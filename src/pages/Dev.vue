@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { Cell, CellBox, Group } from 'vux'
+import { Cell, CellBox, Group, querystring } from 'vux'
 
 export default {
   components: {
@@ -19,11 +19,10 @@ export default {
   },
   methods: {
     changeHref (e) {
-      var { hash, menu } = e.target.dataset
-      window.location.href = window.location.origin
-      + window.location.pathname
-      + window.location.search + '&type=' + menu
-      + '#/' + hash
+      let { hash, menu } = e.target.dataset
+      let userid = querystring.parse()['userid'] || ''
+      window.location.href = window.location.origin + window.location.pathname
+      + `?userid=${userid}&type=${menu}#/${hash}`
     }
   }
 }
