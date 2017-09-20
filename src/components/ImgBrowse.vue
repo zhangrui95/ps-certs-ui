@@ -2,7 +2,12 @@
   <div>
     <img class="previewer-demo-img" v-for="(item, index) in imgList" :src="item.src" @click="show(index)">
     <div v-transfer-dom>
-      <previewer :list="imgList" ref="previewer" :options="options"></previewer>
+      <div @click="hideDel">
+        <previewer :list="imgList" ref="previewer" :options="options"></previewer>
+      </div>
+      <transition name="move" v-if="delShow">
+        <div v-show="del" class="del-btn" transition="move">删除</div>
+      </transition>
     </div>
   </div>
 </template>
@@ -20,14 +25,18 @@
     methods: {
       show (index) {
         this.$refs.previewer.show(index)
+        this.del = true
+      },
+      hideDel () {
+        this.del = false
       }
     },
-    props: ['imgList'],
+    props: ['imgList', 'delShow'],
     data () {
       return {
+        del: false,
         options: {
           getThumbBoundsFn (index) {
-            console.log(index)
             // find thumbnail element
             let thumbnail = document.querySelectorAll('.previewer-demo-img')[index]
             // get window scroll Y
@@ -47,10 +56,41 @@
 </script>
 
 <style>
+  .mytran {
+    transition: all 0.3s ease;
+    background-color: greenyellow;
+  }
+
+  .mytran-enter, .mytran-leave {
+    height: 0;
+    width: 0;
+  }
   .previewer-demo-img{
     width: 45px;
     height: 45px;
     float: right;
     margin: 5px;
   }
+  .del-btn{
+    color: #fff;
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+    z-index: 99999;
+    background: #0d0d0d;
+    font-size: 18px;
+    text-align: center;
+    line-height: 50px;
+    letter-spacing: 2px;
+  }
+  .move-enter-active, .move-leave-active{
+    opacity: 1;
+    transition: all 1s ease;
+  }
+  .move-leave-active, .move-enter{
+    opacity: 0;
+    transition: all 1s ease;
+  }
+
 </style>

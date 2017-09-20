@@ -1,15 +1,15 @@
 <template>
   <div class="page page-list student-page">
-    <div class="header-box" id="title">{{title}}</div>
+    <div class="header-box">{{title}}</div>
     <div class="center-box padding-min">
       <div class="none-flex cell-border cell-margin" v-for="imgNews in imgTitle">
         <div class="weui-cell__hd" v-html="imgNews.title"></div>
-        <ul class="weui-uploader__files" id="uploaderImg">
-          <img-browse :imgList="imgNews.imgList"></img-browse>
+        <ul class="weui-uploader__files">
+          <img-browse :imgList="imgNews.imgList" :delShow="delShow"></img-browse>
         </ul>
         <div class="img-uploader-box">
-          <input id="uploaderInput" class="weui-uploader__input" type="button"/>
-          <img class="change-upload" src="../assets/photo.png" id="checkUploader"/>
+          <input class="weui-uploader__input" type="button"/>
+          <img class="change-upload" src="../assets/photo.png"/>
         </div>
       </div>
       <x-input title="姓名" v-model="name"></x-input>
@@ -67,6 +67,7 @@
     },
     data () {
       return {
+        delShow: true,
         show: false,
         shows: false,
         confirmText: '',
@@ -191,96 +192,96 @@
 </script>
 
 <style lang="less">
-  .padding-min{
-    padding-top: 5px;
-  }
-  .none-flex{
-    display: flex;
-    position: relative;
-  }
-  .cell-border{
-    border-bottom: 1px dashed #ddd;
-    padding: 15px 5px;
-  }
-  .cell-margin{
-    min-height:20px;
-    height:auto;
-    background: #FFFFFF;
-    position: relative;
-  }
-  .weui-label{
-    width:100px;
-    font-size: 18px;
-    line-height: 55px;
-  }
-  .weui-uploader__files{
-    width: 100%;
-  }
-  .img-uploader-box{
-    margin: 0 auto;
-    border: 5px solid #FFFFFF;
-    background: #ddd;
-    height: 45px;
-    width: 45px;
-    position: relative;
-    top: 0;
-    right: 0;
-    flex: 0 0 45px;
-  }
-  .weui-uploader__input{
-    z-index: 9999;
-  }
-  .change-upload {
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    z-index: 500;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-  }
-  .weui-label.student-prove{
-    height:24px;
-    line-height: 34px;
-  }
-  .field-comment{
-    color: #605fbd;
-    font-size: 14px;
-  }
-  .height-fixed-min{
-    height: 50px;
-    weight:100%;
-  }
-  .vux-x-input{
-    border-bottom: 1px dashed #ddd;
-    padding: 15px 5px;
-  }
-  .vux-cell-box{
-    border-bottom: 1px dashed #ddd;
-    padding: 15px 5px;
-    .weui-cell{
-      padding: 0;
+  .student-page{
+    .padding-min{
+      padding-top: 5px;
     }
-    &:before{
-      border: none;
+    .none-flex{
+      display: flex;
+      position: relative;
     }
-  }
-  .vux-datetime{
-    p{
+    .cell-border{
+      border-bottom: 1px dashed #ddd;
+      padding: 15px 5px;
+    }
+    .cell-margin{
+      min-height:20px;
+      height:auto;
+      background: #FFFFFF;
+      position: relative;
+    }
+    .weui-label{
+      width:100px;
       font-size: 18px;
-      color: #333;
+      line-height: 55px;
     }
-  }
-  .vux-datetime.weui-cell{
-    padding: 14.5px 0;
-  }
-  .vux-cell-box{
-    &:before{
-      border-top: none;
+    .weui-uploader__files{
+      width: 100%;
     }
-  }
-  .weui-cell{
-    &:before{
+    .img-uploader-box{
+      margin: 0 auto;
+      border: 5px solid #FFFFFF;
+      background: #ddd;
+      height: 45px;
+      width: 45px;
+      position: relative;
+      top: 0;
+      right: 0;
+      flex: 0 0 45px;
+    }
+    .weui-uploader__input{
+      z-index: 9999;
+    }
+    .change-upload {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      z-index: 500;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+    .weui-label.student-prove{
+      height:24px;
+      line-height: 34px;
+    }
+    .field-comment{
+      color: #605fbd;
+      font-size: 14px;
+    }
+    .height-fixed-min{
+      height: 50px;
+      weight:100%;
+    }
+    .vux-x-input{
+      border-bottom: 1px dashed #ddd;
+      padding: 15px 5px;
+    }
+    .vux-cell-box{
+      border-bottom: 1px dashed #ddd;
+      padding: 15px 5px;
+      .weui-cell{
+        padding: 0;
+      }
+      &:before{
+        border: none;
+      }
+    }
+    .vux-datetime{
+      p{
+        font-size: 18px;
+        color: #333;
+      }
+    }
+    .vux-datetime.weui-cell{
+      padding: 12.5px 0;
+    }
+    .vux-cell-box{
+      &:before{
+        border-top: none;
+      }
+    }
+    .weui-cell:before{
       border-top: none;
     }
   }
