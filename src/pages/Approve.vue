@@ -14,7 +14,12 @@ import { post } from '@/utils/ajax'
 
 export default {
   components: {
+<<<<<<< HEAD
     TopNav, ListView
+=======
+    Cell,
+    TopNav
+>>>>>>> ad7895981ac500195e168633b7408710362eb531
   },
   data () {
     return {
@@ -34,7 +39,7 @@ export default {
         link: 'fire_list?state=0',
         num: data.init,
         text: '未检查',
-        clsName: 'active',
+        clsName: 'active'
       },{
         link: 'fire_list?state=1',
         num: data.done,

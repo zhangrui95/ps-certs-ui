@@ -7,6 +7,7 @@ const pages = [
     'Dev',
     'Student',
     'Approve',
+    'Apply'
 ]
 
 export default new Router((() => {
