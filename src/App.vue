@@ -33,9 +33,7 @@ export default {
 
 <style lang="less">
 @import '~vux/src/styles/reset.less';
-@import '../src/style/style.less';
-@import '../src/style/old.less';
-@import '../src/style/student.less';
+
 body,html {
   background-color: #fff;
   overflow: hidden;

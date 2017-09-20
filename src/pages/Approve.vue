@@ -12,7 +12,7 @@ export default {
     Cell,
   },
   created () {
-    console.log(location)
+    console.log(this.$store.state)
   }
 }
 </script>
