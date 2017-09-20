@@ -1,0 +1,287 @@
+<template>
+  <div class="page page-list student-page">
+    <div class="header-box" id="title">{{title}}</div>
+    <div class="center-box padding-min">
+      <div class="none-flex cell-border cell-margin" v-for="imgNews in imgTitle">
+        <div class="weui-cell__hd" v-html="imgNews.title"></div>
+        <ul class="weui-uploader__files" id="uploaderImg">
+          <img-browse :imgList="imgNews.imgList"></img-browse>
+        </ul>
+        <div class="img-uploader-box">
+          <input id="uploaderInput" class="weui-uploader__input" type="button"/>
+          <img class="change-upload" src="../assets/photo.png" id="checkUploader"/>
+        </div>
+      </div>
+      <x-input title="姓名" v-model="name"></x-input>
+      <x-input title="身份证号" v-model="card"></x-input>
+      <x-input title="手机号码" v-model="mobile"></x-input>
+      <popup-picker title="婚姻状况" :data="marrayList" v-model="marray" value-text-align="right" placeholder="请选择"></popup-picker>
+      <popup-picker title="血型" :data="bloodList" v-model="blood" value-text-align="right" placeholder="请选择"></popup-picker>
+      <x-input title="身高(cm)" v-model="height"></x-input>
+      <x-input title="体重(kg)" v-model="weight"></x-input>
+      <popup-picker title="文化程度" :data="cultureList" v-model="culture" value-text-align="right" placeholder="请选择"></popup-picker>
+      <popup-picker title="宗教信仰" :data="religionList" v-model="religion" value-text-align="right" placeholder="请选择"></popup-picker>
+      <popup-picker title="兵役状况" :data="militaryList" v-model="military" value-text-align="right" placeholder="请选择"></popup-picker>
+      <div class="vux-cell-box">
+        <datetime v-model="time" @on-change="change" title="入学时间" :show.sync="visibility" placeholder="请选择"></datetime>
+      </div>
+      <x-input title="所在院系" v-model="department"></x-input>
+      <x-input title="所在专业" v-model="major"></x-input>
+      <div class="height-fixed-min"></div>
+    </div>
+    <toast v-model="showPositionValue" type="text" :time="2000" is-show-mask :text="toastText" position="default"></toast>
+    <double-btn :leftBtn="leftBtn" :rightBtn="rightBtn" :click="clickUp" :goOut="goOut"></double-btn>
+    <confirm v-model="show"
+             title=" "
+             @on-cancel="onCancel"
+             @on-confirm="onConfirm"
+             @on-show="onShow"
+             @on-hide="onHide">
+      <p style="text-align:center;">{{confirmText}}</p>
+    </confirm><confirm v-model="shows"
+                       title=" "
+                       @on-cancel="onCancels"
+                       @on-confirm="onConfirms"
+                       @on-show="onShow"
+                       @on-hide="onHide">
+    <p style="text-align:center;">{{confirmTexts}}</p>
+  </confirm>
+  </div>
+</template>
+
+<script>
+  import { XInput, PopupPicker, Datetime, Toast, Confirm } from 'vux'
+  import DoubleBtn from '../components/DoubleBtn'
+  import qs from 'qs'
+  import ImgBrowse from '../components/ImgBrowse.vue'
+
+  export default {
+    components: {
+      DoubleBtn,
+      XInput,
+      PopupPicker,
+      Datetime,
+      Toast,
+      Confirm,
+      ImgBrowse
+    },
+    data () {
+      return {
+        show: false,
+        shows: false,
+        confirmText: '',
+        confirmTexts: '',
+        title: '居住证明办理申请登记',
+        leftBtn: '取消',
+        rightBtn: '提交',
+        name: '',
+        card: '',
+        mobile: '',
+        height: '',
+        weight: '',
+        marray: [],
+        marrayList: [['未婚', '已婚', '离异', '其他']],
+        blood: [],
+        bloodList: [['A', 'B', 'O', 'AB', '其他', '不详']],
+        religion: [],
+        religionList: [['佛教', '道教', '天主教', '基督教', '伊斯兰教', '喇嘛教', '其他', '无宗教信仰']],
+        culture: [],
+        cultureList: [['本科', '本科以上']],
+        military: [],
+        militaryList: [['未服兵役', '退出现役', '国防生', '服现役']],
+        time: '',
+        visibility: false,
+        department: '',
+        major: '',
+        showPositionValue: false,
+        toastText: '',
+        imgTitle: [
+          {
+            title: '<label class="weui-label">自拍正面照</label>',
+            imgList: [{
+              src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'
+            }]},
+          {title: '<label class="weui-label">在读证明</label>',
+            imgList: [{
+              src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'
+            }]},
+          {title: '<label class="weui-label student-prove">学生证</label><span class="field-comment">(非学生卡)</span>',
+            imgList: [
+              {src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'},
+              {src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'},
+              {src: 'https://ooo.0o0.ooo/2017/06/15/59425a592b949.jpeg'}
+            ]}]
+      }
+    },
+    methods: {
+      change (value) {
+        console.log('change', value)
+      },
+      goOut () {
+        this.confirmText = '确定取消当前操作？'
+        this.show = true
+      },
+      clickUp () {
+        if (this.name.length === 0) {
+          this.toastText = '请填写姓名'
+          this.showPositionValue = true
+        } else if (this.card.length === 0) {
+          this.toastText = '请填写身份证号'
+          this.showPositionValue = true
+        } else if (this.mobile.length === 0) {
+          this.toastText = '请填写手机号'
+          this.showPositionValue = true
+        } else if (this.marray.length === 0) {
+          this.toastText = '请选择婚姻状况'
+          this.showPositionValue = true
+        } else if (this.blood.length === 0) {
+          this.toastText = '请选择血型'
+          this.showPositionValue = true
+        } else if (this.height.length === 0) {
+          this.toastText = '请填写身高'
+          this.showPositionValue = true
+        } else if (this.weight.length === 0) {
+          this.toastText = '请填写体重'
+          this.showPositionValue = true
+        } else if (this.culture.length === 0) {
+          this.toastText = '请选择文化程度'
+          this.showPositionValue = true
+        } else if (this.religion.length === 0) {
+          this.toastText = '请选择宗教信仰'
+          this.showPositionValue = true
+        } else if (this.military.length === 0) {
+          this.toastText = '请选择兵役情况'
+          this.showPositionValue = true
+        } else if (this.time.length === 0) {
+          this.toastText = '请选择入学时间'
+          this.showPositionValue = true
+        } else if (this.department.length === 0) {
+          this.toastText = '请填写所在院系'
+          this.showPositionValue = true
+        } else if (this.major.length === 0) {
+          this.toastText = '请填写所在专业'
+          this.showPositionValue = true
+        } else {
+          this.confirmTexts = '是否确认提交申请？'
+          this.shows = true
+        }
+      },
+      onCancel () {
+        console.log('on cancel')
+      },
+      onCancels () {
+        console.log('on cancel')
+      },
+      onConfirm (msg) {
+        wx.closeWindow()
+      },
+      onConfirms () {
+        this.$http.post('/example/api/studentCert/save.json', qs.stringify({'info.marray': this.marray})
+        ).then(function (data) {
+        })
+      },
+      onHide () {
+        console.log('on hide')
+      },
+      onShow () {
+        console.log('on show')
+      }
+    }
+  }
+</script>
+
+<style lang="less">
+  .padding-min{
+    padding-top: 5px;
+  }
+  .none-flex{
+    display: flex;
+    position: relative;
+  }
+  .cell-border{
+    border-bottom: 1px dashed #ddd;
+    padding: 15px 5px;
+  }
+  .cell-margin{
+    min-height:20px;
+    height:auto;
+    background: #FFFFFF;
+    position: relative;
+  }
+  .weui-label{
+    width:100px;
+    font-size: 18px;
+    line-height: 55px;
+  }
+  .weui-uploader__files{
+    width: 100%;
+  }
+  .img-uploader-box{
+    margin: 0 auto;
+    border: 5px solid #FFFFFF;
+    background: #ddd;
+    height: 45px;
+    width: 45px;
+    position: relative;
+    top: 0;
+    right: 0;
+    flex: 0 0 45px;
+  }
+  .weui-uploader__input{
+    z-index: 9999;
+  }
+  .change-upload {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    z-index: 500;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+  .weui-label.student-prove{
+    height:24px;
+    line-height: 34px;
+  }
+  .field-comment{
+    color: #605fbd;
+    font-size: 14px;
+  }
+  .height-fixed-min{
+    height: 50px;
+    weight:100%;
+  }
+  .vux-x-input{
+    border-bottom: 1px dashed #ddd;
+    padding: 15px 5px;
+  }
+  .vux-cell-box{
+    border-bottom: 1px dashed #ddd;
+    padding: 15px 5px;
+    .weui-cell{
+      padding: 0;
+    }
+    &:before{
+      border: none;
+    }
+  }
+  .vux-datetime{
+    p{
+      font-size: 18px;
+      color: #333;
+    }
+  }
+  .vux-datetime.weui-cell{
+    padding: 14.5px 0;
+  }
+  .vux-cell-box{
+    &:before{
+      border-top: none;
+    }
+  }
+  .weui-cell{
+    &:before{
+      border-top: none;
+    }
+  }
+</style>

@@ -12,7 +12,7 @@ import { post } from '@/utils/ajax'
 export default {
   components: {
     Cell,
-    TopNav,
+    TopNav
   },
   data () {
     return {
@@ -29,7 +29,7 @@ export default {
         link: 'fire_list?state=0',
         num: 13,
         text: '未检查',
-        clsName: 'active',
+        clsName: 'active'
       },{
         link: 'fire_list?state=1',
         num: 8,

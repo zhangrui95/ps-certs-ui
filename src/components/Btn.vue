@@ -1,6 +1,6 @@
 <template>
   <div class="btn-box">
-    <router-link :to="goLink"><a class="btn" @click="clickDics">{{btn}}</a></router-link>
+    <a class="btn" @click="clickDics">{{btn}}</a>
   </div>
 </template>
 
@@ -8,7 +8,6 @@
   export default {
     props: [
       'btn',
-      'goLink',
       'clickDics'
     ]
   }

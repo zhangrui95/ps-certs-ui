@@ -109,7 +109,7 @@
         pulling: false,
         isPullUpLoad: false,
         pullUpDirty: true,
-        pullDownStyle: '',
+        pullDownStyle: ''
       }
     },
     computed: {
