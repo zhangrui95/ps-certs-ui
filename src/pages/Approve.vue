@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex-page">
     <top-nav :nav="nav">{{title}}</top-nav>
     <list-view url="/example/api/studentCert.json" :style="{paddingTop: '20px'}">
       <router-link :to='"/Undone?id="+item.id' v-for="(item, index) in listData" :key="index">
