@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import vuexI18n from 'vuex-i18n'
 import { sync } from 'vuex-router-sync'
 import router from '../router/index'
+import { post } from '@/utils/ajax'
 
 Vue.use(Vuex)
 
@@ -14,24 +15,43 @@ let store = new Vuex.Store({
 
 store.registerModule('vux', {
     state: {
-        demoScrollTop: 0,
         isLoading: false,
-        direction: 'forward'
+        direction: 'forward',
+        scrollTop: 0,
+        filtrate: {},
+        listData: [],
+        listDataIsNoMore: false,
     },
     mutations: {
-        updateDemoPosition(state, payload) {
-            state.demoScrollTop = payload.top
-        },
         updateLoadingStatus(state, payload) {
             state.isLoading = payload.isLoading
         },
         updateDirection(state, payload) {
             state.direction = payload.direction
+        },
+        updateScrollTop(state, payload) {
+            state.scrollTop = payload
+        },
+        updateFiltrate(state, payload) {
+            state.filtrate = {...state.filtrate, ...payload }
+        },
+        updateListData(state, payload) {
+            state.listData = [...state.listData, ...payload]
+        },
+        updateListDataIsNoMore(state) {
+            state.listData = false
         }
     },
     actions: {
-        updateDemoPosition({ commit }, top) {
-            commit({ type: 'updateDemoPosition', top: top })
+        updateListData({ commit, state }, payload) {
+            post(payload.url, { max: 10, offset: state.listData.length }).then(data => {
+                if (data.list.length > 0) {
+                    commit('updateListData', data.list)
+                    payload.cb && payload.cb(data)
+                } else {
+                    commit('updateListDataIsNoMore')
+                }
+            })
         }
     }
 })

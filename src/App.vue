@@ -46,6 +46,11 @@ ul{
 .app{
   height: 100%;
   width: 100%;
+  .flex-page{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 }
 .page{
   height: 100%;
