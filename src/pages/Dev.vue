@@ -21,7 +21,7 @@ export default {
     changeHref (e) {
       let { hash, menu } = e.target.dataset
       let userid = querystring.parse()['userid'] || ''
-      window.location.href = '#/'+hash+'?userid='+ userid +'&type'+menu
+      window.location.href = '#/'+hash+'?userid='+ userid +'&type='+menu
     }
   }
 }
