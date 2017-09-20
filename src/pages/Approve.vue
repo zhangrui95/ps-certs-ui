@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-page">
+  <div>
     <top-nav :nav="nav">{{title}}</top-nav>
     <list-view url="/example/api/studentCert.json" :style="{paddingTop: '20px'}">
       <router-link :to='"/Undone/"+item.id' v-for="(item, index) in listData" :key="index">
@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import TopNav from '@/components/TopNav'
 import ListView from '@/components/ListView'
+import TopNav from '@/components/TopNav'
 import { post } from '@/utils/ajax'
 
 export default {
@@ -26,17 +26,18 @@ export default {
   },
   data () {
     return {
-      nav: [],
       title: '',
+      nav: ''
     }
   },
   computed: {
     listData () {
       return this.$store.state.vux.listData
-    },
+    }
   },
   created () {
     this.title = this.$route.query.type == 1? '身份证申请': '居住证明申请'
+
     post('/example/api/studentCert/groupByState.json').then(data => {
       this.nav = [{
         num: data.init,
@@ -52,10 +53,6 @@ export default {
         text: '总次数'
       }]
     })
-  },
-  methods: {
-
   }
-
 }
 </script>
