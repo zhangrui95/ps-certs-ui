@@ -1,8 +1,16 @@
 <template>
   <div class="flex-page">
     <top-nav :nav="nav">{{title}}</top-nav>
-    <list-view url="/example/api/studentCert.json">
-      <div v-for="(item, index) in listData" :key="index" style="height:100px;">{{item.name}}</div>
+    <list-view url="/example/api/studentCert.json" :style="{paddingTop: '20px'}">
+      <router-link :to='"/Undone/"+item.id' v-for="(item, index) in listData" :key="index">
+        <div class="list">
+          <div class="number">{{index>=10?index:'0'+(index+1)}}</div>
+          <div class="list-news">
+            <div class="name-color">{{item.name}}</div>
+            <div class="time-color">{{item.createTime | dateFormat}}</div>
+          </div>
+        </div>
+      </router-link>
     </list-view>
   </div>
 </template>
@@ -14,12 +22,7 @@ import { post } from '@/utils/ajax'
 
 export default {
   components: {
-<<<<<<< HEAD
     TopNav, ListView
-=======
-    Cell,
-    TopNav
->>>>>>> ad7895981ac500195e168633b7408710362eb531
   },
   data () {
     return {
@@ -36,15 +39,15 @@ export default {
     this.title = this.$route.query.type == 1? '身份证申请': '居住证明申请'
     post('/example/api/studentCert/groupByState.json').then(data => {
       this.nav = [{
-        link: 'fire_list?state=0',
         num: data.init,
         text: '未检查',
-        clsName: 'active'
+        active: true,
       },{
         link: 'fire_list?state=1',
         num: data.done,
         text: '已检查'
       },{
+        link: 'fire_list?state=1',
         num: data.notify,
         text: '总次数'
       }]

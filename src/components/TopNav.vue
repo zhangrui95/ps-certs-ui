@@ -3,8 +3,8 @@
     <slot></slot>
     <flexbox class="body">
       <flexbox-item v-for="(item, index) in nav" :key="index">
-        <router-link :to="item.link || ''" :class="[item.clsName || '']">
-          <div class="num">{{item.num}}</div>
+        <router-link :to="item.link || ''">
+          <div class="num" :class="{active: item.active}">{{item.num}}</div>
           <div class="text">{{item.text}}</div>
         </router-link>
       </flexbox-item>
@@ -25,12 +25,12 @@ export default {
 
 <style scoped lang="less">
   .top-nav{
-    background: #55a3e7;
-    padding: 15px 20px 60px 20px;
+    background: #6c6bbd;
+    padding: 15px 20px 65px 20px;
     position: relative;
     color: #fff;
     font-size: 18px;
-    margin-bottom: 40px;
+    margin-bottom: 25px;
     .body{
       overflow: hidden;
       width: 86%;
@@ -39,7 +39,7 @@ export default {
       box-shadow: -2px 0 0 #faeded,0 0 0 #ffe1e0,0 2px 15px #ffe1e0,2px 0 0 #fbf6f6;
       border-radius: 10px;
       position: absolute;
-      bottom: -30px;
+      bottom: -25px;
       left: 7%;
       z-index: 100;
       .vux-flexbox-item{
@@ -51,17 +51,17 @@ export default {
         cursor: pointer;
         a{
           color: #999;
-          &.active{
-            color: #55a3e7;
-          }
           .num{
-            font-size: 30px;
+            font-size: 32px;
             line-height: 24px;
           }
           .text{
             font-size: 14px;
             line-height: 26px;
           }
+        }
+        .active{
+          color: #6c6bbd;
         }
       }
     }

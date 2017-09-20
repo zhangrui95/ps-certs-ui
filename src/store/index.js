@@ -44,7 +44,11 @@ store.registerModule('vux', {
     },
     actions: {
         updateListData({ commit, state }, payload) {
-            post(payload.url, { max: 10, offset: state.listData.length }).then(data => {
+            post(payload.url, {
+                max: 10,
+                offset: state.listData.length,
+                ...state.filtrate
+            }).then(data => {
                 if (data.list.length > 0) {
                     commit('updateListData', data.list)
                     payload.cb && payload.cb(data)

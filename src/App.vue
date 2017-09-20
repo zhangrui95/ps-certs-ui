@@ -33,6 +33,7 @@ export default {
 
 <style lang="less">
 @import '~vux/src/styles/reset.less';
+@import './style/old.less';
 
 body,html {
   background-color: #fff;

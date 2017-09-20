@@ -1,5 +1,5 @@
 <template>
-  <div ref="wrapper" class="list-wrapper">
+  <div ref="wrapper" class="list-wrapper" :style="style">
     <div class="scroll-content">
       <div ref="list" class="list-content">
         <slot></slot>
@@ -26,7 +26,7 @@
       BScroll,
       InlineLoading,
     },
-    props: ['url'],
+    props: ['url', 'style'],
     data() {
       return {
         isPullUpLoad:false,
