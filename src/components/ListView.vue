@@ -6,7 +6,7 @@
       </div>  
       <div class="pullup-wrapper">
         <div class="before-trigger" v-if="!isPullUpLoad">
-          <span>{{pullUpTxt}}</span>
+          <span>{{isNoMore? '暂时没有更多': '加载更多'}}</span>
         </div>
         <div class="after-trigger" v-else>
           <inline-loading></inline-loading>
@@ -33,9 +33,9 @@
       }
     },
     computed: {
-      pullUpTxt () {
-        return this.$store.state.vux.listDataIsNoMore? '暂时没有更多': '加载更多'
-      },
+      isNoMore () {
+        return this.$store.state.vux.listDataIsNoMore
+      }
     },
     mounted() {
       this.initScroll()
@@ -81,6 +81,7 @@
     flex: 1;
     overflow: hidden;
     background: #fff;
+    box-sizing: border-box;
     .list-content{
       position: relative;
       z-index: 10;

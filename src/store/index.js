@@ -39,7 +39,7 @@ store.registerModule('vux', {
             state.listData = [...state.listData, ...payload]
         },
         updateListDataIsNoMore(state) {
-            state.listData = false
+            state.listDataIsNoMore = true
         }
     },
     actions: {
@@ -49,12 +49,13 @@ store.registerModule('vux', {
                 offset: state.listData.length,
                 ...state.filtrate
             }).then(data => {
+                let bol = true
                 if (data.list.length > 0) {
                     commit('updateListData', data.list)
-                    payload.cb && payload.cb(data)
                 } else {
                     commit('updateListDataIsNoMore')
                 }
+                payload.cb && payload.cb(data)
             })
         }
     }
