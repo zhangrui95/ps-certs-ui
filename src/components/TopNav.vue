@@ -29,7 +29,8 @@ export default {
     padding: 15px 20px 60px 20px;
     position: relative;
     color: #fff;
-    font-size: 18px; 
+    font-size: 18px;
+    margin-bottom: 40px;
     .body{
       overflow: hidden;
       width: 86%;
@@ -40,6 +41,7 @@ export default {
       position: absolute;
       bottom: -30px;
       left: 7%;
+      z-index: 100;
       .vux-flexbox-item{
         text-align: center;
         border-right: 1px solid #e5e5e5;
