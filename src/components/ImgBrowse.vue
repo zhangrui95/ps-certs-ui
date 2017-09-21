@@ -92,5 +92,8 @@
     opacity: 0;
     transition: all 1s ease;
   }
+  .pswp__top-bar{
+    display: none;
+  }
 
 </style>
