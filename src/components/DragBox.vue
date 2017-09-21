@@ -1,5 +1,6 @@
 <template>
   <div
+    @click="clickPop"
     ref='DragBox'
     @touchstart="start"
     @mousedown="start"
@@ -24,6 +25,7 @@ export default {
       mouseIsDown: false
     }
   },
+  props: ['clickPop'],
   mounted () {
     this.initY = this.$refs.DragBox.offsetTop
     this.initX = this.$refs.DragBox.offsetLeft
@@ -37,7 +39,7 @@ export default {
     },
     move (ev) {
       if (this.mouseIsDown) {
-        const touch = ev.touches ? ev.touches[0] : ev 
+        const touch = ev.touches ? ev.touches[0] : ev
         this.transformX = touch.pageX - this.initX - this.distX
         this.transformY = touch.pageY - this.initY - this.distY
         this.$refs.DragBox.style.transform = 'translate3d(' + this.transformX + 'px, '+ this.transformY +'px, 0)'

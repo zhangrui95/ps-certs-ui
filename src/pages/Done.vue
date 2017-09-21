@@ -1,24 +1,26 @@
 <template>
   <div class="flex-page">
-    <drag-box class="drag-box">
+    <drag-box class="drag-box" :clickPop="popShow">
     </drag-box>
     <list-view url="/example/api/studentCert.json">
     </list-view>
+    <filtrate-pop :show="show" :PopHide="PopHide"></filtrate-pop>
   </div>
 </template>
 
 <script>
 import ListView from '@/components/ListView'
 import DragBox from '@/components/DragBox'
+import FiltratePop from '@/components/FiltratePop'
 import { post } from '@/utils/ajax'
 
 export default {
   components: {
-    ListView, DragBox
+    ListView, DragBox, FiltratePop
   },
   data () {
     return {
-
+      show: false
     }
   },
   computed: {
@@ -27,7 +29,15 @@ export default {
     }
   },
   created () {
-    
+
+  },
+  methods: {
+    popShow () {
+      this.show = true
+    },
+    PopHide: function () {
+      this.show = false
+    }
   }
 }
 </script>
