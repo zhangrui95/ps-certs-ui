@@ -8,8 +8,6 @@
           <img-browse :imgList="imgNews.imgList" :delShow="delShow"></img-browse>
         </div>
       </div>
-      <detail-cell title="在读证明"></detail-cell>
-      <detail-cell title="学生证"></detail-cell>
       <detail-cell title="姓名" :detail="name"></detail-cell>
       <detail-cell title="身份证号" :detail="card"></detail-cell>
       <detail-cell title="手机号" :detail="mobile"></detail-cell>
@@ -73,23 +71,41 @@
           {
             title: '自拍正面照',
             imgList: [{
-              src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'
-            }]},
+              src: ''
+            }]
+          },
           {title: '在读证明',
             imgList: [{
               src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'
             }]},
           {title: '学生证',
-            imgList: [
-              {src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'},
-              {src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'},
-              {src: 'https://ooo.0o0.ooo/2017/06/15/59425a592b949.jpeg'}
-            ]}]
+            imgList: []}]
       }
     },
     created: function () {
       this.$http.post('/example/api/studentCert/detail.json').then(response => {
         let item = response.data.data
+        let src1 = []
+        let src2 = []
+        let src3 = []
+        for (let i in item.photos) {
+          if (item.photos[i].type === 1) {
+            let img1 = {}
+            img1.src = 'example/api/studentCert/photo?id=' + item.photos[i].id
+            src1.push(img1)
+            this.imgTitle[0].imgList = src1
+          } else if (item.photos[i].type === 2) {
+            let img2 = {}
+            img2.src = 'example/api/studentCert/photo?id=' + item.photos[i].id
+            src2.push(img2)
+            this.imgTitle[2].imgList = src2
+          } else if (item.photos[i].type === 3) {
+            let img3 = {}
+            img3.src = 'example/api/studentCert/photo?id=' + item.photos[i].id
+            src3.push(img3)
+            this.imgTitle[1].imgList = src3
+          }
+        }
         this.name = item.name
         this.card = item.info.card
         this.mobile = item.info.mobile
@@ -115,7 +131,7 @@
           default:
         }
         this.mar = mar
-        switch(item.info.blood){
+        switch (item.info.blood) {
           case 1:blood = 'A'
             break
           case 2:blood = 'B'
@@ -131,7 +147,7 @@
           default:
         }
         this.blood = blood
-        switch(item.info.education){
+        switch (item.info.education) {
           case 1:education = '本科'
             break
           case 2:education = '本科以上'
@@ -139,7 +155,7 @@
           default:
         }
         this.education = education
-        switch(item.info.religion){
+        switch (item.info.religion) {
           case 1:religion = '佛教'
             break
           case 2:religion = '道教'
@@ -159,7 +175,7 @@
           default:
         }
         this.religion = religion
-        switch(item.info.military){
+        switch (item.info.military) {
           case 1:military = '未服兵役'
             break
           case 2:military = '退出现役'
@@ -174,11 +190,11 @@
       })
     },
     methods: {
-      goOut() {
+      goOut () {
         let id = this.$route.params.id
-        this.$router.push({path: '/Back', query:{id: id}})
+        this.$router.push({path: '/Back', query: {id: id}})
       },
-      clickUp() {
+      clickUp () {
       }
     }
   }
