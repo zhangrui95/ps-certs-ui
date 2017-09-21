@@ -68,6 +68,7 @@ export default {
     width: 50px;
     height: 50px;
     background: red;
+    border-radius: 50%;
     z-index: 100;
   }
 </style>

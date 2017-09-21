@@ -4,7 +4,9 @@
     @touchstart="start"
     @mousedown="start"
     @touchmove="move"
-    @mousemove="move">
+    @mousemove="move"
+    @mouseout="end"
+    @mouseup="end">
     <slot></slot>
   </div>
 </template>
@@ -19,6 +21,7 @@ export default {
       initY: 0,
       transformX: 0,
       transformY: 0,
+      mouseIsDown: false
     }
   },
   mounted () {
@@ -30,15 +33,20 @@ export default {
       const touch = ev.touches ? ev.touches[0] : ev
       this.distX = touch.pageX - this.$refs.DragBox.offsetLeft - this.transformX
       this.distY = touch.pageY - this.$refs.DragBox.offsetTop - this.transformY
-      console.log(this.$refs.DragBox.offsetLeft)
+      this.mouseIsDown = true
     },
     move (ev) {
-      const touch = ev.touches ? ev.touches[0] : ev 
-      this.transformX = touch.pageX - this.initX - this.distX
-      this.transformY = touch.pageY - this.initY - this.distY
-      this.$refs.DragBox.style.transform = 'translate3d(' + this.transformX + 'px, '+ this.transformY +'px, 0)'
-      ev.preventDefault()
+      if (this.mouseIsDown) {
+        const touch = ev.touches ? ev.touches[0] : ev 
+        this.transformX = touch.pageX - this.initX - this.distX
+        this.transformY = touch.pageY - this.initY - this.distY
+        this.$refs.DragBox.style.transform = 'translate3d(' + this.transformX + 'px, '+ this.transformY +'px, 0)'
+        ev.preventDefault()
+      }
     },
+    end () {
+      this.mouseIsDown = false
+    }
   }
 }
 </script>
