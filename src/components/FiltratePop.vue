@@ -6,8 +6,7 @@
       <div class="input-border">
         <div class="weui-search-bar__box">
           <i class="weui-icon-search"></i>
-          <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="请输入您要查询的企业名称" required/>
-          <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+          <x-input v-model="value1" placeholder="请输入您要查询的企业名称"></x-input>
         </div>
       </div>
     </div>
@@ -16,15 +15,18 @@
 </template>
 
 <script>
+  import { XInput } from 'vux'
   import Btn from './Btn'
   export default {
     components: {
-      Btn
+      Btn,
+      XInput
     },
     props: ['show', 'PopHide'],
     data () {
       return {
-        btn: '确定'
+        btn: '确定',
+        value1: ''
       }
     },
     methods: {
@@ -103,6 +105,15 @@
      background: #605fbd;
    }
   }
+    .weui-cell{
+      padding: 7px 15px;
+      &:before{
+        border: 0;
+      }
+    }
+    .weui-input{
+      margin-left: 20px;
+    }
   }
   .fire-header-right{
     float: right;
@@ -118,18 +129,6 @@
     margin-top: 14px;
     float: left;
     border-radius: 20px;
-    .weui-search-bar__input{
-      margin: 6px 0 0 35px;
-      border: 0;
-      padding: 4px 0;
-      width: 80%;
-      height: 1.42857143em;
-      font-size: 14px;
-      line-height: 1.42857143em;
-      box-sizing: content-box;
-      background: transparent;
-      outline: none;
-    }
     .weui-icon-search{
       font-size: 16px;
       margin-top: 6px;
@@ -145,6 +144,9 @@
       right: 0;
       padding: 0 10px;
       line-height: 28px;
+    }
+    .weui-input{
+      color: #000;
     }
   }
 </style>
