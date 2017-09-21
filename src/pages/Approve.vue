@@ -1,7 +1,5 @@
 <template>
   <div class="flex-page">
-    <drag-box class="drag-box">
-    </drag-box>
     <top-nav :nav="nav">{{title}}</top-nav>
     <list-view url="/example/api/studentCert.json">
       <div :style="{paddingTop: '20px'}">
@@ -46,13 +44,12 @@ export default {
       this.nav = [{
         num: data.init,
         text: '未办理',
-        active: true,
       },{
         link: '/NoInform',
         num: data.done,
         text: '未通知'
       },{
-        link: 'fire_list?state=1',
+        link: '/Done',
         num: data.notify,
         text: '已完成'
       }]
@@ -61,14 +58,11 @@ export default {
 }
 </script>
 <style lang="less">
-  .drag-box{
-    position: fixed;
-    top: 70%;
-    left: 60%;
-    width: 50px;
-    height: 50px;
-    background: red;
-    border-radius: 50%;
-    z-index: 100;
+  .top-nav{
+    .vux-flexbox-item:first-child{
+      .num{
+        color: #6c6bbd;
+      }
+    }
   }
 </style>

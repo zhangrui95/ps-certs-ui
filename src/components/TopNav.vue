@@ -4,7 +4,7 @@
     <flexbox class="body">
       <flexbox-item v-for="(item, index) in nav" :key="index">
         <router-link :to="item.link || ''">
-          <div class="num" :class="{active: item.active}">{{item.num}}</div>
+          <div class="num">{{item.num}}</div>
           <div class="text">{{item.text}}</div>
         </router-link>
       </flexbox-item>
@@ -59,9 +59,6 @@ export default {
             font-size: 14px;
             line-height: 26px;
           }
-        }
-        .active{
-          color: #6c6bbd;
         }
       }
     }
