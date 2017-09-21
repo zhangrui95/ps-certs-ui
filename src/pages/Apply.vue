@@ -108,9 +108,9 @@
             }]},
           {title: '<label class="weui-label student-prove">学生证</label><span class="field-comment">(非学生卡)</span>',
             imgList: [
-              {src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'},
+              {src: 'https://ooo.0o0.ooo/2017/06/15/59425a592b949.jpeg'},
               {src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'},
-              {src: 'https://ooo.0o0.ooo/2017/06/15/59425a592b949.jpeg'}
+              {src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'}
             ]}]
       }
     },

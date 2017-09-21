@@ -1,9 +1,9 @@
 <template>
   <div>
-    <img class="previewer-demo-img" v-for="(item, index) in imgList" :src="item.src" @click="show(index)">
+    <img class="previewer-demo-img" v-for="(item, index) in imgList" :src="item.src" @click="show(index)" :key="index">
     <div v-transfer-dom>
       <div @click="hideDel">
-        <previewer :list="imgList" ref="previewer" :options="options"></previewer>
+        <previewer :list="imgList" ref="previewer"></previewer>
       </div>
       <transition name="move" v-if="delShow">
         <div v-show="del" class="del-btn" transition="move">删除</div>
@@ -34,22 +34,22 @@
     props: ['imgList', 'delShow'],
     data () {
       return {
-        del: false,
-        options: {
-          getThumbBoundsFn (index) {
+        del: false
+//        options: {
+//          getThumbBoundsFn (index) {
             // find thumbnail element
-            let thumbnail = document.querySelectorAll('.previewer-demo-img')[index]
+//            let thumbnail = document.querySelectorAll('.previewer-demo-img')[index]
             // get window scroll Y
-            let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
+//            let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
             // optionally get horizontal scroll
             // get position of element relative to viewport
-            let rect = thumbnail.getBoundingClientRect()
+//            let rect = thumbnail.getBoundingClientRect()
             // w = width
-            return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
+//            return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
             // Good guide on how to get element coordinates:
             // http://javascript.info/tutorial/coordinates
-          }
-        }
+//          }
+//        }
       }
     }
   }
