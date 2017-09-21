@@ -38,14 +38,16 @@ export default {
     }
   },
   created () {
+                            console.log(this.$store.state.vux)
     this.title = this.$route.query.type == 1? '身份证申请': '居住证明申请'
+
     post('/example/api/studentCert/groupByState.json').then(data => {
       this.nav = [{
         num: data.init,
         text: '未办理',
         active: true,
       },{
-        link: '/NoInform',
+        link: 'fire_list?state=1',
         num: data.done,
         text: '未通知'
       },{

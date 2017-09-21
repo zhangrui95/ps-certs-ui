@@ -6,7 +6,7 @@
       </div>  
       <div class="pullup-wrapper">
         <div class="before-trigger" v-if="!isPullUpLoad">
-          <span>{{pullUpTxt}}</span>
+          <span>{{isNoMore? '暂时没有更多': '加载更多'}}</span>
         </div>
         <div class="after-trigger" v-else>
           <inline-loading></inline-loading>
@@ -19,6 +19,7 @@
 <script>
   import BScroll from 'better-scroll'
   import { InlineLoading } from 'vux'
+  import { mapState } from 'vuex'
   import { getRect } from '@/utils/dom'
 
   export default {
@@ -32,20 +33,21 @@
         isPullUpLoad:false,
       }
     },
-    computed: {
-      pullUpTxt () {
-        return this.$store.state.vux.listDataIsNoMore? '暂时没有更多': '加载更多'
-      },
-    },
+    computed: mapState({
+      isNoMore: state => state.vux.listDataIsNoMore,
+      noListData: state => state.vux.listData.length > 0,
+      scrollTop: 'scrollTop'
+    }),
     mounted() {
       this.initScroll()
     },
     methods: {
       initScroll() {
+        
         this.scroll = new BScroll(this.$refs.wrapper, { click: true, pullUpLoad: true })
-        if (this.$store.state.vux.listData.length > 0) {
+        if (this.noListData) {
           this.$nextTick(() => {
-            this.scroll.scrollTo(0,this.$store.state.vux.scrollTop,200)
+            this.scroll.scrollTo(0,this.scrollTop,200)
           })
         } else {
           this.updateListData()
@@ -63,7 +65,7 @@
         }})
       },
       bindScrollEvent() {
-        this.scroll.on('scrollEnd', ({x, y}) => {
+        this.scroll.on('scrollEnd', ({x, y = 0}) => {
           this.$store.commit('updateScrollTop', y)
         })
         this.scroll.on('pullingUp', () => {
@@ -81,6 +83,7 @@
     flex: 1;
     overflow: hidden;
     background: #fff;
+    box-sizing: border-box;
     .list-content{
       position: relative;
       z-index: 10;

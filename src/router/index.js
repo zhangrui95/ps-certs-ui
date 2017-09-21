@@ -8,6 +8,7 @@ const pages = [
     'Student',
     'Approve',
     'Apply',
+    'NoInform',
     'Undone',
     'Back'
 ]
