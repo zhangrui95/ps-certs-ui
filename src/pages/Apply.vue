@@ -177,7 +177,7 @@
         wx.closeWindow()
       },
       onConfirms () {
-        this.$http.post('/example/api/studentCert/save.json', qs.stringify({'info.marray': this.marray})
+        this.$http.post('/api/studentCert/save.json', qs.stringify({'info.marray': this.marray})
         ).then(function (data) {
         })
       },
@@ -283,6 +283,9 @@
     }
     .weui-cell:before{
       border-top: none;
+    }
+    .weui-input{
+      text-align: right;
     }
   }
 </style>
