@@ -38,7 +38,6 @@ Vue.use(LocalePlugin)
 Vue.use(DatetimePlugin)
 Vue.use(BusPlugin)
 
-// test
 if (process.env.platform === 'app') {
     Vue.use(AppPlugin, store)
 }
