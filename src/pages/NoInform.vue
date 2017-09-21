@@ -3,7 +3,7 @@
     <top-nav :nav="nav">{{title}}</top-nav>
     <list-view url="/example/api/studentCert.json">
       <div :style="{paddingTop: '20px'}">
-        <router-link :to='"/Undone/"+item.id' v-for="(item, index) in listData" :key="index">
+        <router-link :to='"/Undone?id="+item.id' v-for="(item, index) in listData" :key="index">
           <div class="list">
             <div class="number">{{index>=10?index:'0'+(index+1)}}</div>
             <div class="list-news">

@@ -55,7 +55,7 @@
   }
 </script>
 
-<style>
+<style lang="less">
   .mytran {
     transition: all 0.3s ease;
     background-color: greenyellow;
