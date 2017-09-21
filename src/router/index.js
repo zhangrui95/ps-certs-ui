@@ -21,5 +21,7 @@ export default new Router((() => {
             component: require(`../pages/${page}`)
         })
     })
-    return { routes }
+    return {
+        routes,
+    }
 })())
