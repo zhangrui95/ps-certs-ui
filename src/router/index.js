@@ -9,6 +9,7 @@ const pages = [
     'Approve',
     'Apply',
     'NoInform',
+    'Done',
     'Undone',
     'Back'
 ]
