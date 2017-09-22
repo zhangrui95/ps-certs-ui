@@ -11,7 +11,8 @@ const pages = [
     'NoInform',
     'Done',
     'Undone',
-    'Back'
+    'Back',
+    'Detail',
 ]
 
 export default new Router((() => {
