@@ -17,9 +17,9 @@ import { Flexbox, FlexboxItem } from 'vux'
 
 export default {
   components: {
-    Flexbox, FlexboxItem,
+    Flexbox, FlexboxItem
   },
-  props: ['nav'],
+  props: ['nav']
 }
 </script>
 

@@ -7,10 +7,7 @@
         <ul class="weui-uploader__files">
           <img-browse :imgList="imgNews.imgList" :delShow="delShow"></img-browse>
         </ul>
-        <div class="img-uploader-box">
-          <input class="weui-uploader__input" type="button"/>
-          <img class="change-upload" src="../assets/photo.png"/>
-        </div>
+        <up-loading :count="imgNews.count"></up-loading>
       </div>
       <x-input title="姓名" v-model="name"></x-input>
       <x-input title="身份证号" v-model="card"></x-input>
@@ -53,7 +50,8 @@
   import { XInput, PopupPicker, Datetime, Toast, Confirm } from 'vux'
   import DoubleBtn from '../components/DoubleBtn'
   import qs from 'qs'
-  import ImgBrowse from '../components/ImgBrowse.vue'
+  import ImgBrowse from '../components/ImgBrowse'
+  import UpLoading from '../components/UpLoading'
 
   export default {
     components: {
@@ -63,7 +61,8 @@
       Datetime,
       Toast,
       Confirm,
-      ImgBrowse
+      ImgBrowse,
+      UpLoading
     },
     data () {
       return {
@@ -99,14 +98,17 @@
         imgTitle: [
           {
             title: '<label class="weui-label">自拍正面照</label>',
+            count: 1,
             imgList: [{
               src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'
             }]},
           {title: '<label class="weui-label">在读证明</label>',
+            count: 1,
             imgList: [{
               src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'
             }]},
           {title: '<label class="weui-label student-prove">学生证</label><span class="field-comment">(非学生卡)</span>',
+            count: 9,
             imgList: [
               {src: 'https://ooo.0o0.ooo/2017/06/15/59425a592b949.jpeg'},
               {src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'},
