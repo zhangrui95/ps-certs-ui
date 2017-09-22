@@ -83,7 +83,10 @@
       }
     },
     created () {
-      this.$store.commit('updateFiltrate', { state: 1 })
+      this.$store.commit('updateFiltrate', {
+        type: this.$route.query.type,
+        state: 0,
+      })
       post('/example/api/studentCert.json').then(data => {
         this.count = data.count
       })
