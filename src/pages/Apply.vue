@@ -7,7 +7,7 @@
         <ul class="weui-uploader__files">
           <img-browse :imgList="imgNews.imgList" :delShow="delShow"></img-browse>
         </ul>
-        <up-loading :count="imgNews.count"></up-loading>
+        <up-loading :count="imgNews.count" @addImages="listenToImgs"></up-loading>
       </div>
       <x-input title="姓名" v-model="name"></x-input>
       <x-input title="身份证号" v-model="card"></x-input>
@@ -117,6 +117,9 @@
       }
     },
     methods: {
+      listenToImgs (msg) {
+        console.log(msg)
+      },
       change (value) {
         console.log('change', value)
       },
