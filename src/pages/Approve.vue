@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-page">
+  <div class="flex-page approve">
     <top-nav :nav="nav">{{title}}</top-nav>
     <list-view url="/example/api/studentCert.json">
       <div class="list-wrap">
@@ -61,23 +61,25 @@ export default {
   }
 }
 </script>
-<style scoped lang="less">
-  .top-nav{
-    .vux-flexbox-item:first-child{
-      .num{
-        color: #6c6bbd;
+<style lang="less">
+  .approve{
+    .list-wrap{
+      padding-top: 20px;
+    }
+    .top-nav{
+      .vux-flexbox-item:first-child{
+        .num{
+          color: #6c6bbd;
+        }
       }
     }
-  }
-  .list-wrap{
-    padding-top: 20px;
-  }
-  .item-left{
-    display: inline-block;
-    line-height: 60px;
-    vertical-align: top;
-  }
-  .item-right{
-    display: inline-block;
+    .item-left{
+      display: inline-block;
+      line-height: 60px;
+      vertical-align: top;
+    }
+    .item-right{
+      display: inline-block;
+    }
   }
 </style>
