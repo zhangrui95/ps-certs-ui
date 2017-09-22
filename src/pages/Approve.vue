@@ -61,7 +61,7 @@ export default {
   }
 }
 </script>
-<style scope lang="less">
+<style scoped lang="less">
   .top-nav{
     .vux-flexbox-item:first-child{
       .num{

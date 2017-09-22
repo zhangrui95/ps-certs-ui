@@ -1,14 +1,14 @@
 <template>
   <div class="flex-page">
     <div class="header-box">未通知({{count}})</div>
-    <group>
+    <group class="no-margin">
       <datetime
-        v-model="dateTime"  title="领取时间"
+        v-model="dateTime"  title="领取时间" placeholder="请选择"
         year-row="{value}年" month-row="{value}月" day-row="{value}日"
         :start-date="new Date() | dateFormat"/>
-      <x-input title="领取地址" :show-clear="false" v-model="address"></x-input>
+      <x-input title="领取地址" :show-clear="false" v-model="address" text-align="right"></x-input>
     </group>
-    <list-view url="/example/api/studentCert.json">
+    <list-view url="/example/api/studentCert.json" ref="listView">
       <div class="list-wrap">
         <div class="list-group" v-for="(group, index) in listData" :key="index">
           <div class="group-title">
@@ -25,7 +25,7 @@
     </list-view>
     <div class="btn-box">
       <a class="btn-min check-all">
-        <check-icon :checked='checkAll' @click="checkAllClick"/>全部选择({{choiseNum}})</a>
+        <check-icon :checked='checkAll' @click="checkAllClick"/>全部选择({{checkCount}})</a>
       <a class="btn-min" @click="submit">通知</a>
     </div>
   </div>
@@ -46,10 +46,9 @@
     data () {
       return {
         count: 0,
-        dateTime: dateFormat(new Date(), 'YYYY-MM-DD'),
+        dateTime: '',
         address: '',
         listData: [],
-        choiseNum: 0,
         checkAll: true,
       }
     },
@@ -70,6 +69,13 @@
         })
         return result
       },
+      checkCount () {
+        let checkCount = 0
+        this.listData.forEach(group => {
+          checkCount += group.items.filter(item => item.checked).length
+        })
+        return checkCount
+      }
     },
     watch: {
       storeListData: function (newVal) {
@@ -83,16 +89,6 @@
       })
     },
     methods: {
-      submit () {
-        let ids = ''
-        this.listData.forEach(group => {
-          group.items.forEach(item => {
-            if (!item.checked) ids += item.id + ','
-          })
-        })
-        ids = ids.substring(0,ids.length-1)
-        console.log(ids)
-      },
       checkAllClick () {
         this.checkAll = !this.checkAll;
         this.listData = this.listData.map(group => {
@@ -131,12 +127,56 @@
           if (!group.checked) this.checkAll = false
           return group
         })
-      }
+      },
+      submit () { 
+        if (!this.dateTime || !this.address) {
+          this.$vux.toast.text('请填写领取地址与领取时间')
+          return
+        }
+        this.$vux.confirm.show({
+          title: '是否确认发送通知',
+          onConfirm () {
+            let id = '', all = 0
+            if (this.checkAll) all = 1
+            else {
+              this.listData.forEach(group => {
+                group.items.forEach(item => {
+                  if (!item.checked) id += item.id + ','
+                })
+              })
+              id = id.substring(0,id.length-1)
+            }
+            post('/example/api/studentCert/notifyUsers.json',{
+              type: this.$route.query.type,
+              id, all,
+              time: this.dateTime,
+              address: this.address,
+            }).then(data => {
+              if (data.state === 0) {
+                console.log(1)
+                this.$vux.toast.show({text:'发送成功'})
+                this.dateTime = '',
+                this.address = '',
+                this.$refs.listView.reload()
+              }else{
+                this.$vux.toast.text('发送失败')
+              }
+            }).catch(err => {
+              this.$vux.toast.text('发送失败')
+            })
+          }
+        })
+      },
     }
   }
 </script>
 
 <style lang="less">
+.no-margin{
+  .vux-no-group-title{
+    margin-top: 0;
+  }
+}
 .check-all{
   background: none;
   color: #000;

@@ -42,7 +42,6 @@
     },
     methods: {
       initScroll() {
-        
         this.scroll = new BScroll(this.$refs.wrapper, { click: true, pullUpLoad: true })
         if (this.hasListData) {
           this.$nextTick(() => {
@@ -73,6 +72,10 @@
           }
         })
       },
+      reload() {
+        this.$store.commit('clearListData')
+        this.updateListData()
+      }
     },
   }
 </script>

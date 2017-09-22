@@ -11,7 +11,7 @@ export function post(url, params = {}) {
                 if (response.status === 200) {
                     resolve(response.data)
                 } else {
-                    reject()
+                    reject(response.status)
                 }
             }).catch(err => reject(err));
     })
