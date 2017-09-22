@@ -6,7 +6,7 @@
         <previewer :list="imgList" ref="previewer"></previewer>
       </div>
       <transition name="move" v-if="delShow">
-        <div v-show="del" class="del-btn" transition="move">删除</div>
+        <div v-show="del" class="del-btn" transition="move"><i class="weui-icon-delete weui-icon_gallery-delete"></i></div>
       </transition>
     </div>
   </div>
@@ -75,13 +75,13 @@
     color: #fff;
     position: absolute;
     bottom: 0;
-    height: 50px;
+    height: 60px;
     width: 100%;
     z-index: 99999;
     background: #0d0d0d;
     font-size: 18px;
     text-align: center;
-    line-height: 50px;
+    line-height: 60px;
     letter-spacing: 2px;
   }
   .move-enter-active, .move-leave-active{

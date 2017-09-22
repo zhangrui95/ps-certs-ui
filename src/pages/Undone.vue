@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import { Previewer, TransferDom } from 'vux'
+  import { Previewer, TransferDom, dateFormat } from 'vux'
   import DetailCell from '../components/DetailCell'
   import DoubleBtn from '../components/DoubleBtn'
   import ImgBrowse from '../components/ImgBrowse.vue'
@@ -42,7 +42,8 @@
       Previewer,
       DetailCell,
       DoubleBtn,
-      ImgBrowse
+      ImgBrowse,
+      dateFormat
     },
     methods: {
       show (index) {
@@ -70,16 +71,14 @@
         imgTitle: [
           {
             title: '自拍正面照',
-            imgList: [{
-              src: ''
-            }]
+            imgList: []
           },
           {title: '在读证明',
-            imgList: [{
-              src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'
-            }]},
+            imgList: []
+          },
           {title: '学生证',
-            imgList: []}]
+            imgList: []
+          }]
       }
     },
     created: function () {
@@ -111,7 +110,7 @@
         this.mobile = item.info.mobile
         this.height = item.info.height
         this.weight = item.info.weight
-//        this.time = formatDate(new Date(item.info.enterSchoolTime), 'yyyy-MM-dd')
+        this.time = dateFormat(new Date(item.info.enterSchoolTime), 'YYYY-MM-DD')
         this.faculty = item.info.faculty
         this.specialty = item.info.specialty
         let mar = ''
