@@ -8,20 +8,6 @@ import App from './App'
 
 require('es6-promise').polyfill()
 
-import objectAssign from 'object-assign'
-
-const vuxLocales = require('json-loader!yaml-loader!../src/locales/all.yml')
-const componentsLocales = require('json-loader!yaml-loader!../src/locales/components.yml')
-
-const finalLocales = {
-    'en': objectAssign(vuxLocales['en'], componentsLocales['en']),
-    'zh-CN': objectAssign(vuxLocales['zh-CN'], componentsLocales['zh-CN'])
-}
-
-for (let i in finalLocales) {
-    Vue.i18n.add(i, finalLocales[i])
-}
-Vue.i18n.set('zh-CN')
 
 // plugins
 import { dateFormat, BusPlugin, DatetimePlugin, LocalePlugin, DevicePlugin, ToastPlugin, AlertPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin, AjaxPlugin, AppPlugin } from 'vux'
@@ -39,9 +25,9 @@ Vue.use(BusPlugin)
 
 import MockWechatPlugin from '../mock/wx-mock'
 if (process.env.NODE_ENV === 'development') {
-  Vue.use(MockWechatPlugin)
+    Vue.use(MockWechatPlugin)
 } else {
-  Vue.use(WechatPlugin)
+    Vue.use(WechatPlugin)
 }
 
 if (process.env.platform === 'app') {
@@ -52,20 +38,20 @@ const wx = Vue.wechat
 const http = Vue.http
 
 wx.ready(() => {
-  console.log('wechat ready')
-  wx.onMenuShareAppMessage({
-    title: 'VUX', // 分享标题
-    desc: '基于 WeUI 和 Vue 的移动端 UI 组件库',
-    link: 'https://vux.li?x-page=wechat_share_message',
-    imgUrl: 'https://static.vux.li/logo_520.png'
-  })
+    console.log('wechat ready')
+    wx.onMenuShareAppMessage({
+        title: 'VUX', // 分享标题
+        desc: '基于 WeUI 和 Vue 的移动端 UI 组件库',
+        link: 'https://vux.li?x-page=wechat_share_message',
+        imgUrl: 'https://static.vux.li/logo_520.png'
+    })
 
-  wx.onMenuShareTimeline({
-    title: 'VUX', // 分享标题
-    desc: '基于 WeUI 和 Vue 的移动端 UI 组件库',
-    link: 'https://vux.li?x-page=wechat_share_timeline',
-    imgUrl: 'https://static.vux.li/logo_520.png'
-  })
+    wx.onMenuShareTimeline({
+        title: 'VUX', // 分享标题
+        desc: '基于 WeUI 和 Vue 的移动端 UI 组件库',
+        link: 'https://vux.li?x-page=wechat_share_timeline',
+        imgUrl: 'https://static.vux.li/logo_520.png'
+    })
 })
 
 if (process.env.NODE_ENV === 'production') {
@@ -76,12 +62,6 @@ if (process.env.NODE_ENV === 'production') {
     })
 }
 
-const nowLocale = Vue.locale.get()
-if (/zh/.test(nowLocale)) {
-    Vue.i18n.set('zh-CN')
-} else {
-    Vue.i18n.set('en')
-}
 
 FastClick.attach(document.body)
 
