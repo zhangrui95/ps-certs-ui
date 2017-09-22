@@ -23,9 +23,9 @@ export default {
       route: state => state.route,
       path: state => state.route.path,
 //      deviceready: state => state.app.deviceready,
-      demoTop: state => state.vux.demoScrollTop,
-      isLoading: state => state.vux.isLoading,
-      direction: state => state.vux.direction
+      demoTop: state => state.scrollTop,
+      isLoading: state => state.isLoading,
+      direction: state => state.direction
     })
   }
 }
@@ -51,6 +51,9 @@ ul{
     display: flex;
     flex-direction: column;
     height: 100%;
+    .flex-section{
+      flex: 1;
+    }
   }
 }
 .page{

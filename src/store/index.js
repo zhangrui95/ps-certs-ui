@@ -8,12 +8,6 @@ import { post } from '@/utils/ajax'
 Vue.use(Vuex)
 
 let store = new Vuex.Store({
-    modules: {
-        i18n: vuexI18n.store
-    }
-})
-
-store.registerModule('vux', {
     state: {
         isLoading: false,
         direction: 'forward',
@@ -61,6 +55,9 @@ store.registerModule('vux', {
                 payload.cb && payload.cb(data)
             })
         }
+    },
+    modules: {
+        i18n: vuexI18n.store
     }
 })
 

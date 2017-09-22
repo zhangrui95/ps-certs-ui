@@ -20,7 +20,6 @@
   import BScroll from 'better-scroll'
   import { InlineLoading } from 'vux'
   import { mapState } from 'vuex'
-  import { getRect } from '@/utils/dom'
 
   export default {
     components: {
@@ -34,18 +33,20 @@
       }
     },
     computed: mapState({
-      isNoMore: state => state.vux.listDataIsNoMore,
-      noListData: state => state.vux.listData.length > 0,
+      isNoMore: state => state.listDataIsNoMore,
+      hasListData: state => state.listData.length > 0,
       scrollTop: 'scrollTop'
     }),
     mounted() {
-      this.initScroll()
+      setTimeout(() => {
+        this.initScroll()
+      },200)   
     },
     methods: {
       initScroll() {
         
         this.scroll = new BScroll(this.$refs.wrapper, { click: true, pullUpLoad: true })
-        if (this.noListData) {
+        if (this.hasListData) {
           this.$nextTick(() => {
             this.scroll.scrollTo(0,this.scrollTop,200)
           })

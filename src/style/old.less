@@ -38,5 +38,75 @@
     font-weight: 900;
     font-size: 18px;
 }
+.time-box{
+    float: left;
+    width: 90%;
+    color: #444;
+}
+.time-top{
+    margin-top: 20px;
+    margin-left: 15px;
+    padding-left: 30px;
+    position: relative;
+}
+.time-title{
+    float: left;
+    color: #444;
+    font-weight: 900;
+}
+.number{
+    float: left;
+    width: 20%;
+    text-align: center;
+    line-height: 60px;
+    color: #999;
+    font-style: italic;
+    font-family: "黑体";
+    font-size: 18px;
+}
+.number-line-height{
+    line-height: 30px;
+}
+.checkbox-left-num{
+    margin-left: 45px;
+}
+.center-box{
+    width: 90%;
+    margin: 0 5%;
+    line-height: 30px;
+    font-size: 16px;
+    color: #444;
+    padding-top: 20px;
+    overflow-y: scroll;
+    height: 80%;
+    .weui-cells{
+        margin-top: 0;
+        &:before, &:after{
+            display: none;
+        }
+    }
+}
+.checkbox{
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    background: #605fbd ;
+    border: 1px solid #605fbd;
+    border-radius: 2px;
+    display: inline-block;
+    top: 14px;
+    left: 18px;
+    &.cancle{
+        background: none;
+    }
+    img{
+        padding: 1px;
+    }
+}
 
-
+.time-top{
+    .checkbox{
+        top: 0;
+        left: 0;
+    }
+}

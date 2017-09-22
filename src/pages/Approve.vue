@@ -35,11 +35,15 @@ export default {
   },
   computed: {
     listData () {
-      return this.$store.state.vux.listData
+      return this.$store.state.listData
     }
   },
   created () {
     this.title = this.$route.query.type == 1? '身份证申请': '居住证明申请'
+    this.$store.commit('updateFiltrate', {
+      type: this.$route.query.type,
+      state: 0,
+    })
     post('/example/api/studentCert/groupByState.json').then(data => {
       this.nav = [{
         num: data.init,

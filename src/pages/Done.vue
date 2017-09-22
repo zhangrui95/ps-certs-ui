@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     listData () {
-      return this.$store.state.vux.listData
+      return this.$store.state.listData
     }
   },
   created () {
