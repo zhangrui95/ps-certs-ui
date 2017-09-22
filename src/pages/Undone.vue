@@ -24,14 +24,23 @@
       <div class="height-fixed-min"></div>
     </div>
     <double-btn :leftBtn="leftBtn" :rightBtn="rightBtn" :click="clickUp" :goOut="goOut"></double-btn>
+    <confirm v-model="show"
+             title=" "
+             @on-cancel="onCancel"
+             @on-confirm="onConfirm"
+             @on-show="onShow"
+             @on-hide="onHide">
+      <p style="text-align:center;">{{confirmText}}</p>
+    </confirm>
   </div>
 </template>
 
 <script>
-  import { Previewer, TransferDom, dateFormat } from 'vux'
+  import { Previewer, TransferDom, dateFormat, Confirm } from 'vux'
   import DetailCell from '../components/DetailCell'
   import DoubleBtn from '../components/DoubleBtn'
   import ImgBrowse from '../components/ImgBrowse.vue'
+  import qs from 'qs'
 //  import { formatDate } from '../components/DateChange.js'
 
   export default {
@@ -43,7 +52,8 @@
       DetailCell,
       DoubleBtn,
       ImgBrowse,
-      dateFormat
+      dateFormat,
+      Confirm
     },
     methods: {
       show (index) {
@@ -67,6 +77,8 @@
         military: '',
         leftBtn: '退回',
         rightBtn: '办理完成',
+        confirmText: '',
+        show: false,
         delShow: false,
         imgTitle: [
           {
@@ -194,6 +206,25 @@
         this.$router.push({path: '/Back', query: {id: id}})
       },
       clickUp () {
+        this.confirmText = '是否确认办理完成？'
+        this.show = true
+      },
+      onCancel () {
+        console.log('on cancel')
+      },
+      onConfirm () {
+        this.$http.post('api/studentCert/done.json', qs.stringify({'userid': '', 'type': '', 'id': ''})
+        ).then(response => {
+          if (response.data.state === 0) {
+          } else {
+          }
+        })
+      },
+      onHide () {
+        console.log('on hide')
+      },
+      onShow () {
+        console.log('on show')
       }
     }
   }

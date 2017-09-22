@@ -1,6 +1,6 @@
 <template>
   <div class="flex-page">
-    <drag-box class="drag-box" :clickPop="popShow">
+    <drag-box class="drag-box" @click.native="popShow">
       <img src="../assets/Iconset.png" class="choice-img">
     </drag-box>
     <list-view url="/example/api/studentCert.json">
