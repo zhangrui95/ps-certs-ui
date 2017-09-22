@@ -9,7 +9,7 @@
           </div>
           <router-link class="list-item" :to='"/Detail?id="+item.id'
             v-for="(item, itemIndex) in group.items" :key="item.id">
-            <span class="item-index">{{itemIndex>=10?itemIndex:'0'+(itemIndex+1)}}.</span>
+            <span class="item-index">{{itemIndex>8?itemIndex+1:'0'+(itemIndex+1)}}.</span>
             <span class="item-title">{{item.name}}</span>
             <badge v-if="item.result == -1" text="已退回"/>
           </router-link>

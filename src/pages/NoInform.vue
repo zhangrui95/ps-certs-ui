@@ -17,7 +17,7 @@
           </div>
           <div class="list-item" v-for="(item, itemIndex) in group.items" :key="item.id">
             <check-icon :checked='item.checked' @click.native="itemClick(item.id)"/>
-            <span class="item-index">{{itemIndex>=10?itemIndex:'0'+(itemIndex+1)}}.</span>
+            <span class="item-index">{{itemIndex>8?itemIndex+1:'0'+(itemIndex+1)}}.</span>
             <span class="item-title">{{item.name}}</span>
           </div>
         </div>

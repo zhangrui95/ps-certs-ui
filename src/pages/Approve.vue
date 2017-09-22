@@ -5,7 +5,7 @@
       <div class="list-wrap">
         <router-link class="list-item" :to='"/Undone?id="+item.id' v-for="(item, index) in listData" :key="index">
           <div class="item-left">
-            <div class="item-index">{{index>=10?index:'0'+(index+1)}}.</div>
+            <div class="item-index">{{index>8?index+1:'0'+(index+1)}}.</div>
           </div>
           <div class="item-right">
             <div class="item-title">{{item.name}}</div>

@@ -85,7 +85,7 @@ export default {
     }
   },
   created () {
-    post('/example/api/studentCert/detail.json').then(data => {
+    post('/example/api/studentCert/detail.json',{id: this.$route.query.id}).then(data => {
         this.name = data.data.name
         this.createTime = data.data.createTime
         this.back = data.data.result === -1
