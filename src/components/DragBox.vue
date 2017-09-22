@@ -1,6 +1,5 @@
 <template>
   <div
-    @click="clickPop"
     ref='DragBox'
     @touchstart="start"
     @mousedown="start"
@@ -25,7 +24,6 @@ export default {
       mouseIsDown: false
     }
   },
-  props: ['clickPop'],
   mounted () {
     this.initY = this.$refs.DragBox.offsetTop
     this.initX = this.$refs.DragBox.offsetLeft

@@ -32,11 +32,17 @@ Vue.use(ToastPlugin)
 Vue.use(AlertPlugin)
 Vue.use(ConfirmPlugin)
 Vue.use(LoadingPlugin)
-Vue.use(WechatPlugin)
 Vue.use(AjaxPlugin)
 Vue.use(LocalePlugin)
 Vue.use(DatetimePlugin)
 Vue.use(BusPlugin)
+
+import MockWechatPlugin from '../mock/wx-mock'
+if (process.env.NODE_ENV === 'development') {
+  Vue.use(MockWechatPlugin)
+} else {
+  Vue.use(WechatPlugin)
+}
 
 if (process.env.platform === 'app') {
     Vue.use(AppPlugin, store)
@@ -45,24 +51,24 @@ if (process.env.platform === 'app') {
 const wx = Vue.wechat
 const http = Vue.http
 
+wx.ready(() => {
+  console.log('wechat ready')
+  wx.onMenuShareAppMessage({
+    title: 'VUX', // 分享标题
+    desc: '基于 WeUI 和 Vue 的移动端 UI 组件库',
+    link: 'https://vux.li?x-page=wechat_share_message',
+    imgUrl: 'https://static.vux.li/logo_520.png'
+  })
+
+  wx.onMenuShareTimeline({
+    title: 'VUX', // 分享标题
+    desc: '基于 WeUI 和 Vue 的移动端 UI 组件库',
+    link: 'https://vux.li?x-page=wechat_share_timeline',
+    imgUrl: 'https://static.vux.li/logo_520.png'
+  })
+})
+
 if (process.env.NODE_ENV === 'production') {
-    wx.ready(() => {
-        console.log('wechat ready')
-        wx.onMenuShareAppMessage({
-            title: 'VUX', // 分享标题
-            desc: '基于 WeUI 和 Vue 的移动端 UI 组件库',
-            link: 'https://vux.li?x-page=wechat_share_message',
-            imgUrl: 'https://static.vux.li/logo_520.png'
-        })
-
-        wx.onMenuShareTimeline({
-            title: 'VUX', // 分享标题
-            desc: '基于 WeUI 和 Vue 的移动端 UI 组件库',
-            link: 'https://vux.li?x-page=wechat_share_timeline',
-            imgUrl: 'https://static.vux.li/logo_520.png'
-        })
-    })
-
     const permissions = JSON.stringify(['onMenuShareTimeline', 'onMenuShareAppMessage'])
     const url = document.location.href
     http.post('https://vux.li/jssdk?url=' + encodeURIComponent(url.split('#')[0]) + '&jsApiList=' + permissions).then(res => {

@@ -1,5 +1,6 @@
 <template>
   <div class="flex-page">
+<<<<<<< HEAD
     <div class="header-box">已完成({{count}})</div>
     <list-view url="/example/api/studentCert.json" ref="listView">
       <div class="list-wrap">
@@ -15,6 +16,12 @@
           </router-link>
         </div>
       </div>
+=======
+    <drag-box class="drag-box" @click.native="popShow">
+      <img src="../assets/Iconset.png" class="choice-img">
+    </drag-box>
+    <list-view url="/example/api/studentCert.json">
+>>>>>>> e20e71619de1e12fea859b3a9ef614db5b919733
     </list-view>
     <filtrate-pop ref="filtrate" @submit="submit"/>
   </div>
