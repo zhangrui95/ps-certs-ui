@@ -2,15 +2,15 @@
   <div class="flex-page">
     <top-nav :nav="nav">{{title}}</top-nav>
     <list-view url="/example/api/studentCert.json">
-      <div :style="{paddingTop: '20px'}">
-        <router-link :to='"/Undone?id="+item.id' v-for="(item, index) in listData" :key="index">
-          <div class="list">
-            <div class="number">{{index>=10?index:'0'+(index+1)}}</div>
-            <div class="list-news">
-              <div class="name-color">{{item.name}}</div>
-              <div class="time-color">{{item.createTime | dateFormat}}</div>
-            </div>
+      <div class="list-wrap">
+        <router-link class="list-item" :to='"/Undone?id="+item.id' v-for="(item, index) in listData" :key="index">
+          <div class="item-left">
+            <div class="item-index">{{index>=10?index:'0'+(index+1)}}.</div>
           </div>
+          <div class="item-right">
+            <div class="item-title">{{item.name}}</div>
+            <div class="item-desc">{{item.createTime | dateFormat}}</div>
+          </div>    
         </router-link>
       </div>
     </list-view>
@@ -61,12 +61,23 @@ export default {
   }
 }
 </script>
-<style lang="less">
+<style scope lang="less">
   .top-nav{
     .vux-flexbox-item:first-child{
       .num{
         color: #6c6bbd;
       }
     }
+  }
+  .list-wrap{
+    padding-top: 20px;
+  }
+  .item-left{
+    display: inline-block;
+    line-height: 60px;
+    vertical-align: top;
+  }
+  .item-right{
+    display: inline-block;
   }
 </style>

@@ -1,9 +1,7 @@
 <template>
   <div ref="wrapper" class="list-wrapper">
     <div class="scroll-content">
-      <div ref="list" class="list-content">
-        <slot></slot>
-      </div>  
+      <slot ref="list"></slot>
       <div class="pullup-wrapper">
         <div class="before-trigger" v-if="!isPullUpLoad">
           <span>{{isNoMore? '暂时没有更多': '加载更多'}}</span>
@@ -85,11 +83,6 @@
     overflow: hidden;
     background: #fff;
     box-sizing: border-box;
-    .list-content{
-      position: relative;
-      z-index: 10;
-      background: #fff;
-    }
   }
   .pullup-wrapper{
     width: 100%;

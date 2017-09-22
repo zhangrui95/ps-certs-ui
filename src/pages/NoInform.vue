@@ -9,33 +9,23 @@
       <x-input title="领取地址" :show-clear="false" v-model="address"></x-input>
     </group>
     <list-view url="/example/api/studentCert.json">
-      <div class="center-box">
-        <div v-for="(group, index) in listData" :key="index" class="weui-cells weui-cells_checkbox">
-          <div class="time-box time-top">
-            <label class="checkbox" :class="{'cancle': group.cancle}">
-              <img src="../assets/checked.png" alt="" @click="groupClick(index)">
-            </label>
-            <span class="time-title">{{group.dateStr}}</span>
+      <div class="list-wrap">
+        <div class="list-group" v-for="(group, index) in listData" :key="index">
+          <div class="group-title">
+            <check-icon :checked='group.checked' @click.native="groupClick(index)"/>
+            {{group.dateStr}}
           </div>
-          <div class="list" v-for="item in group.items" :key="item.id">
-            <div class="time-box">
-              <label class="checkbox" :class="{cancle: item.cancle}">
-                <img src="../assets/checked.png" alt="" @click="itemClick(item.id)">
-              </label>
-              <div class="number checkbox-left-num number-line-height">{{index>=10?index:'0'+(index+1)}}.</div>
-              <div class="list-news">
-                <div class="name-color name-color-line">{{item.name}}</div>
-              </div>
-            </div>
+          <div class="list-item" v-for="(item, itemIndex) in group.items" :key="item.id">
+            <check-icon :checked='item.checked' @click.native="itemClick(item.id)"/>
+            <span class="item-index">{{itemIndex>=10?itemIndex:'0'+(itemIndex+1)}}.</span>
+            <span class="item-title">{{item.name}}</span>
           </div>
         </div>
       </div>
     </list-view>
     <div class="btn-box">
       <a class="btn-min check-all">
-        <label class="checkbox" :class="{'cancle': !checkAll}" >
-          <img src="../assets/checked.png" alt="" @click="checkAllClick">
-        </label>全部选择({{choiseNum}})</a>
+        <check-icon :checked='checkAll' @click="checkAllClick"/>全部选择({{choiseNum}})</a>
       <a class="btn-min" @click="submit">通知</a>
     </div>
   </div>
@@ -45,12 +35,13 @@
   import { Group, XInput, Datetime, dateFormat } from 'vux'
   import ListView from '@/components/ListView'
   import TopNav from '@/components/TopNav'
+  import CheckIcon from '@/components/CheckIcon'
   import { post } from '@/utils/ajax'
 
   export default {
     components: {
       Group, XInput, Datetime,
-      TopNav, ListView
+      TopNav, ListView, CheckIcon
     },
     data () {
       return {
@@ -69,9 +60,10 @@
         this.$store.state.listData.forEach(item => {
           let dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
           let iof = dateStrArr.indexOf(dateStr)
+          item.checked = true
           if (iof == -1) {
             dateStrArr.push(dateStr)
-            result.push({ dateStr: dateStr, items: [item] })
+            result.push({ dateStr: dateStr, checked: true, items: [item] })
           } else {
             result[iof].items.push(item)
           }
@@ -95,7 +87,7 @@
         let ids = ''
         this.listData.forEach(group => {
           group.items.forEach(item => {
-            if (!item.cancle) ids += item.id + ','
+            if (!item.checked) ids += item.id + ','
           })
         })
         ids = ids.substring(0,ids.length-1)
@@ -105,10 +97,10 @@
         this.checkAll = !this.checkAll;
         this.listData = this.listData.map(group => {
           group.items.map(item => {
-            item.cancle = !this.checkAll         
+            item.checked = !this.checkAll         
             return item
           })
-          group.cancle = !this.checkAll
+          group.checked = !this.checkAll
           return group
         })
       },
@@ -116,27 +108,27 @@
         this.checkAll = true
         this.listData = this.listData.map((group, index) => {
           if ( index == i ) {
-            group.cancle = !group.cancle
-            group.items.forEach(item => item.cancle = group.cancle)
+            group.checked = !group.checked
+            group.items.forEach(item => item.checked = group.checked)
           }
-          if (group.cancle) this.checkAll = false
+          if (!group.checked) this.checkAll = false
           return group
         })
       },
       itemClick (id) {
         this.checkAll = true
         this.listData = this.listData.map(group => {
-          group.cancle = false
+          group.checked = true
           group.items.map(item => {
             if (item.id == id) {
-              item.cancle = !item.cancle
+              item.checked = !item.checked
               } 
-            if (item.cancle) {
-              group.cancle = true
+            if (!item.checked) {
+              group.checked = false
             }              
             return item
           })
-          if (group.cancle) this.checkAll = false
+          if (!group.checked) this.checkAll = false
           return group
         })
       }
@@ -151,13 +143,6 @@
   text-align: left;
   font-size: 16px;
   position: relative;
-  padding-left: 24px;
   box-sizing: border-box;
-  .checkbox{
-    top: 13px;
-    left: 0;
-    margin: 0;
-    line-height: 12px;
-  }
 }
 </style>
