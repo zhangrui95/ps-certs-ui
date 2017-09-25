@@ -6,7 +6,7 @@
         <previewer :list="imgList" ref="previewer"></previewer>
       </div>
       <transition name="move" v-if="delShow">
-        <div v-show="del" class="del-btn" transition="move"><i class="weui-icon-delete weui-icon_gallery-delete"></i></div>
+        <div v-show="del" class="del-btn" transition="move" @click="deleteImage(index)"><i class="weui-icon-delete weui-icon_gallery-delete"></i></div>
       </transition>
     </div>
   </div>
@@ -26,15 +26,20 @@
       show (index) {
         this.$refs.previewer.show(index)
         this.del = true
+        this.index = index
       },
       hideDel () {
         this.del = false
+      },
+      deleteImage: function (index) {
+        this.imgList.splice(index, 1)
       }
     },
     props: ['imgList', 'delShow'],
     data () {
       return {
-        del: false
+        del: false,
+        index: ''
       }
     }
   }

@@ -17,7 +17,6 @@
       chooseImage: function () {
         this.$emit('num', this.index)
         let _this = this
-        console.log('start!')
         this.$wechat.chooseImage({
           count: _this.count, // 默认9
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
