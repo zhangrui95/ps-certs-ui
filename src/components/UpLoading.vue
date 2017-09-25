@@ -6,60 +6,57 @@
 </template>
 
 <script>
-  import wx from 'weixin-js-sdk'
   export default {
     data () {
       return {
-        newImagesCache: [],
         ViewImages: []
       }
     },
-    props: ['count'],
+    props: ['count', 'index'],
     methods: {
       chooseImage: function () {
+        this.$emit('num', this.index)
         let _this = this
-        wx.chooseImage({
+        console.log('start!')
+        this.$wechat.chooseImage({
           count: _this.count, // 默认9
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
-            console.log('wx is success!!!')
-            let _localIds = res.localIds
-            _this.$options.methods.upload(_localIds)
+            let localId = res.localIds[0]
+            let localData = res.localData
+            let url = localData || localId
+            console.log('url' + url)
+            _this.upload(res, _this.count)
           },
           fail: function (err) {
-            console.log('error!!!')
+            console.log('error')
           }
         })
       },
-      upload: function (_localIds) {
-        let localId = _localIds.pop()
-        wx.uploadImage({
-          localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+      upload: function (res, count) {
+        let _localIds = res.localIds
+        let _this = this
+        this.$wechat.uploadImage({
+          localId: _localIds, // 需要上传的图片的本地ID，由chooseImage接口获得
           isShowProgressTips: 1, // 默认为1，显示进度提示
           success: function (res) {
-            let serverId = res.serverId // 返回图片的服务器端ID
-            this.$options.methods.serverCb(_localIds, serverId)
+            let Imgsrc = []
+            for (var i = 0, len = _localIds.length; i < len; i++) {
+              let imgs = {}
+              imgs.src = "'" + _localIds[i] + "'"
+              if (count === 9) {
+                _this.ViewImages.push(imgs)
+              } else {
+                Imgsrc.push(imgs)
+                _this.ViewImages = Imgsrc
+              }
+            }
+            _this.$emit('addImages', _this.ViewImages)
           },
           fail: function (err) {
           }
         })
-      },
-      serverCb: function (_localIds, serverId) {
-        for (var i = 0, len = _localIds.length; i < len; i++) {
-          let imgs = {}
-          imgs.src = _localIds[i]
-          if (this.count === 1) {
-            this.ViewImages = imgs
-          } else {
-            this.ViewImages.push(imgs)
-          }
-          this.ViewImages.push(imgs)
-          this.newImagesCache.push(_localIds[i])
-        }
-        console.log(this.newImagesCache)
-        this.$emit('addImages', this.newImagesCache)
-        console.log(this.ViewImages)
       }
     }
   }

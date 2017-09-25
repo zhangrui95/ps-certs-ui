@@ -2,12 +2,12 @@
   <div class="page page-list student-page">
     <div class="header-box">{{title}}</div>
     <div class="center-box padding-min">
-      <div class="none-flex cell-border cell-margin" v-for="imgNews in imgTitle">
+      <div class="none-flex cell-border cell-margin" v-for="(imgNews, index) in imgTitle">
         <div class="weui-cell__hd" v-html="imgNews.title"></div>
         <ul class="weui-uploader__files">
           <img-browse :imgList="imgNews.imgList" :delShow="delShow"></img-browse>
         </ul>
-        <up-loading :count="imgNews.count" @addImages="listenToImgs"></up-loading>
+        <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex"></up-loading>
       </div>
       <x-input title="姓名" v-model="name"></x-input>
       <x-input title="身份证号" v-model="card"></x-input>
@@ -50,6 +50,7 @@
   import { XInput, PopupPicker, Datetime, Toast, Confirm } from 'vux'
   import DoubleBtn from '../components/DoubleBtn'
   import qs from 'qs'
+  import wx from 'weixin-js-sdk'
   import ImgBrowse from '../components/ImgBrowse'
   import UpLoading from '../components/UpLoading'
 
@@ -66,6 +67,7 @@
     },
     data () {
       return {
+        num: '',
         delShow: true,
         show: false,
         shows: false,
@@ -99,26 +101,24 @@
           {
             title: '<label class="weui-label">自拍正面照</label>',
             count: 1,
-            imgList: [{
-              src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'
-            }]},
+            imgList: []
+          },
           {title: '<label class="weui-label">在读证明</label>',
             count: 1,
-            imgList: [{
-              src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'
-            }]},
+            imgList: []
+          },
           {title: '<label class="weui-label student-prove">学生证</label><span class="field-comment">(非学生卡)</span>',
             count: 9,
-            imgList: [
-              {src: 'https://ooo.0o0.ooo/2017/06/15/59425a592b949.jpeg'},
-              {src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'},
-              {src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'}
-            ]}]
+            imgList: []
+          }]
       }
     },
     methods: {
-      listenToImgs (msg) {
-        console.log(msg)
+      ImgIndex: function (num) {
+        this.num = num
+      },
+      listenToImgs: function (data) {
+        this.imgTitle[this.num].imgList = data
       },
       change (value) {
         console.log('change', value)

@@ -11,7 +11,7 @@
       </div>
     </div>
     <btn :btn="btn" :clickDics="clickDics"></btn>
-    <toast v-model="show1" @on-change="changes">发送成功</toast>
+    <toast v-model="show1">发送成功</toast>
     <toast v-model="show2" type="text">请选择存在问题项或填写备注</toast>
   </div>
 </template>
@@ -31,23 +31,20 @@
       change (val) {
         this.val = val
       },
-      changes () {
-
-      },
       clickDics: function () {
         if (this.textArea.length !== 0 || this.val.length !== 0) {
           let id = this.$route.query.id
-          this.$http.post('/example/api/studentCert/fail.json', qs.stringify({userid:'',type:2,id:id,items:this.val,remark:this.textArea})
+          this.$http.post('/example/api/studentCert/fail.json', qs.stringify({type: this.$route.query.type, id: id, items: this.val, remark: this.textArea})
           ).then(response => {
-            if(response.data.state === 0){
+            if (response.data.state === 0) {
               this.show1 = true
 //              this.$router.push({path:'/Approve'})
             }
           })
-        }else{
+        } else {
           this.show2 = true
         }
-      },
+      }
     },
     data () {
       return {
