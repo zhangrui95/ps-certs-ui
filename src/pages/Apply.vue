@@ -12,15 +12,15 @@
       <x-input title="姓名" v-model="name"></x-input>
       <x-input title="身份证号" v-model="card"></x-input>
       <x-input title="手机号码" v-model="mobile"></x-input>
-      <popup-picker title="婚姻状况" :data="marrayList" v-model="marray" value-text-align="right" placeholder="请选择"></popup-picker>
-      <popup-picker title="血型" :data="bloodList" v-model="blood" value-text-align="right" placeholder="请选择"></popup-picker>
+      <popup-picker title="婚姻状况" ref="picker3" :data="marrayList" v-model="marray" value-text-align="right" placeholder="请选择" @on-change="onChange" show-name></popup-picker>
+      <popup-picker title="血型" :data="bloodList" v-model="blood" value-text-align="right" placeholder="请选择" show-name></popup-picker>
       <x-input title="身高(cm)" v-model="height"></x-input>
       <x-input title="体重(kg)" v-model="weight"></x-input>
-      <popup-picker title="文化程度" :data="cultureList" v-model="culture" value-text-align="right" placeholder="请选择"></popup-picker>
-      <popup-picker title="宗教信仰" :data="religionList" v-model="religion" value-text-align="right" placeholder="请选择"></popup-picker>
-      <popup-picker title="兵役状况" :data="militaryList" v-model="military" value-text-align="right" placeholder="请选择"></popup-picker>
+      <popup-picker title="文化程度" :data="cultureList" v-model="culture" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+      <popup-picker title="宗教信仰" :data="religionList" v-model="religion" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+      <popup-picker title="兵役状况" :data="militaryList" v-model="military" value-text-align="right" placeholder="请选择" show-name></popup-picker>
       <div class="vux-cell-box">
-        <datetime v-model="time" @on-change="change" title="入学时间" :show.sync="visibility" placeholder="请选择"></datetime>
+        <datetime v-model="time" @on-change="change" title="入学时间" :show.sync="visibility" placeholder="请选择" show-name></datetime>
       </div>
       <x-input title="所在院系" v-model="department"></x-input>
       <x-input title="所在专业" v-model="major"></x-input>
@@ -28,20 +28,10 @@
     </div>
     <toast v-model="showPositionValue" type="text" :time="2000" is-show-mask :text="toastText" position="default"></toast>
     <double-btn :leftBtn="leftBtn" :rightBtn="rightBtn" :click="clickUp" :goOut="goOut"></double-btn>
-    <confirm v-model="show"
-             title=" "
-             @on-cancel="onCancel"
-             @on-confirm="onConfirm"
-             @on-show="onShow"
-             @on-hide="onHide">
+    <confirm v-model="show" title=" " @on-cancel="onCancel" @on-confirm="onConfirm" @on-show="onShow" @on-hide="onHide">
       <p style="text-align:center;">{{confirmText}}</p>
     </confirm>
-    <confirm v-model="shows"
-                       title=" "
-                       @on-cancel="onCancels"
-                       @on-confirm="onConfirms"
-                       @on-show="onShow"
-                       @on-hide="onHide">
+    <confirm v-model="shows" title=" " @on-cancel="onCancels" @on-confirm="onConfirms" @on-show="onShow" @on-hide="onHide">
       <p style="text-align:center;">{{confirmTexts}}</p>
     </confirm>
   </div>
@@ -65,6 +55,9 @@
       ImgBrowse,
       UpLoading
     },
+    created () {
+      this.title = this.$route.query.type == 1 ? '身份证办理申请登记' : '居住证明办理申请登记'
+    },
     data () {
       return {
         num: '',
@@ -73,7 +66,7 @@
         shows: false,
         confirmText: '',
         confirmTexts: '',
-        title: '居住证明办理申请登记',
+        title: '',
         leftBtn: '取消',
         rightBtn: '提交',
         name: '',
@@ -82,15 +75,15 @@
         height: '',
         weight: '',
         marray: [],
-        marrayList: [['未婚', '已婚', '离异', '其他']],
+        marrayList: [[{name: '未婚', value: '1'}, {name: '已婚', value: '2'}, {name: '离异', value: '3'}, {name: '其他', value: '4'}]],
         blood: [],
-        bloodList: [['A', 'B', 'O', 'AB', '其他', '不详']],
+        bloodList: [[{name: 'A', value: '1'}, {name: 'B', value: '2'}, {name: 'O', value: '3'}, {name: 'AB', value: '4'}, {name: '其他', value: '5'}, {name: '不详', value: '6'}]],
         religion: [],
-        religionList: [['佛教', '道教', '天主教', '基督教', '伊斯兰教', '喇嘛教', '其他', '无宗教信仰']],
+        religionList: [[{name: '佛教', value: '1'}, {name: '道教', value: '2'}, {name: '天主教', value: '3'}, {name: '基督教', value: '4'}, {name: '伊斯兰教', value: '5'}, {name: '喇嘛教', value: '6'}, {name: '其他', value: '7'}, {name: '无宗教信仰', value: '8'}]],
         culture: [],
-        cultureList: [['本科', '本科以上']],
+        cultureList: [[{name: '本科', value: '1'}, {name: '本科以上', value: '2'}]],
         military: [],
-        militaryList: [['未服兵役', '退出现役', '国防生', '服现役']],
+        militaryList: [[{name: '未服兵役', value: '1'}, {name: '退出现役', value: '2'}, {name: '国防生', value: '3'}, {name: '服现役', value: '4'}]],
         time: '',
         visibility: false,
         department: '',
@@ -110,10 +103,14 @@
           {title: '<label class="weui-label student-prove">学生证</label><span class="field-comment">(非学生卡)</span>',
             count: 9,
             imgList: []
-          }]
+          }
+        ]
       }
     },
     methods: {
+      onChange (index) {
+        console.log('val change', index[0])
+      },
       ImgIndex: function (num) {
         this.num = num
       },
@@ -182,7 +179,23 @@
         this.$wechat.closeWindow()
       },
       onConfirms () {
-        this.$http.post('/api/studentCert/save.json', qs.stringify({'info.marray': this.marray})
+        this.$http.post('/example/api/studentCert/save.json',
+          qs.stringify({
+            'type': this.$route.query.type,
+            'info.marray': this.marray[0],
+            'info.blood': this.blood[0],
+            'info.education': this.culture[0],
+            'info.military': this.military[0],
+            'info.religion': this.religion[0],
+            'info.enterSchoolTime': this.time,
+            'name': this.name,
+            'info.card': this.card,
+            'info.mobile': this.mobile,
+            'info.height': this.height,
+            'info.weight': this.weight,
+            'info.faculty': this.department,
+            'info.specialty': this.major
+          })
         ).then(function (data) {
         })
       },
