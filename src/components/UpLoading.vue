@@ -9,7 +9,8 @@
   export default {
     data () {
       return {
-        ViewImages: []
+        ViewImages: [],
+        Ids: []
       }
     },
     props: ['count', 'index'],
@@ -23,7 +24,7 @@
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
             _this.getLocalImgData(res, _this.count)
-            _this.upload(res)
+            _this.upload(res, _this.count)
           },
           fail: function (err) {
             console.log('error')
@@ -53,18 +54,28 @@
           })
         }
       },
-      upload: function (res) {
+      upload: function (res, count) {
         let _localIds = res.localIds
-        this.$wechat.uploadImage({
-          localId: _localIds, // 需要上传的图片的本地ID，由chooseImage接口获得
-          isShowProgressTips: 1, // 默认为1，显示进度提示
-          success: function (res) {
-            let serverId = res.serverId
-            console.log(serverId)
-          },
-          fail: function (err) {
-          }
-        })
+        let _this = this
+        let ids = []
+        for (let i = 0, len = _localIds.length; i < len; i++) {
+          this.$wechat.uploadImage({
+            localId: _localIds, // 需要上传的图片的本地ID，由chooseImage接口获得
+            isShowProgressTips: 1, // 默认为1，显示进度提示
+            success: function (res) {
+              let serverId = res.serverId
+              if (count === 9) {
+                _this.Ids.push(serverId)
+              } else {
+                ids.push(serverId)
+                _this.Ids = ids
+              }
+              _this.$emit('ids', _this.Ids)
+            },
+            fail: function (err) {
+            }
+          })
+        }
       }
     }
   }
