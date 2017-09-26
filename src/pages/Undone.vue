@@ -2,7 +2,7 @@
   <div class="page page-list student-page">
     <div class="header-box">未办理</div>
     <div class="center-box padding-min">
-      <div class="none-flex cell-border cell-margin cell-border-padding"  v-for="(index, imgNews) in imgTitle" :key="index">
+      <div class="none-flex cell-border cell-margin cell-border-padding"  v-for="imgNews in imgTitle">
         <div class="weui-cell__hd"><label class="weui-label label-line-height">{{imgNews.title}}</label></div>
         <div class="weui-cell__bd bd-right font-color blur label-line-height">
           <img-browse :imgList="imgNews.imgList" :delShow="delShow"></img-browse>
@@ -40,7 +40,8 @@
   import DetailCell from '../components/DetailCell'
   import DoubleBtn from '../components/DoubleBtn'
   import ImgBrowse from '../components/ImgBrowse.vue'
-  import { post } from '@/utils/ajax'
+  import qs from 'qs'
+//  import { formatDate } from '../components/DateChange.js'
 
   export default {
     directives: {
@@ -93,8 +94,8 @@
       }
     },
     created: function () {
-      post('/example/api/studentCert/detail.json').then(data => {
-        let item = data.data
+      this.$http.post('/example/api/studentCert/detail.json', {id: this.$route.query.id}).then(response => {
+        let item = response.data.data
         let src1 = []
         let src2 = []
         let src3 = []
@@ -214,7 +215,7 @@
       onConfirm () {
         this.$http.post('api/studentCert/done.json', qs.stringify({'userid': '', 'type': '', 'id': ''})
         ).then(response => {
-          if (data.state === 0) {
+          if (response.data.state === 0) {
           } else {
           }
         })
