@@ -51,7 +51,10 @@ Object.keys(proxyTable).forEach(function (context) {
 })
 
 var mockMiddleware = require('../mock/mock-middleware')
-app.use(mockMiddleware())
+app.use(mockMiddleware({
+  watch: '/mocks',
+  base: '/example',
+}))
 
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())

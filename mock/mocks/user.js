@@ -1,6 +1,6 @@
 
 const routes = {
-  '/example/api/user/jsTicket.json': {
+  '/api/user/jsTicket.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json; charset=UTF-8')
       res.end(JSON.stringify({

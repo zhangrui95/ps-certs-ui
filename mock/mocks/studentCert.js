@@ -9,7 +9,7 @@ const routes = {
    * @param isNewFirst bool 是否新数据在上
    * @return studentCert list pageable
    */
-  '/example/api/studentCert.json': {
+  '/api/studentCert.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = {
@@ -36,7 +36,7 @@ const routes = {
    * @param state eq state 0申请1完成2通知
    * @return studentCert list
    */
-  '/example/api/studentCert/all.json': {
+  '/api/studentCert/all.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = {
@@ -61,7 +61,7 @@ const routes = {
    *      photos -> studentCertPhoto
    *        type 1正面照2学生证3在读证明
    */
-  '/example/api/studentCert/detail.json': {
+  '/api/studentCert/detail.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = {
@@ -94,7 +94,7 @@ const routes = {
    * @param id photo's id
    * @return img or 404
    */
-  '/example/api/studentCert/photo': {
+  '/api/studentCert/photo': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'image/png')
       res.end(fs.readFileSync(path.resolve(__dirname, '/../../static/images/header.jpg')))
@@ -109,7 +109,7 @@ const routes = {
    * @param info.{blood,card,...}
    * @return result
    */
-  '/example/api/studentCert/save.json': {
+  '/api/studentCert/save.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = {
@@ -139,7 +139,7 @@ const routes = {
    *      done 未通知
    *      notify 已完成
    */
-  '/example/api/studentCert/groupByState.json': {
+  '/api/studentCert/groupByState.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = { 'init': 1, 'done': 0, 'notify': 0 }
@@ -150,7 +150,7 @@ const routes = {
    * @param id studentCert's id
    * @return state 0 or -1
    */
-  '/example/api/studentCert/done.json': {
+  '/api/studentCert/done.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = { 'state': 0 }
@@ -163,7 +163,7 @@ const routes = {
    * @param remark remark text
    * @return state 0 or -1
    */
-  '/example/api/studentCert/fail.json': {
+  '/api/studentCert/fail.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = { 'state': 0 }
@@ -176,7 +176,7 @@ const routes = {
    * @param address address text
    * @return state 0 or -1
    */
-  '/example/api/studentCert/notifyUsers.json': {
+  '/api/studentCert/notifyUsers.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = { 'state': 0 }

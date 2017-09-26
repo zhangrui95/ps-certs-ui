@@ -1,18 +1,18 @@
 
 const routes = {
-  '/example/api/apiRequest/reload.json': {
+  '/api/apiRequest/reload.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json; charset=UTF-8')
       res.end(JSON.stringify({state: 1}))
     }
   },
-  '/example/api/apiRequest/reset.json': {
+  '/api/apiRequest/reset.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json; charset=UTF-8')
       res.end(JSON.stringify({state: 1}))
     }
   },
-  '/example/api/menu/reload.json': {
+  '/api/menu/reload.json': {
     handle: function (req, res, next) {
       res.setHeader('Content-Type', 'application/json; charset=UTF-8')
       res.end(JSON.stringify({state: 1}))

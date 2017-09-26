@@ -4,7 +4,7 @@ const path = require('path')
 const cache = {}
 const fileCaches = {}
 
-const getRouteKey = function (route) {
+const getRouteKey = route => {
   const routes = route.split(' ')
   if (routes.length === 1) {
     return {key: route, method: 'ALL'}
@@ -12,8 +12,8 @@ const getRouteKey = function (route) {
   return {key: routes[1], method: routes[0].toUpperCase()}
 }
 
-let loadMock = function (mock, reload, stat) {
-  const mockPath = './mocks/' + mock
+let loadMock = (mock, reload, stat, option) => {
+  const mockPath = '.' + option.watch + '/' + mock
   try {
     if (reload) {
       delete require.cache[require.resolve(mockPath)]
@@ -23,10 +23,11 @@ let loadMock = function (mock, reload, stat) {
     const fileItem = {ms: fStat.ctimeMs}
     let isArr = Array.isArray(routes)
     const routesKeys = []
+    const base = option.base
     for (let k in routes) {
       const item = routes[k]
       const rKey = getRouteKey(isArr ? item.route : k)
-      const key = rKey.key
+      const key = base + rKey.key
       item.method = rKey.method
       item.file = mock
       const old = cache[key]
@@ -68,7 +69,7 @@ let loadMock = function (mock, reload, stat) {
   }
 }
 
-const check = function () {
+const check = () => {
   for (let i in cache) {
     if (cache[i] && cache[i].length > 1) {
       console.warn(i + ' repeat defined in ' + cache[i].map(v => v.file).join(','))
@@ -76,62 +77,68 @@ const check = function () {
   }
 }
 
-const load = () => {
+const load = option => {
   console.log(new Date().getTime() + ' load mocks start')
-  const mocks = fs.readdirSync(path.join(__dirname, '/mocks'))
+  const mocks = fs.readdirSync(path.join(__dirname, option.watch))
   for (let i in mocks) {
-    loadMock(mocks[i], false)
+    loadMock(mocks[i], false, null, option)
   }
   check()
   console.log(new Date().getTime() + ' load mocks end')
 }
 
-load()
-
-fs.watch(path.join(__dirname, '/mocks'), (event, file) => {
-  if (!file.endsWith('.js')) {
-    return
-  }
-  fs.stat(path.join(__dirname, '/mocks/' + file), (e, f) => {
-    if (f) {
-      const fileItem = fileCaches[file]
-      if (!fileItem || fileItem.ms !== f.ctimeMs) {
-        loadMock(file, true, f)
-        check()
-      }
-    } else {
-      const fileItem = fileCaches[file]
-      const routesKeys = fileItem.routesKeys
-      for (let i in routesKeys) {
-        const arr = cache[routesKeys[i]]
-        if (arr && arr.length > 1) {
-          cache[routesKeys[i]] = arr.filter(v => v.file !== file)
-        } else {
-          delete cache[routesKeys[i]]
-        }
-      }
-      delete fileCaches[file]
-      console.log(new Date().getTime() + ' unload mock ' + file)
+const watch = option => {
+  fs.watch(path.join(__dirname, option.watch), (event, file) => {
+    if (!file.endsWith('.js')) {
+      return
     }
+    fs.stat(path.join(__dirname, option.watch + '/' + file), (e, f) => {
+      if (f) {
+        const fileItem = fileCaches[file]
+        if (!fileItem || fileItem.ms !== f.ctimeMs) {
+          loadMock(file, true, f, option)
+          check()
+        }
+      } else {
+        const fileItem = fileCaches[file]
+        const routesKeys = fileItem.routesKeys
+        for (let i in routesKeys) {
+          const arr = cache[routesKeys[i]]
+          if (arr && arr.length > 1) {
+            cache[routesKeys[i]] = arr.filter(v => v.file !== file)
+          } else {
+            delete cache[routesKeys[i]]
+          }
+        }
+        delete fileCaches[file]
+        console.log(new Date().getTime() + ' unload mock ' + file)
+      }
+    })
   })
-})
+}
 
-const getRoute = (path) => {
+const getRoute = path => {
   const arr = cache[path]
   return arr === null || arr === undefined ? null : arr[0]
 }
 
-const MockMiddleware = () => {
+const MockMiddleware = option => {
+  load(option)
+  watch(option)
   return Mock(getRoute)
 }
 
-const Mock = (getRoute) => {
+const Mock = getRoute => {
   return (req, res, next) => {
     const ret = getRoute(req.path)
     if (ret) {
       if (ret.method === 'ALL' || ret.method === req.method) {
         console.log('proxy => ' + req.method + ' ' + req.path)
-        ret.handle(req, res, next)
+        if (ret.timeout && ret.timeout > 0) {
+          setTimeout(() => ret.handle(req, res, next), ret.timeout)
+        } else {
+          ret.handle(req, res, next)
+        }
       } else {
         next()
       }
