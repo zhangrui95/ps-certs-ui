@@ -76,12 +76,11 @@ export default {
   },
   methods: {
     show (index) {
-      console.log(index)
       this.$refs.previewer.show(index)
     }
   },
   created () {
-    post('/example/api/studentCert/detail.json', {id: this.$route.query.id}).then(data => {
+    post('/example/api/studentCert/detail.json').then(data => {
         this.name = data.data.name
         this.createTime = data.data.createTime
         this.back = data.data.result === -1

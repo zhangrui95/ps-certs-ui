@@ -7,7 +7,7 @@
         <ul class="weui-uploader__files">
           <img-browse :imgList="imgNews.imgList" :delShow="delShow"></img-browse>
         </ul>
-        <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex"></up-loading>
+        <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'></up-loading>
       </div>
       <x-input title="姓名" v-model="name"></x-input>
       <x-input title="身份证号" v-model="card"></x-input>
@@ -40,7 +40,7 @@
 <script>
   import { XInput, PopupPicker, Datetime, Toast, Confirm } from 'vux'
   import DoubleBtn from '../components/DoubleBtn'
-  import qs from 'qs'
+  import { post } from '@/utils/ajax'
   import ImgBrowse from '../components/ImgBrowse'
   import UpLoading from '../components/UpLoading'
 
@@ -90,6 +90,9 @@
         major: '',
         showPositionValue: false,
         toastText: '',
+        selfLis: '',
+        cardLis: '',
+        proveLis: '',
         imgTitle: [
           {
             title: '<label class="weui-label">自拍正面照</label>',
@@ -125,7 +128,10 @@
         this.show = true
       },
       clickUp () {
-        if (this.name.length === 0) {
+        if (this.selfLis.length === 0 || this.cardLis.length === 0 || (this.$route.query.type == 2 && this.proveLis.length === 0)) {
+          this.toastText = '照片不能为空'
+          this.showPositionValue = true
+        } else if (this.name.length === 0) {
           this.toastText = '请填写姓名'
           this.showPositionValue = true
         } else if (this.card.length === 0) {
@@ -179,8 +185,8 @@
         this.$wechat.closeWindow()
       },
       onConfirms () {
-        this.$http.post('/example/api/studentCert/save.json',
-          qs.stringify({
+        post('/example/api/studentCert/save.json',
+          {
             'type': this.$route.query.type,
             'info.marray': this.marray[0],
             'info.blood': this.blood[0],
@@ -194,8 +200,11 @@
             'info.height': this.height,
             'info.weight': this.weight,
             'info.faculty': this.department,
-            'info.specialty': this.major
-          })
+            'info.specialty': this.major,
+            'selfIds': this.selfLis,
+            'cardIds': this.cardLis,
+            'proveIds': this.proveLis
+          }
         ).then(function (data) {
         })
       },
@@ -204,6 +213,15 @@
       },
       onShow () {
         console.log('on show')
+      },
+      Ids (ids) {
+        if (this.num === 0) {
+          this.selfLis = ids.join(',')
+        } else if (this.num === 2) {
+          this.cardLis = ids.join(',')
+        } else {
+          this.proveLis = ids.join(',')
+        }
       }
     }
   }

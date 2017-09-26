@@ -2,11 +2,9 @@ import Vue from 'vue'
 import qs from 'qs'
 import { querystring } from 'vux'
 
-const userid = querystring.parse()['userid']
-
 export function post(url, params = {}) {
     return new Promise((resolve, reject) => {
-        Vue.http.post(url, qs.stringify({...params, userid }))
+        Vue.http.post(url, qs.stringify({...params, ...querystring.parse() }))
             .then((response) => {
                 if (response.status === 200) {
                     resolve(response.data)

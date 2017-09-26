@@ -50,9 +50,9 @@
         }
         this.bindScrollEvent()
       },
-      getListData() {
+      getListData(params) {
         this.isPullUpLoad = true
-        post(this.url, { max: 10, offset: this.list.length, ... this.params }).then(data => {
+        post(this.url, { max: 10, offset: this.list.length, ... this.params, ...params }).then(data => {
           this.$emit('update', data)
           if (!data.list.length) this.isNoMore = true
           this.$nextTick(() => {
@@ -63,7 +63,7 @@
         })
       },
       refresh () {
-        this.getListData()
+        this.getListData({offset: 0})
         this.$nextTick(() => {
           this.scroll.scrollTo(0,0,0)
         })

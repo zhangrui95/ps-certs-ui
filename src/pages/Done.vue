@@ -67,7 +67,6 @@ export default {
   },
   created () {
     this.params = {
-      type: this.$route.query.type,
       state: 2,
     }
     post('/example/api/studentCert.json').then(data => {
@@ -81,7 +80,7 @@ export default {
       this.$refs.listView.refresh()
     },
     update (data) {
-      this.listData = [...data.list, ...this.listData]
+      this.listData = [ ...this.listData, ...data.list]
     },
     commitState () {
       this.$store.commit('updateRouterState', { 

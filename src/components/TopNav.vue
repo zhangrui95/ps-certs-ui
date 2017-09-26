@@ -22,8 +22,10 @@ export default {
   props: ['nav'],
   methods: {
     itemClick (url) {
-      this.$emit("navClick")
-      this.$router.push(url)
+      if (url) {
+        this.$emit("navClick")
+        this.$router.push(url)
+      }
     }
   }
 }
