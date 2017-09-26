@@ -35,29 +35,4 @@ export default {
 @import '~vux/src/styles/reset.less';
 @import './style/old.less';
 
-body,html {
-  background-color: #fff;
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
-}
-ul{
-  list-style: none;
-}
-.app{
-  height: 100%;
-  width: 100%;
-  .flex-page{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    .flex-section{
-      flex: 1;
-    }
-  }
-}
-.page{
-  height: 100%;
-  overflow: hidden;
-}
 </style>

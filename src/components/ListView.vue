@@ -38,14 +38,14 @@
       },200)   
     },
     methods: {
-      initScroll() {
+      initScroll() { //初始化scroll
         this.scroll = new BScroll(this.$refs.wrapper, { click: true, pullUpLoad: true })
-        if (this.list.length) {
+        if (this.list.length > 0) { // 如果已有数据 滚动到指定位置 否则首次获取数据
           this.$nextTick(() => {
             this.scrollY = this.startY || 0
             this.scroll.scrollTo(0,this.scrollY,0)
           })
-        } else {
+        } else { 
           this.getListData()
         }
         this.bindScrollEvent()
@@ -53,8 +53,8 @@
       getListData(params) {
         this.isPullUpLoad = true
         post(this.url, { max: 10, offset: this.list.length, ... this.params, ...params }).then(data => {
-          this.$emit('update', data)
-          if (!data.list.length) this.isNoMore = true
+          this.$emit('update', data) // 将获取的数据传递给父组件
+          if (!data.list.length) this.isNoMore = true  // 如果list长度为0  显示“暂时没有更多”
           this.$nextTick(() => {
             this.scroll.refresh()
             this.scroll.finishPullUp()
@@ -62,19 +62,19 @@
           })
         })
       },
-      refresh () {
+      refresh () {  // 刷新
         this.getListData({offset: 0})
         this.$nextTick(() => {
           this.scroll.scrollTo(0,0,0)
         })
       },
-      bindScrollEvent() {
+      bindScrollEvent() {  // 绑定滚动和上拉事件
         this.scroll.on('scrollEnd', ({x, y = 0}) => this.scrollY = y )
         this.scroll.on('pullingUp', () => {
           if (!this.isPullUpLoad && !this.isNoMore) this.getListData()
         })
       },
-      getScrollY() {
+      getScrollY() {  // 获取滚动的高度
         return this.scrollY
       }
     },

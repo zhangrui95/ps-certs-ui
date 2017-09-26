@@ -102,17 +102,17 @@
         for (let i in item.photos) {
           if (item.photos[i].type === 1) {
             let img1 = {}
-            img1.src = 'example/api/studentCert/photo?id=' + item.photos[i].id
+            img1.src = 'api/studentCert/photo?id=' + item.photos[i].id
             src1.push(img1)
             this.imgTitle[0].imgList = src1
           } else if (item.photos[i].type === 2) {
             let img2 = {}
-            img2.src = 'example/api/studentCert/photo?id=' + item.photos[i].id
+            img2.src = 'api/studentCert/photo?id=' + item.photos[i].id
             src2.push(img2)
             this.imgTitle[2].imgList = src2
           } else if (item.photos[i].type === 3) {
             let img3 = {}
-            img3.src = 'example/api/studentCert/photo?id=' + item.photos[i].id
+            img3.src = 'api/studentCert/photo?id=' + item.photos[i].id
             src3.push(img3)
             this.imgTitle[1].imgList = src3
           }

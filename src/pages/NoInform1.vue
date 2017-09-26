@@ -10,12 +10,12 @@
     </group>
     <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
       <div class="list-wrap">
-        <div class="list-group" v-for="(group, index) in groups" :key="index">
+        <div class="list-group" v-for="(group, index) in computedListData" :key="index">
           <div class="group-title">
-            <check-icon :checked='group.checked' @click.native="groupClick(!group.checked, group.dateStr)"/>
+            <check-icon :checked='group.checked' @click.native="groupClick(index)"/>
             {{group.dateStr}}
           </div>
-          <div class="list-item" v-for="(item, itemIndex) in listData" :key="item.id" v-if="group.dateStr == item.dateStr">
+          <div class="list-item" v-for="(item, itemIndex) in group.items" :key="item.id">
             <check-icon :checked='item.checked' @click.native="itemClick(item.id)"/>
             <span class="item-index">{{itemIndex>8?itemIndex+1:'0'+(itemIndex+1)}}.</span>
             <span class="item-title">{{item.name}}</span>
@@ -25,7 +25,7 @@
     </list-view>
     <div class="btn-box">
       <a class="btn-min check-all">
-        <check-icon :checked='checkedAll' @click.native="checkAllClick(!checkedAll)"/>全部选择({{checkCount}})</a>
+        <check-icon :checked='checkAll' @click.native="checkAllClick"/>全部选择({{checkCount}})</a>
       <a class="btn-min" @click="submit">通知</a>
     </div>
   </div>
@@ -48,35 +48,41 @@
         count: 0,
         dateTime: '',
         address: '',
+        checkAll: true,
         scrollTop: 0,
         params: {},
         listData: [],
+        computedListData: []
       }
     },
     computed: {
-      groups () {
-        let groups = []
+      storeListData () {
+        let result = []
         let dateStrArr = []
         this.listData.forEach(item => {
           let dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
-          if (dateStrArr.indexOf(dateStr) == -1) dateStrArr.push(dateStr)
+          let iof = dateStrArr.indexOf(dateStr)
+          item.checked = true
+          if (iof == -1) {
+            dateStrArr.push(dateStr)
+            result.push({ dateStr: dateStr, checked: true, items: [item] })
+          } else {
+            result[iof].items.push(item)
+          }
         })
-        dateStrArr.forEach(dateStr => {
-          let checked = true
-          this.listData.forEach(item => {
-            if (item.dateStr == dateStr && !item.checked) {
-              checked = false; return
-            }
-          })
-          groups.push({dateStr, checked})
-        })
-        return groups
-      },
-      checkedAll () {
-        return this.listData.filter(item => item.checked).length === this.listData.length
+        return result
       },
       checkCount () {
-        return this.listData.filter(item => item.checked).length
+        let checkCount = 0
+        this.computedListData.forEach(group => {
+          checkCount += group.items.filter(item => item.checked).length
+        })
+        return checkCount
+      }
+    },
+    watch: {
+      storeListData: function (newVal) {
+        this.computedListData = newVal
       }
     },
     created () {
@@ -86,24 +92,46 @@
     },
     methods: {
       update (data) {
+        this.listData = [ ...this.listData, ...data.list]
         this.count = data.count
-        this.listData = [ ...this.listData, ...data.list.map(item => {
-          return {...item, dateStr:dateFormat(item.createTime, 'YYYY年MM月DD日'), checked: true,}
-        })]
       },
-      checkAllClick (checked) {
-        this.listData = this.listData.map(item => {
-          return {...item, checked}
+      checkAllClick () {
+        this.checkAll = !this.checkAll;
+        this.computedListData = this.computedListData.map(group => {
+          group.items.map(item => {
+            item.checked = this.checkAll         
+            return item
+          })
+          group.checked = this.checkAll
+          return group
         })
       },
-      groupClick (checked, dateStr) {
-        this.listData = this.listData.map(item => {
-          return {...item, checked: item.dateStr == dateStr? checked: item.checked}
+      groupClick (i) {
+        this.checkAll = true
+        this.computedListData = this.computedListData.map((group, index) => {
+          if ( index == i ) {
+            group.checked = !group.checked
+            group.items.forEach(item => item.checked = group.checked)
+          }
+          if (!group.checked) this.checkAll = false
+          return group
         })
       },
       itemClick (id) {
-        this.listData = this.listData.map(item => {
-          return {...item, checked: item.id == id? !item.checked: item.checked}
+        this.checkAll = true
+        this.computedListData = this.computedListData.map(group => {
+          group.checked = true
+          group.items.map(item => {
+            if (item.id == id) {
+              item.checked = !item.checked
+              } 
+            if (!item.checked) {
+              group.checked = false
+            }              
+            return item
+          })
+          if (!group.checked) this.checkAll = false
+          return group
         })
       },
       submit () { 
@@ -116,9 +144,13 @@
           title: '是否确认发送通知',
           onConfirm () {
             let id = '', all = 0
-            if (that.checkedAll) all = 1
+            if (that.checkAll) all = 1
             else {
-              that.listData.forEach(item => id += item.checked? item.id + ',': '')
+              that.computedListData.forEach(group => {
+                group.items.forEach(item => {
+                  if (!item.checked) id += item.id + ','
+                })
+              })
               id = id.substring(0,id.length-1)
             }
             post('/example/api/studentCert/notifyUsers.json',{

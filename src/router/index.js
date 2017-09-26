@@ -20,12 +20,10 @@ const pages = [
 Vue.use(VueRouter)
 
 let router = new VueRouter((() => {
-    let routes = [
-      {
+    let routes = [{
         path: '/',
         redirect: '/dev'
-      }
-    ]
+    }]
     pages.forEach(page => {
         routes.push({
             path: `/${page}`,
@@ -34,7 +32,7 @@ let router = new VueRouter((() => {
     })
     return {
         routes,
-        base: 'prove',
+        base: 'example',
         mode: 'history',
         stringifyQuery(obj) { // 将userid以及type加到locastion.search
             return routerStringifyQuery({
