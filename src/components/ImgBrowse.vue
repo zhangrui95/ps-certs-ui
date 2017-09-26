@@ -2,64 +2,89 @@
   <div>
     <img class="previewer-demo-img" v-for="(item, index) in imgList" :src="item.src" @click="show(index)" :key="index">
     <div v-transfer-dom>
-      <div @click="hideDel">
-        <previewer :list="imgList" ref="previewer"></previewer>
-      </div>
-      <transition name="move" v-if="delShow">
-        <div v-show="del" class="del-btn" transition="move" @click="deleteImage(index)"><i class="weui-icon-delete weui-icon_gallery-delete"></i></div>
+      <transition name="move">
+        <div v-show="del">
+          <div class="box-img" @click="hideImg">
+            <img :src="src" class="src-img"/>
+          </div>
+          <div class="del-btn" transition="move" @click="deleteImage" v-if="delShow"><i class="weui-icon-delete weui-icon_gallery-delete"></i></div>
+        </div>
       </transition>
     </div>
+    <confirm v-model="showCom"
+             title=" "
+             @on-confirm="onConfirm(index)"
+             @on-show="onShow"
+             @on-hide="onHide">
+      <p style="text-align:center;">{{confirmText}}</p>
+    </confirm>
   </div>
 </template>
 
 <script>
-  import { Previewer, TransferDom } from 'vux'
+  import { Previewer, TransferDom, Confirm } from 'vux'
 
   export default {
     directives: {
       TransferDom
     },
     components: {
-      Previewer
+      Previewer,
+      Confirm
     },
     methods: {
       show (index) {
-        this.$refs.previewer.show(index)
         this.del = true
         this.index = index
+        this.src = this.imgList[index].src
       },
-      hideDel () {
+      deleteImage: function () {
+        this.del = false
+        this.showCom = true
+      },
+      hideImg () {
         this.del = false
       },
-      deleteImage: function (index) {
+      onConfirm (index) {
         this.imgList.splice(index, 1)
+      },
+      onHide () {
+        console.log('on hide')
+      },
+      onShow () {
+        console.log('on show')
       }
     },
     props: ['imgList', 'delShow'],
     data () {
       return {
         del: false,
-        index: ''
+        index: '',
+        src: '',
+        confirmText: '确定删除该照片？',
+        showCom: false
       }
     }
   }
 </script>
 
 <style lang="less">
-  .mytran {
-    transition: all 0.3s ease;
-    background-color: greenyellow;
-  }
-
-  .mytran-enter, .mytran-leave {
-    height: 0;
-    width: 0;
-  }
   .previewer-demo-img{
     width: 45px;
     height: 45px;
     float: right;
     margin: 5px;
+  }
+  .box-img{
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 99999;
+    background: #000;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
   }
   .del-btn{
     color: #fff;
@@ -76,14 +101,21 @@
   }
   .move-enter-active, .move-leave-active{
     opacity: 1;
-    transition: all 1s ease;
+    transition: all 0s ease;
   }
   .move-leave-active, .move-enter{
     opacity: 0;
-    transition: all 1s ease;
+    transition: all 0s ease;
   }
   .pswp__top-bar{
     display: none;
   }
-
+  .src-img{
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+  }
 </style>

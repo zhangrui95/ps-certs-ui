@@ -35,14 +35,15 @@
              @on-show="onShow"
              @on-hide="onHide">
       <p style="text-align:center;">{{confirmText}}</p>
-    </confirm><confirm v-model="shows"
+    </confirm>
+    <confirm v-model="shows"
                        title=" "
                        @on-cancel="onCancels"
                        @on-confirm="onConfirms"
                        @on-show="onShow"
                        @on-hide="onHide">
-    <p style="text-align:center;">{{confirmTexts}}</p>
-  </confirm>
+      <p style="text-align:center;">{{confirmTexts}}</p>
+    </confirm>
   </div>
 </template>
 
@@ -50,7 +51,6 @@
   import { XInput, PopupPicker, Datetime, Toast, Confirm } from 'vux'
   import DoubleBtn from '../components/DoubleBtn'
   import qs from 'qs'
-  import wx from 'weixin-js-sdk'
   import ImgBrowse from '../components/ImgBrowse'
   import UpLoading from '../components/UpLoading'
 
@@ -179,7 +179,7 @@
         console.log('on cancel')
       },
       onConfirm (msg) {
-        wx.closeWindow()
+        this.$wechat.closeWindow()
       },
       onConfirms () {
         this.$http.post('/api/studentCert/save.json', qs.stringify({'info.marray': this.marray})
@@ -291,6 +291,9 @@
     }
     .weui-input{
       text-align: right;
+    }
+    .weui-dialog__btn_primary{
+      color: #5f60bd;
     }
   }
 </style>
