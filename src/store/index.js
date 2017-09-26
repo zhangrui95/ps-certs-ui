@@ -8,7 +8,7 @@ Vue.use(Vuex)
 let store = new Vuex.Store({
     state: {
         isLoading: false,
-        router: {}
+        router: {} //将要保存到history中的state
     },
     mutations: {
         updateLoadingStatus(state, payload) {
