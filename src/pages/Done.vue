@@ -1,18 +1,18 @@
 <template>
   <div class="flex-page">
     <div class="header-box">已完成({{count}})</div>
-    <list-view url="/example/api/studentCert.json" ref="listView">
+    <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
       <div class="list-wrap">
-        <div class="list-group" v-for="(group, index) in listData" :key="index">
+        <div class="list-group" v-for="(group, index) in computedListData" :key="index">
           <div class="group-title">
             {{group.dateStr}}
           </div>
-          <router-link class="list-item" :to='"/Detail?id="+item.id'
+          <div class="list-item" @click="linkTo(`/Detail?id=${item.id}`)"
             v-for="(item, itemIndex) in group.items" :key="item.id">
             <span class="item-index">{{itemIndex>8?itemIndex+1:'0'+(itemIndex+1)}}.</span>
             <span class="item-title">{{item.name}}</span>
             <badge v-if="item.result == -1" text="已退回"/>
-          </router-link>
+          </div>
         </div>
       </div>
     </list-view>
@@ -34,13 +34,16 @@ export default {
   data () {
     return {
       count: 0,
+      scrollY: 0,
+      params: {},
+      listData: []
     }
   },
   computed: {
-    listData () {
+    computedListData () {
       let result = []
       let dateStrArr = []
-      this.$store.state.listData.forEach(item => {
+      this.listData.forEach(item => {
         let dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
         let iof = dateStrArr.indexOf(dateStr)
         if (iof == -1) {
@@ -53,20 +56,44 @@ export default {
       return result
     }
   },
+  watch : {
+    '$store.state.router' () {
+      if (this.$store.state.router.isReverse) {
+        this.scrollY = this.$store.state.router.scrollY
+        this.params = this.$store.state.router.params
+        this.listData = this.$store.state.router.listData
+      }
+    }
+  },
   created () {
-    this.$store.commit('updateFiltrate', {
+    this.params = {
       type: this.$route.query.type,
       state: 2,
-    })
+    }
     post('/example/api/studentCert.json').then(data => {
       this.count = data.count
     })
   },
   methods: {
     submit (val) {
-      this.$store.commit('updateFiltrate', { name: val })
-      this.$refs.listView.reload()
+      this.params = {...this.params, name: val}
+      this.listData = []
+      this.$refs.listView.refresh()
     },
+    update (data) {
+      this.listData = [...data.list, ...this.listData]
+    },
+    commitState () {
+      this.$store.commit('updateRouterState', { 
+        params: this.params,
+        listData: this.listData,
+        scrollY: this.$refs.listView.getScrollY() 
+      })
+    },
+    linkTo (url) {
+      this.commitState()
+      this.$router.push(url)
+    }
   }
 }
 </script>

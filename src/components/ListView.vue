@@ -17,24 +17,21 @@
 <script>
   import BScroll from 'better-scroll'
   import { InlineLoading } from 'vux'
-  import { mapState } from 'vuex'
+  import { post } from '@/utils/ajax'
 
   export default {
     components: {
       BScroll,
       InlineLoading,
     },
-    props: ['url'],
+    props: ['url', 'params', 'list', 'startY'],
     data() {
       return {
-        isPullUpLoad:false,
+        isPullUpLoad: false,
+        isNoMore: false,
+        scrollY: 0,
       }
     },
-    computed: mapState({
-      isNoMore: state => state.listDataIsNoMore,
-      hasListData: state => state.listData.length > 0,
-      scrollTop: 'scrollTop'
-    }),
     mounted() {
       setTimeout(() => {
         this.initScroll()
@@ -43,38 +40,42 @@
     methods: {
       initScroll() {
         this.scroll = new BScroll(this.$refs.wrapper, { click: true, pullUpLoad: true })
-        if (this.hasListData) {
+        if (this.list.length) {
           this.$nextTick(() => {
-            this.scroll.scrollTo(0,this.scrollTop,200)
+            this.scrollY = this.startY || 0
+            this.scroll.scrollTo(0,this.scrollY,0)
           })
         } else {
-          this.updateListData()
+          this.getListData()
         }
         this.bindScrollEvent()
       },
-      updateListData() {
+      getListData() {
         this.isPullUpLoad = true
-        this.$store.dispatch('updateListData', { url: this.url, cb: () => {
+        post(this.url, { max: 10, offset: this.list.length, ... this.params }).then(data => {
+          this.$emit('update', data)
+          if (!data.list.length) this.isNoMore = true
           this.$nextTick(() => {
             this.scroll.refresh()
             this.scroll.finishPullUp()
             this.isPullUpLoad = false
           })
-        }})
+        })
+      },
+      refresh () {
+        this.getListData()
+        this.$nextTick(() => {
+          this.scroll.scrollTo(0,0,0)
+        })
       },
       bindScrollEvent() {
-        this.scroll.on('scrollEnd', ({x, y = 0}) => {
-          this.$store.commit('updateScrollTop', y)
-        })
+        this.scroll.on('scrollEnd', ({x, y = 0}) => this.scrollY = y )
         this.scroll.on('pullingUp', () => {
-          if (!this.isPullUpLoad && !this.isNoMore){
-            this.updateListData()
-          }
+          if (!this.isPullUpLoad && !this.isNoMore) this.getListData()
         })
       },
-      reload() {
-        this.$store.commit('clearListData')
-        this.updateListData()
+      getScrollY() {
+        return this.scrollY
       }
     },
   }

@@ -8,9 +8,9 @@
         :start-date="new Date() | dateFormat"/>
       <x-input title="领取地址" :show-clear="false" v-model="address" text-align="right"></x-input>
     </group>
-    <list-view url="/example/api/studentCert.json" ref="listView">
+    <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
       <div class="list-wrap">
-        <div class="list-group" v-for="(group, index) in listData" :key="index">
+        <div class="list-group" v-for="(group, index) in computedListData" :key="index">
           <div class="group-title">
             <check-icon :checked='group.checked' @click.native="groupClick(index)"/>
             {{group.dateStr}}
@@ -48,15 +48,18 @@
         count: 0,
         dateTime: '',
         address: '',
-        listData: [],
         checkAll: true,
+        scrollTop: 0,
+        params: {},
+        listData: [],
+        computedListData: []
       }
     },
     computed: {
       storeListData () {
         let result = []
         let dateStrArr = []
-        this.$store.state.listData.forEach(item => {
+        this.listData.forEach(item => {
           let dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
           let iof = dateStrArr.indexOf(dateStr)
           item.checked = true
@@ -71,7 +74,7 @@
       },
       checkCount () {
         let checkCount = 0
-        this.listData.forEach(group => {
+        this.computedListData.forEach(group => {
           checkCount += group.items.filter(item => item.checked).length
         })
         return checkCount
@@ -79,22 +82,23 @@
     },
     watch: {
       storeListData: function (newVal) {
-        this.listData = newVal
+        this.computedListData = newVal
       }
     },
     created () {
-      this.$store.commit('updateFiltrate', {
+      this.params = {
         type: this.$route.query.type,
-        state: 1,
-      })
-      post('/example/api/studentCert.json').then(data => {
-        this.count = data.count
-      })
+        state: 0,
+      }
     },
     methods: {
+      update (data) {
+        this.listData = [ ...this.listData, ...data.list]
+        this.count = data.count
+      },
       checkAllClick () {
         this.checkAll = !this.checkAll;
-        this.listData = this.listData.map(group => {
+        this.computedListData = this.computedListData.map(group => {
           group.items.map(item => {
             item.checked = !this.checkAll         
             return item
@@ -105,7 +109,7 @@
       },
       groupClick (i) {
         this.checkAll = true
-        this.listData = this.listData.map((group, index) => {
+        this.computedListData = this.computedListData.map((group, index) => {
           if ( index == i ) {
             group.checked = !group.checked
             group.items.forEach(item => item.checked = group.checked)
@@ -116,7 +120,7 @@
       },
       itemClick (id) {
         this.checkAll = true
-        this.listData = this.listData.map(group => {
+        this.computedListData = this.computedListData.map(group => {
           group.checked = true
           group.items.map(item => {
             if (item.id == id) {
@@ -160,7 +164,8 @@
                 this.$vux.toast.show({text:'发送成功'})
                 this.dateTime = '',
                 this.address = '',
-                this.$refs.listView.reload()
+                this.listData = []
+                this.$refs.listView.getListData()
               }else{
                 this.$vux.toast.text('发送失败')
               }

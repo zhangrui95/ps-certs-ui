@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <btn :btn="btn" @click.native="submit"></btn>
+    <btn :btn="btn" :clickDics="submit"></btn>
   </div>
 </div>
 

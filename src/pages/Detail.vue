@@ -50,15 +50,11 @@
 
 <script>
 import { Previewer } from 'vux'
-import ListView from '@/components/ListView'
-import TopNav from '@/components/TopNav'
-import DragBox from '@/components/DragBox'
 import { post } from '@/utils/ajax'
 
 export default {
   components: {
-    Previewer,
-    TopNav, ListView, DragBox
+    Previewer
   },
   data () {
     return {

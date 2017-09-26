@@ -1,9 +1,9 @@
 <template>
   <div class="flex-page approve">
-    <top-nav :nav="nav">{{title}}</top-nav>
-    <list-view url="/example/api/studentCert.json">
+    <top-nav :nav="nav" @navClick="commitState">{{title}}</top-nav>
+    <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
       <div class="list-wrap">
-        <router-link class="list-item" :to='"/Undone?id="+item.id' v-for="(item, index) in listData" :key="index">
+        <div class="list-item" v-for="(item, index) in listData" :key="index" @click="linkTo(`/Undone?id=${item.id}`)">
           <div class="item-left">
             <div class="item-index">{{index>8?index+1:'0'+(index+1)}}.</div>
           </div>
@@ -11,7 +11,7 @@
             <div class="item-title">{{item.name}}</div>
             <div class="item-desc">{{item.createTime | dateFormat}}</div>
           </div>    
-        </router-link>
+        </div>
       </div>
     </list-view>
   </div>
@@ -30,34 +30,48 @@ export default {
   data () {
     return {
       title: '',
-      nav: ''
-    }
-  },
-  computed: {
-    listData () {
-      return this.$store.state.listData
+      nav: '',
+      scrollY: this.$store.state.router.scrollY || 0,
+      params: this.$store.state.router.params || {},
+      listData: this.$store.state.router.listData || []
     }
   },
   created () {
     this.title = this.$route.query.type == 1? '身份证申请': '居住证明申请'
-    this.$store.commit('updateFiltrate', {
+    this.params = {
       type: this.$route.query.type,
       state: 0,
-    })
+    }
     post('/example/api/studentCert/groupByState.json').then(data => {
       this.nav = [{
         num: data.init,
         text: '未办理',
       },{
-        link: '/NoInform',
+        link: `/NoInform`,
         num: data.done,
         text: '未通知'
       },{
-        link: '/Done',
+        link: `/Done`,
         num: data.notify,
         text: '已完成'
       }]
     })
+  },
+  methods: {
+    update (data) {
+      this.listData = [ ...this.listData, ...data.list]
+    },
+    commitState () {
+      this.$store.commit('updateRouterState', { 
+        params: this.params,
+        listData: this.listData,
+        scrollY: this.$refs.listView.getScrollY() 
+      })
+    },
+    linkTo (url) {
+      this.commitState()
+      this.$router.push(url)
+    }
   }
 }
 </script>

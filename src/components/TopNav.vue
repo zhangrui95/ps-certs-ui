@@ -3,10 +3,10 @@
     <slot></slot>
     <flexbox class="body">
       <flexbox-item v-for="(item, index) in nav" :key="index">
-        <router-link :to="item.link || ''">
+        <a @click="itemClick(item.link)">
           <div class="num">{{item.num}}</div>
           <div class="text">{{item.text}}</div>
-        </router-link>
+        </a>
       </flexbox-item>
     </flexbox>
   </div>
@@ -19,7 +19,13 @@ export default {
   components: {
     Flexbox, FlexboxItem
   },
-  props: ['nav']
+  props: ['nav'],
+  methods: {
+    itemClick (url) {
+      this.$emit("navClick")
+      this.$router.push(url)
+    }
+  }
 }
 </script>
 
