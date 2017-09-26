@@ -20,7 +20,12 @@ const pages = [
 Vue.use(VueRouter)
 
 let router = new VueRouter((() => {
-    let routes = []
+    let routes = [
+      {
+        path: '/',
+        redirect: '/dev'
+      }
+    ]
     pages.forEach(page => {
         routes.push({
             path: `/${page}`,
