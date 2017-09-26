@@ -2,12 +2,12 @@
   <div class="page page-list student-page">
     <div class="header-box">{{title}}</div>
     <div class="center-box padding-min">
-      <div class="none-flex cell-border cell-margin" v-for="imgNews in imgTitle">
+      <div class="none-flex cell-border cell-margin" v-for="(imgNews, index) in imgTitle">
         <div class="weui-cell__hd" v-html="imgNews.title"></div>
         <ul class="weui-uploader__files">
           <img-browse :imgList="imgNews.imgList" :delShow="delShow"></img-browse>
         </ul>
-        <up-loading :count="imgNews.count" @addImages="listenToImgs"></up-loading>
+        <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex"></up-loading>
       </div>
       <x-input title="姓名" v-model="name"></x-input>
       <x-input title="身份证号" v-model="card"></x-input>
@@ -35,14 +35,15 @@
              @on-show="onShow"
              @on-hide="onHide">
       <p style="text-align:center;">{{confirmText}}</p>
-    </confirm><confirm v-model="shows"
+    </confirm>
+    <confirm v-model="shows"
                        title=" "
                        @on-cancel="onCancels"
                        @on-confirm="onConfirms"
                        @on-show="onShow"
                        @on-hide="onHide">
-    <p style="text-align:center;">{{confirmTexts}}</p>
-  </confirm>
+      <p style="text-align:center;">{{confirmTexts}}</p>
+    </confirm>
   </div>
 </template>
 
@@ -66,6 +67,7 @@
     },
     data () {
       return {
+        num: '',
         delShow: true,
         show: false,
         shows: false,
@@ -99,26 +101,24 @@
           {
             title: '<label class="weui-label">自拍正面照</label>',
             count: 1,
-            imgList: [{
-              src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'
-            }]},
+            imgList: []
+          },
           {title: '<label class="weui-label">在读证明</label>',
             count: 1,
-            imgList: [{
-              src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'
-            }]},
+            imgList: []
+          },
           {title: '<label class="weui-label student-prove">学生证</label><span class="field-comment">(非学生卡)</span>',
             count: 9,
-            imgList: [
-              {src: 'https://ooo.0o0.ooo/2017/06/15/59425a592b949.jpeg'},
-              {src: 'https://ooo.0o0.ooo/2017/05/17/591c271acea7c.jpg'},
-              {src: 'https://ooo.0o0.ooo/2017/05/17/591c271ab71b1.jpg'}
-            ]}]
+            imgList: []
+          }]
       }
     },
     methods: {
-      listenToImgs (msg) {
-        console.log(msg)
+      ImgIndex: function (num) {
+        this.num = num
+      },
+      listenToImgs: function (data) {
+        this.imgTitle[this.num].imgList = data
       },
       change (value) {
         console.log('change', value)
@@ -179,7 +179,7 @@
         console.log('on cancel')
       },
       onConfirm (msg) {
-        wx.closeWindow()
+        this.$wechat.closeWindow()
       },
       onConfirms () {
         this.$http.post('/api/studentCert/save.json', qs.stringify({'info.marray': this.marray})
@@ -291,6 +291,9 @@
     }
     .weui-input{
       text-align: right;
+    }
+    .weui-dialog__btn_primary{
+      color: #5f60bd;
     }
   }
 </style>

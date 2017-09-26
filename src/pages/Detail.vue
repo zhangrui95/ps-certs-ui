@@ -6,7 +6,7 @@
     </div>
     <div class="center-box">
       <div class="cell">
-        <div class="cell-title">自拍正面照</div> 
+        <div class="cell-title">自拍正面照</div>
         <div class="cell-content">
           <span v-for="(item, index) in list" :key="index">
             <img class="previewer-img"  v-if="item.type==1" :src="item.src" @click="show(index)">
@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="cell">
-        <div class="cell-title">在读证明</div> 
+        <div class="cell-title">在读证明</div>
         <div class="cell-content">
           <span v-for="(item, index) in list" :key="index">
             <img class="previewer-img"  v-if="item.type==3" :src="item.src" @click="show(index)">
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="cell">
-        <div class="cell-title">学生证</div> 
+        <div class="cell-title">学生证</div>
         <div class="cell-content">
           <span v-for="(item, index) in list" :key="index">
             <img class="previewer-img"  v-if="item.type==2" :src="item.src" @click="show(index)">
@@ -30,13 +30,13 @@
         </div>
       </div>
       <div class="cell">
-        <div class="cell-title">联系方式</div> 
+        <div class="cell-title">联系方式</div>
         <div class="cell-content">
           <a class="text phone-blue" href="tel:13012345678">{{mobile}}</a>
         </div>
       </div>
       <div class="cell" v-if="back">
-        <div class="cell-title">退回原因</div> 
+        <div class="cell-title">退回原因</div>
         <div class="cell-content">
           <span class="text">{{remark}}</span>
         </div>
@@ -81,7 +81,7 @@ export default {
     }
   },
   created () {
-    post('/example/api/studentCert/detail.json',{id: this.$route.query.id}).then(data => {
+    post('/example/api/studentCert/detail.json', {id: this.$route.query.id}).then(data => {
         this.name = data.data.name
         this.createTime = data.data.createTime
         this.back = data.data.result === -1

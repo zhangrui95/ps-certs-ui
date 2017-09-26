@@ -94,7 +94,7 @@
       }
     },
     created: function () {
-      this.$http.post('/example/api/studentCert/detail.json').then(response => {
+      this.$http.post('/example/api/studentCert/detail.json', {id: this.$route.query.id}).then(response => {
         let item = response.data.data
         let src1 = []
         let src2 = []
