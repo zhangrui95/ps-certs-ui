@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { querystring } from 'vux'
 import store from '@/store/index'
+
+import routerStringifyQuery from './stringifyQuery'
 
 const pages = [
     'Dev',
@@ -25,8 +28,16 @@ let router = new VueRouter((() => {
         })
     })
     return {
-        mode: 'history',
         routes,
+        base: 'prove',
+        mode: 'history',
+        stringifyQuery(obj) {
+            return routerStringifyQuery({
+                userid: querystring.parse()['userid'],
+                type: querystring.parse()['type'],
+                ...obj,
+            })
+        },
     }
 })())
 
