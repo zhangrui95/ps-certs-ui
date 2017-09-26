@@ -25,7 +25,7 @@
     </list-view>
     <div class="btn-box">
       <a class="btn-min check-all">
-        <check-icon :checked='checkAll' @click="checkAllClick"/>全部选择({{checkCount}})</a>
+        <check-icon :checked='checkAll' @click.native="checkAllClick"/>全部选择({{checkCount}})</a>
       <a class="btn-min" @click="submit">通知</a>
     </div>
   </div>
@@ -87,8 +87,7 @@
     },
     created () {
       this.params = {
-        type: this.$route.query.type,
-        state: 0,
+        state: 1,
       }
     },
     methods: {
@@ -100,10 +99,10 @@
         this.checkAll = !this.checkAll;
         this.computedListData = this.computedListData.map(group => {
           group.items.map(item => {
-            item.checked = !this.checkAll         
+            item.checked = this.checkAll         
             return item
           })
-          group.checked = !this.checkAll
+          group.checked = this.checkAll
           return group
         })
       },
@@ -140,13 +139,14 @@
           this.$vux.toast.text('请填写领取地址与领取时间')
           return
         }
+        let that = this
         this.$vux.confirm.show({
           title: '是否确认发送通知',
           onConfirm () {
             let id = '', all = 0
-            if (this.checkAll) all = 1
+            if (that.checkAll) all = 1
             else {
-              this.listData.forEach(group => {
+              that.computedListData.forEach(group => {
                 group.items.forEach(item => {
                   if (!item.checked) id += item.id + ','
                 })
@@ -154,23 +154,22 @@
               id = id.substring(0,id.length-1)
             }
             post('/example/api/studentCert/notifyUsers.json',{
-              type: this.$route.query.type,
               id, all,
-              time: this.dateTime,
-              address: this.address,
+              time: that.dateTime,
+              address: that.address,
             }).then(data => {
               if (data.state === 0) {
-                console.log(1)
-                this.$vux.toast.show({text:'发送成功'})
-                this.dateTime = '',
-                this.address = '',
-                this.listData = []
-                this.$refs.listView.getListData()
+                that.$vux.toast.show({text:'发送成功'})
+                that.dateTime = ''
+                that.address = ''
+                that.listData = []
+                that.checkAll = true
+                that.$refs.listView.refresh()
               }else{
-                this.$vux.toast.text('发送失败')
+                that.$vux.toast.text('发送失败')
               }
             }).catch(err => {
-              this.$vux.toast.text('发送失败')
+              that.$vux.toast.text('发送失败')
             })
           }
         })
