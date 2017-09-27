@@ -22,7 +22,7 @@ export default {
     ...mapState({
       route: state => state.route,
       path: state => state.route.path,
-//      deviceready: state => state.app.deviceready,
+      // deviceready: state => state.app.deviceready,
       demoTop: state => state.scrollTop,
       isLoading: state => state.isLoading,
       direction: state => state.direction
