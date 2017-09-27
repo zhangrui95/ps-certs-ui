@@ -91,9 +91,9 @@
           { name: '文化程度', value: ['本科', '本科以上'][info.education-1] },
           { name: '宗教信仰', value: ['佛教', '道教', '天主教', '基督教', '伊斯兰教', '喇嘛教', '其他', '无宗教信仰'][info.religion-1] },
           { name: '兵役状况', value: ['未服兵役', '退出现役', '国防生', '服现役'][info.education-1] },
-          { name: '入学时间', value: dateFormat(info.enterSchoolTime) },
+          { name: '入学时间', value: dateFormat(info.enterSchoolTime, 'YYYY-MM-DD') },
           { name: '所在院系', value: info.faculty },
-          { name: '所在专业', value: info.specialty },
+          { name: '所在专业', value: info.specialty }
         ]
       })
       this.options = {
