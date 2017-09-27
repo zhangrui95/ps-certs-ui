@@ -67,7 +67,7 @@ export default {
   },
   created () {
     this.params = {
-      state: 2,
+      state: 2
     }
     post('api/studentCert.json').then(data => {
       this.count = data.count

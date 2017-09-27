@@ -201,7 +201,7 @@
     },
     methods: {
       goOut () {
-        let id = this.$route.params.id
+        let id = this.$route.query.id
         this.$router.push({path: '/Back', query: {id: id}})
       },
       clickUp () {
