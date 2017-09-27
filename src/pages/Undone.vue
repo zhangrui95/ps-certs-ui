@@ -41,7 +41,8 @@
         this.$refs.previewer[index].show(itemIndex)
       },
       back () {
-        this.$router.back()
+        let id = this.$route.query.id
+        this.$router.push({path: '/Back', query: {id: id}})
       },
       submit () {
         let that = this
