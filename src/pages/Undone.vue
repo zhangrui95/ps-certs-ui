@@ -11,8 +11,8 @@
       <div class="height-fixed-min"></div>
     </div>
     <div class="btn-box">
-      <span class="btn-min btn-min-gray" @click="back">退回</span>
-      <span class="btn-min" @click="submit">办理完成</span>
+      <span class="btn bg-gray" @click="back">退回</span>
+      <span class="btn" @click="submit">办理完成</span>
     </div>
     <previewer v-for="group in photoList" :key="group.name" :list="group.list" ref="previewer" :options="options"></previewer>
   </div>

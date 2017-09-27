@@ -10,7 +10,9 @@
         <div class="height-fixed-min"></div>
       </div>
     </div>
-    <btn :btn="btn" :clickDics="clickDics"></btn>
+    <div class="btn-box">
+      <span class="btn" @click="clickDics">发送</span>
+    </div>
     <toast v-model="show1">发送成功</toast>
     <toast v-model="show2" type="text">请选择存在问题项或填写备注</toast>
   </div>
@@ -18,14 +20,11 @@
 
 <script>
   import { Checklist, Toast } from 'vux'
-  import Btn from '../components/Btn'
   import { post } from '@/utils/ajax'
 
   export default {
     components: {
-      Checklist,
-      Btn,
-      Toast
+      Checklist, Toast
     },
     methods: {
       change (val) {
@@ -48,7 +47,6 @@
     },
     data () {
       return {
-        btn: '发送',
         labelPosition: '',
         show1: false,
         show2: false,

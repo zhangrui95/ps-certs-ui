@@ -2,18 +2,16 @@
   <div class="page page-list">
     <div class="header-box">重载</div>
     <div class="center-box">{{result}}</div>
-    <btn btn="重载用户微信配置" :clickDics="clickDics"></btn>
+    <div class="btn-box">
+      <span class="btn" @click="clickDics">重载用户微信配置</span>
+    </div>
   </div>
 </template>
 
 <script>
-  import Btn from '../components/Btn'
   import { post } from '@/utils/ajax'
 
   export default {
-    components: {
-      Btn
-    },
     data () {
       return {
         result: ''

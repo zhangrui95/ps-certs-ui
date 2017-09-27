@@ -27,7 +27,10 @@
         <div class="height-fixed-min"></div>
     </group>
     <toast v-model="showPositionValue" type="text" :time="2000" is-show-mask :text="toastText" position="default"></toast>
-    <double-btn :leftBtn="leftBtn" :rightBtn="rightBtn" :click="clickUp" :goOut="goOut"></double-btn>
+    <div class="btn-box">
+      <span class="btn bg-gray" @click="goOut">取消</span>
+      <span class="btn" @click="clickUp">提交</span>
+    </div>
     <confirm v-model="show" title=" " @on-cancel="onCancel" @on-confirm="onConfirm" @on-show="onShow" @on-hide="onHide">
       <p style="text-align:center;">{{confirmText}}</p>
     </confirm>
@@ -39,14 +42,12 @@
 
 <script>
   import { XInput, PopupPicker, Datetime, Toast, Confirm, Group } from 'vux'
-  import DoubleBtn from '../components/DoubleBtn'
   import { post } from '@/utils/ajax'
   import ImgBrowse from '../components/ImgBrowse'
   import UpLoading from '../components/UpLoading'
 
   export default {
     components: {
-      DoubleBtn,
       XInput,
       PopupPicker,
       Datetime,
@@ -68,8 +69,6 @@
         confirmText: '',
         confirmTexts: '',
         title: '',
-        leftBtn: '取消',
-        rightBtn: '提交',
         name: '',
         card: '',
         mobile: '',
