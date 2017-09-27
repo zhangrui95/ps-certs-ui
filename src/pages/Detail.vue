@@ -5,27 +5,11 @@
       <span>{{createTime | dateFormat('YYYY-MM-DD hh:mm:ss')}}</span>
     </div>
     <div class="center-box">
-      <div class="cell">
-        <div class="cell-title">自拍正面照</div>
-        <div class="cell-content">
-          <span v-for="(item, index) in list" :key="index">
-            <img class="previewer-img"  v-if="item.type==1" :src="item.src" @click="show(index)">
-          </span>
-        </div>
-      </div>
-      <div class="cell">
-        <div class="cell-title">在读证明</div>
-        <div class="cell-content">
-          <span v-for="(item, index) in list" :key="index">
-            <img class="previewer-img"  v-if="item.type==3" :src="item.src" @click="show(index)">
-          </span>
-        </div>
-      </div>
-      <div class="cell">
-        <div class="cell-title">学生证</div>
-        <div class="cell-content">
-          <span v-for="(item, index) in list" :key="index">
-            <img class="previewer-img"  v-if="item.type==2" :src="item.src" @click="show(index)">
+      <div class="cell" v-for="(group, index) in lists" :key="index">
+        <div class="cell-title">{{group.name}}</div>
+        <div class="cell-content previewer-box">
+          <span v-for="(item, itemIndex) in group.list" :key="itemIndex">
+            <img class="previewer-img" :src="item.src" @click="show(index, itemIndex)">
           </span>
         </div>
       </div>
@@ -42,9 +26,7 @@
         </div>
       </div>
     </div>
-    <previewer :list="list" ref="previewer" :options="options"></previewer>
-    <previewer :list="list" ref="previewer" :options="options"></previewer>
-    <previewer :list="list" ref="previewer" :options="options"></previewer>
+    <previewer v-for="(group, index) in lists" :key="index" :list="group.list" ref="previewer" :options="options"></previewer>
   </div>
 </template>
 
@@ -63,20 +45,15 @@ export default {
       back: false,
       remark: '',
       mobile: '',
-      list: [],
-      options: {
-        getThumbBoundsFn (index) {
-          let thumbnail = document.querySelectorAll('.previewer-img')[index]
-          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
-          let rect = thumbnail.getBoundingClientRect()
-          return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
-        }
-      }
+      lists: [],
+      showList: 0,
+      options: {}
     }
   },
   methods: {
-    show (index) {
-      this.$refs.previewer.show(index)
+    show (index, itemIndex) {
+      this.showList = index
+      this.$refs.previewer[index].show(itemIndex)
     }
   },
   created () {
@@ -89,12 +66,26 @@ export default {
         let list = data.data.photos.map(item => {
           return  {...item, src: "/example/api/studentCert/photo?id="+item.id}
         })
-        this.list = [
-          ...list.filter(item => item.type == 1),
-          ...list.filter(item => item.type == 3),
-          ...list.filter(item => item.type == 2),
+        this.lists = [{
+            name: '自拍正面照',
+            list: list.filter(item => item.type == 1),
+          }, {
+            name: '在读证明',
+            list: list.filter(item => item.type == 3),
+          }, {
+            name: '学生证',
+            list: list.filter(item => item.type == 2),
+          }
         ]
     })
+    this.options = {
+        getThumbBoundsFn: (index) =>{
+          let thumbnail = document.querySelectorAll('.previewer-box')[this.showList].querySelectorAll('.previewer-img')[index]
+          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
+          let rect = thumbnail.getBoundingClientRect()
+          return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
+        }
+      }
   }
 }
 </script>

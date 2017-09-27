@@ -2,6 +2,7 @@ import Vue from 'vue'
 import qs from 'qs'
 import { querystring } from 'vux'
 
+// post快捷方式
 export function post(url, params = {}) {
     return new Promise((resolve, reject) => {
         Vue.http.post(url, qs.stringify({...params, ...querystring.parse() }))
@@ -17,6 +18,7 @@ export function post(url, params = {}) {
 
 const startProxyTime = {};
 
+// 延迟执行函数
 export function lazyRateProxy(func, time, key) {
     var akey = key == null || key == '' ? 'defaultProxyKey' : key;
     startProxyTime[akey] = new Date().getTime();
