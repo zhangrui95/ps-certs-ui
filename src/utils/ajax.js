@@ -5,7 +5,7 @@ import { querystring } from 'vux'
 // post快捷方式
 export function post(url, params = {}) {
   return new Promise((resolve, reject) => {
-    Vue.http.post(url, qs.stringify({...params, ...querystring.parse() }))
+    Vue.http.post(url, qs.stringify({...params, ...querystring.parse() }, { allowDots: true }))
       .then((response) => {
         if (response.status === 200) {
           resolve(response.data)

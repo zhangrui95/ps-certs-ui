@@ -147,26 +147,33 @@
         }
       },
       onConfirm () {
-        post('api/studentCert/save.json',
+        post('api/studentCert/save.json?userid=' + this.$route.query.userid,
           {
-            'info.marray': this.marray[0],
-            'info.blood': this.blood[0],
-            'info.education': this.culture[0],
-            'info.military': this.military[0],
-            'info.religion': this.religion[0],
-            'info.enterSchoolTime': this.time,
-            'name': this.name,
-            'info.card': this.card,
-            'info.mobile': this.mobile,
-            'info.height': this.height,
-            'info.weight': this.weight,
-            'info.faculty': this.department,
-            'info.specialty': this.major,
-            'selfIds': this.selfLis,
-            'cardIds': this.cardLis.join(','),
-            'proveIds': this.proveLis
+            info:{
+              marray: this.marray[0],
+              blood: this.blood[0],
+              education: this.culture[0],
+              military: this.military[0],
+              religion: this.religion[0],
+              enterSchoolTime: this.time,
+              card: this.card,
+              mobile: this.mobile,
+              height: this.height,
+              weight: this.weight,
+              faculty: this.department,
+              specialty: this.major,
+            },
+            name: this.name,
+            selfIds: this.selfLis,
+            cardIds: this.cardLis.join(','),
+            proveIds: this.proveLis
           }
-        ).then(function (data) {
+        ).then(data => {
+          if(data.state === 0){
+            this.$vux.toast.text(this.$route.query.type == 1? '请注意查看系统通知领取个人信息表': '请注意查看系统通知领取居住证明')
+          }else{
+            this.$vux.toast.text('提交失败！');
+          }
         })
       },
       ShowImg (index) {
