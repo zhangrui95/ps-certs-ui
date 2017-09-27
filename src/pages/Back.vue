@@ -34,11 +34,13 @@
       clickDics: function () {
         if (this.textArea.length !== 0 || this.val.length !== 0) {
           let id = this.$route.query.id
-          post('api/studentCert/fail.json', {id: id, items: this.val, remark: this.textArea}
+          post('api/studentCert/fail.json', {id: id, items: this.val.join(','), remark: this.textArea}
           ).then(response => {
             if (response.state === 0) {
               this.show1 = true
-//              this.$router.push({path:'/Approve'})
+              setTimeout(() => {
+                this.$router.push({path: '/Approve'})
+              }, 2500)
             }
           })
         } else {
