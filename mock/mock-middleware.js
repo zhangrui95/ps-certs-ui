@@ -128,6 +128,10 @@ const MockMiddleware = option => {
   return Mock(getRoute)
 }
 
+const invoke = (route, req, res) => {
+  route.handle(req, res)
+}
+
 const Mock = getRoute => {
   return (req, res, next) => {
     const ret = getRoute(req.path)
@@ -135,9 +139,9 @@ const Mock = getRoute => {
       if (ret.method === 'ALL' || ret.method === req.method) {
         console.log('proxy => ' + req.method + ' ' + req.path)
         if (ret.timeout && ret.timeout > 0) {
-          setTimeout(() => ret.handle(req, res, next), ret.timeout)
+          setTimeout(() => invoke(ret, req, res), ret.timeout)
         } else {
-          ret.handle(req, res, next)
+          invoke(ret, req, res)
         }
       } else {
         next()
@@ -149,4 +153,3 @@ const Mock = getRoute => {
 }
 
 module.exports = MockMiddleware
-

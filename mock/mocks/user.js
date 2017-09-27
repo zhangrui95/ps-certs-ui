@@ -1,7 +1,7 @@
 
 const routes = {
   '/api/user/jsTicket.json': {
-    handle: function (req, res, next) {
+    handle: function (req, res) {
       res.setHeader('Content-Type', 'application/json; charset=UTF-8')
       res.end(JSON.stringify({
         appid: 'test_appid',
