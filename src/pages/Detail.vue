@@ -79,13 +79,13 @@ export default {
         ]
     })
     this.options = {
-        getThumbBoundsFn: (index) =>{
-          let thumbnail = document.querySelectorAll('.previewer-box')[this.showList].querySelectorAll('.previewer-img')[index]
-          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
-          let rect = thumbnail.getBoundingClientRect()
-          return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
-        }
+      getThumbBoundsFn: (index) =>{
+        let thumbnail = document.querySelectorAll('.previewer-box')[this.showList].querySelectorAll('.previewer-img')[index]
+        let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
+        let rect = thumbnail.getBoundingClientRect()
+        return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
       }
+    }
   }
 }
 </script>

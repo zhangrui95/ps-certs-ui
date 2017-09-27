@@ -1,229 +1,107 @@
 <template>
   <div class="page page-list student-page">
     <div class="header-box">未办理</div>
-    <div class="center-box padding-min">
-      <div class="none-flex cell-border cell-margin cell-border-padding"  v-for="imgNews in imgTitle">
-        <div class="weui-cell__hd"><label class="weui-label label-line-height">{{imgNews.title}}</label></div>
-        <div class="weui-cell__bd bd-right font-color blur label-line-height">
-          <img-browse :imgList="imgNews.imgList" :delShow="delShow"></img-browse>
-        </div>
-      </div>
-      <detail-cell title="姓名" :detail="name"></detail-cell>
-      <detail-cell title="身份证号" :detail="card"></detail-cell>
-      <detail-cell title="手机号" :detail="mobile"></detail-cell>
-      <detail-cell title="婚姻状况" :detail="mar"></detail-cell>
-      <detail-cell title="血型" :detail="blood"></detail-cell>
-      <detail-cell title="身高(cm)" :detail="height"></detail-cell>
-      <detail-cell title="体重(kg)" :detail="weight"></detail-cell>
-      <detail-cell title="文化程度" :detail="education"></detail-cell>
-      <detail-cell title="宗教信仰" :detail="religion"></detail-cell>
-      <detail-cell title="兵役状况" :detail="military"></detail-cell>
-      <detail-cell title="入学时间" :detail="time"></detail-cell>
-      <detail-cell title="所在院系" :detail="faculty"></detail-cell>
-      <detail-cell title="所在专业" :detail="specialty"></detail-cell>
+    <div class="center-box">
+      <detail-cell v-for="(group, index) in photoList" :key="index" :title="group.name" class="previewer-box">
+        <span v-for="(item, itemIndex) in group.list" :key="itemIndex">
+          <img class="previewer-img previewer-demo-img" :src="item.src" @click="show(index, itemIndex)">
+        </span>
+      </detail-cell>
+      <detail-cell v-for="item in textList" :key="item.name" :title="item.name" :detail="item.value"></detail-cell>
       <div class="height-fixed-min"></div>
     </div>
-    <double-btn :leftBtn="leftBtn" :rightBtn="rightBtn" :click="clickUp" :goOut="goOut"></double-btn>
-    <confirm v-model="show"
-             title=" "
-             @on-cancel="onCancel"
-             @on-confirm="onConfirm"
-             @on-show="onShow"
-             @on-hide="onHide">
-      <p style="text-align:center;">{{confirmText}}</p>
-    </confirm>
+    <div class="btn-box">
+      <span class="btn-min btn-min-gray" @click="back">退回</span>
+      <span class="btn-min" @click="submit">办理完成</span>
+    </div>
+    <previewer v-for="group in photoList" :key="group.name" :list="group.list" ref="previewer" :options="options"></previewer>
   </div>
 </template>
 
 <script>
-  import { Previewer, TransferDom, dateFormat, Confirm } from 'vux'
+  import { Previewer, dateFormat } from 'vux'
   import DetailCell from '../components/DetailCell'
-  import DoubleBtn from '../components/DoubleBtn'
-  import ImgBrowse from '../components/ImgBrowse.vue'
-  import qs from 'qs'
+  import { post } from '@/utils/ajax'
 
   export default {
-    directives: {
-      TransferDom
-    },
     components: {
-      Previewer,
-      DetailCell,
-      DoubleBtn,
-      ImgBrowse,
-      dateFormat,
-      Confirm
-    },
-    methods: {
-      show (index) {
-        this.$refs.previewer.show(index)
-      }
+      Previewer, DetailCell
     },
     data () {
       return {
-        name: '',
-        card: '',
-        mobile: '',
-        height: '',
-        weight: '',
-        time: '',
-        faculty: '',
-        specialty: '',
-        mar: '',
-        blood: '',
-        education: '',
-        religion: '',
-        military: '',
-        leftBtn: '退回',
-        rightBtn: '办理完成',
-        confirmText: '',
-        show: false,
-        delShow: false,
-        imgTitle: [
-          {
-            title: '自拍正面照',
-            imgList: []
-          },
-          {title: '在读证明',
-            imgList: []
-          },
-          {title: '学生证',
-            imgList: []
-          }]
+        photoList: [],
+        textList: [],
+        showList: 0,
+        options: {}
       }
     },
-    created: function () {
-      this.$http.post('api/studentCert/detail.json', {id: this.$route.query.id}).then(response => {
-        let item = response.data.data
-        let src1 = []
-        let src2 = []
-        let src3 = []
-        for (let i in item.photos) {
-          if (item.photos[i].type === 1) {
-            let img1 = {}
-            img1.src = 'api/studentCert/photo?id=' + item.photos[i].id
-            src1.push(img1)
-            this.imgTitle[0].imgList = src1
-          } else if (item.photos[i].type === 2) {
-            let img2 = {}
-            img2.src = 'api/studentCert/photo?id=' + item.photos[i].id
-            src2.push(img2)
-            this.imgTitle[2].imgList = src2
-          } else if (item.photos[i].type === 3) {
-            let img3 = {}
-            img3.src = 'api/studentCert/photo?id=' + item.photos[i].id
-            src3.push(img3)
-            this.imgTitle[1].imgList = src3
-          }
-        }
-        this.name = item.name
-        this.card = item.info.card
-        this.mobile = item.info.mobile
-        this.height = item.info.height
-        this.weight = item.info.weight
-        this.time = dateFormat(new Date(item.info.enterSchoolTime), 'YYYY-MM-DD')
-        this.faculty = item.info.faculty
-        this.specialty = item.info.specialty
-        let mar = ''
-        let blood = ''
-        let education = ''
-        let religion = ''
-        let military = ''
-        switch (item.info.marray) {
-          case 1:mar = '未婚'
-            break
-          case 2:mar = '已婚'
-            break
-          case 3:mar = '离异'
-            break
-          case 4:mar = '其他'
-            break
-          default:
-        }
-        this.mar = mar
-        switch (item.info.blood) {
-          case 1:blood = 'A'
-            break
-          case 2:blood = 'B'
-            break
-          case 3:blood = 'O'
-            break
-          case 4:blood = 'AB'
-            break
-          case 5:blood = '其他'
-            break
-          case 6:blood = '不详'
-            break
-          default:
-        }
-        this.blood = blood
-        switch (item.info.education) {
-          case 1:education = '本科'
-            break
-          case 2:education = '本科以上'
-            break
-          default:
-        }
-        this.education = education
-        switch (item.info.religion) {
-          case 1:religion = '佛教'
-            break
-          case 2:religion = '道教'
-            break
-          case 3:religion = '天主教'
-            break
-          case 4:religion = '基督教'
-            break
-          case 5:religion = '伊斯兰教'
-            break
-          case 6:religion = '喇嘛教'
-            break
-          case 7:religion = '其他'
-            break
-          case 8:religion = '无宗教信仰'
-            break
-          default:
-        }
-        this.religion = religion
-        switch (item.info.military) {
-          case 1:military = '未服兵役'
-            break
-          case 2:military = '退出现役'
-            break
-          case 3:military = '国防生'
-            break
-          case 4:military = '服现役'
-            break
-          default:
-        }
-        this.military = military
-      })
-    },
     methods: {
-      goOut () {
-        let id = this.$route.params.id
-        this.$router.push({path: '/Back', query: {id: id}})
+      show (index, itemIndex) {
+        this.showList = index
+        this.$refs.previewer[index].show(itemIndex)
       },
-      clickUp () {
-        this.confirmText = '是否确认办理完成？'
-        this.show = true
+      back () {
+        this.$router.back()
       },
-      onCancel () {
-        console.log('on cancel')
-      },
-      onConfirm () {
-        this.$http.post('api/studentCert/done.json', qs.stringify({'userid': '', 'type': '', 'id': ''})
-        ).then(response => {
-          if (response.data.state === 0) {
-          } else {
+      submit () {
+        let that = this
+        this.$vux.confirm.show({
+          title: '是否确认办理完成？',
+          onConfirm () {
+            that.confirm()
           }
         })
       },
-      onHide () {
-        console.log('on hide')
-      },
-      onShow () {
-        console.log('on show')
+      confirm () {
+        post('api/studentCert/done.json').then(data => {
+          if (data.state === 0) {
+            this.$vux.toast.show({text:'提交成功'})
+          } else {
+            this.$vux.toast.show({text:'提交失败'})
+          }
+        })
+      }
+    },
+    created: function () {
+      post('/example/api/studentCert/detail.json').then(data => {
+        let { photos, name, info } = data.data
+        photos = photos.map(item => {
+          return  {...item, src: "api/studentCert/photo?id="+item.id}
+        })
+        this.photoList = [{
+            name: '自拍正面照',
+            list: photos.filter(item => item.type == 1),
+          }, {
+            name: '在读证明',
+            list: photos.filter(item => item.type == 3),
+          }, {
+            name: '学生证',
+            list: photos.filter(item => item.type == 2),
+          }
+        ]
+        this.textList = [
+          { name: '姓名', value: name },
+          { name: '身份证号', value: info.card },
+          { name: '手机号', value: info.mobile },
+          { name: '婚姻状况', value: ['未婚', '已婚', '离异', '其他'][info.marray-1] },
+          { name: '血型', value: ['A', 'B', 'O', 'AB', '其他', '不详'][info.blood-1] },
+          { name: '身高(cm)', value: info.height },
+          { name: '体重(kg)', value: info.weight },
+          { name: '文化程度', value: ['本科', '本科以上'][info.education-1] },
+          { name: '宗教信仰', value: ['佛教', '道教', '天主教', '基督教', '伊斯兰教', '喇嘛教', '其他', '无宗教信仰'][info.religion-1] },
+          { name: '兵役状况', value: ['未服兵役', '退出现役', '国防生', '服现役'][info.education-1] },
+          { name: '入学时间', value: dateFormat(info.enterSchoolTime) },
+          { name: '所在院系', value: info.faculty },
+          { name: '所在专业', value: info.specialty },
+        ]
+      })
+      this.options = {
+        getThumbBoundsFn: (index) =>{
+          let thumbnail = document.querySelectorAll('.previewer-box')[this.showList].querySelectorAll('.previewer-img')[index]
+          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
+          let rect = thumbnail.getBoundingClientRect()
+          return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
+        }
       }
     }
   }
