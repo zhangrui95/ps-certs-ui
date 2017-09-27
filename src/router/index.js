@@ -46,6 +46,7 @@ let router = new VueRouter((() => {
 
 router.beforeEach(function(to, from, next) {
     window.history.replaceState(store.state.router, '', from.fullPath) // 将状态保存到跳转前的页面
+    store.commit('updateRouterState', {})
     store.commit('updateLoadingStatus', { isLoading: true })
     next()
 })
@@ -55,7 +56,7 @@ router.afterEach(function(to) {
 })
 
 window.addEventListener('popstate', function(popstate) { //监听popstate事件  将history中的状态还原到当前页面
-    store.commit('updateRouterState', {...popstate.state, isReverse: true })
+    store.commit('updateRouterState', {...popstate.state })
 });
 
 export default router
