@@ -40,7 +40,7 @@
             success: function (res) {
               let localData = res.localData
               let imgs = {}
-              imgs.src = localData.replace('jgp', 'jpeg')
+              imgs.src = localData
               if (count === 9) {
                 _this.ViewImages.push(imgs)
               } else {

@@ -1,7 +1,7 @@
 <template>
   <div class="flex-page approve">
     <top-nav :nav="nav" @navClick="commitState">{{title}}</top-nav>
-    <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
+    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
       <div class="list-wrap">
         <div class="list-item" v-for="(item, index) in listData" :key="index" @click="linkTo(`/Undone?id=${item.id}`)">
           <div class="item-left">
@@ -10,7 +10,7 @@
           <div class="item-right">
             <div class="item-title">{{item.name}}</div>
             <div class="item-desc">{{item.createTime | dateFormat}}</div>
-          </div>    
+          </div>
         </div>
       </div>
     </list-view>
@@ -31,29 +31,27 @@ export default {
     return {
       title: '',
       nav: '',
-      scrollY: this.$store.state.router.scrollY || 0,
-      params: this.$store.state.router.params || {},
-      listData: this.$store.state.router.listData || []
+      scrollY: 0,
+      params: {},
+      listData: []
+    }
+  },
+  watch : {
+    '$store.state.router' () {
+      this.scrollY = this.$store.state.router.scrollY
+      this.params = this.$store.state.router.params
+      this.listData = this.$store.state.router.listData
     }
   },
   created () {
     this.title = this.$route.query.type == 1? '身份证申请': '居住证明申请'
-    this.params = {
-      state: 0,
-    }
+    this.params = { state: 0 }
     post('/example/api/studentCert/groupByState.json').then(data => {
-      this.nav = [{
-        num: data.init,
-        text: '未办理',
-      },{
-        link: `/NoInform`,
-        num: data.done,
-        text: '未通知'
-      },{
-        link: `/Done`,
-        num: data.notify,
-        text: '已完成'
-      }]
+      this.nav = [
+        { text: '未办理', num: data.init }, 
+        { text: '未通知', num: data.done, link: '/NoInform' },
+        { text: '已完成', num: data.notify, link: '/Done' }
+      ]
     })
   },
   methods: {
@@ -61,10 +59,10 @@ export default {
       this.listData = [ ...this.listData, ...data.list]
     },
     commitState () {
-      this.$store.commit('updateRouterState', { 
+      this.$store.commit('updateRouterState', {
         params: this.params,
         listData: this.listData,
-        scrollY: this.$refs.listView.getScrollY() 
+        scrollY: this.$refs.listView.getScrollY()
       })
     },
     linkTo (url) {

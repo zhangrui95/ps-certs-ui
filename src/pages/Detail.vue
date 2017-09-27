@@ -57,14 +57,14 @@ export default {
     }
   },
   created () {
-    post('/example/api/studentCert/detail.json').then(data => {
+    post('api/studentCert/detail.json').then(data => {
         this.name = data.data.name
         this.createTime = data.data.createTime
         this.back = data.data.result === -1
         this.remark = data.data.remark
         this.mobile = data.data.mobile
         let list = data.data.photos.map(item => {
-          return  {...item, src: "/example/api/studentCert/photo?id="+item.id}
+          return  {...item, src: "api/studentCert/photo?id="+item.id}
         })
         this.lists = [{
             name: '自拍正面照',
@@ -79,13 +79,13 @@ export default {
         ]
     })
     this.options = {
-        getThumbBoundsFn: (index) =>{
-          let thumbnail = document.querySelectorAll('.previewer-box')[this.showList].querySelectorAll('.previewer-img')[index]
-          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
-          let rect = thumbnail.getBoundingClientRect()
-          return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
-        }
+      getThumbBoundsFn: (index) =>{
+        let thumbnail = document.querySelectorAll('.previewer-box')[this.showList].querySelectorAll('.previewer-img')[index]
+        let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
+        let rect = thumbnail.getBoundingClientRect()
+        return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
       }
+    }
   }
 }
 </script>

@@ -10,7 +10,9 @@
         <div class="height-fixed-min"></div>
       </div>
     </div>
-    <btn :btn="btn" :clickDics="clickDics"></btn>
+    <div class="btn-box">
+      <span class="btn" @click="clickDics">发送</span>
+    </div>
     <toast v-model="show1">发送成功</toast>
     <toast v-model="show2" type="text">请选择存在问题项或填写备注</toast>
   </div>
@@ -18,14 +20,11 @@
 
 <script>
   import { Checklist, Toast } from 'vux'
-  import Btn from '../components/Btn'
-  import qs from 'qs'
+  import { post } from '@/utils/ajax'
 
   export default {
     components: {
-      Checklist,
-      Btn,
-      Toast
+      Checklist, Toast
     },
     methods: {
       change (val) {
@@ -34,11 +33,13 @@
       clickDics: function () {
         if (this.textArea.length !== 0 || this.val.length !== 0) {
           let id = this.$route.query.id
-          this.$http.post('/example/api/studentCert/fail.json', qs.stringify({type: this.$route.query.type, id: id, items: this.val, remark: this.textArea})
+          post('api/studentCert/fail.json', {id: id, items: this.val.join(','), remark: this.textArea}
           ).then(response => {
-            if (response.data.state === 0) {
+            if (response.state === 0) {
               this.show1 = true
-//              this.$router.push({path:'/Approve'})
+              setTimeout(() => {
+                this.$router.push({path: '/Approve'})
+              }, 2500)
             }
           })
         } else {
@@ -48,7 +49,6 @@
     },
     data () {
       return {
-        btn: '发送',
         labelPosition: '',
         show1: false,
         show2: false,

@@ -14,7 +14,9 @@
         </div>
       </div>
     </div>
-    <btn :btn="btn" :clickDics="submit"></btn>
+    <div class="btn-box">
+      <span class="btn" @click="submit">确定</span>
+    </div>
   </div>
 </div>
 
@@ -23,16 +25,12 @@
 <script>
   import { XInput } from 'vux'
   import DragBox from '@/components/DragBox'
-  import Btn from './Btn'
   export default {
     components: {
-      Btn,
-      XInput,
-      DragBox
+      XInput, DragBox
     },
     data () {
       return {
-        btn: '确定',
         value1: '',
         show: false,
       }
