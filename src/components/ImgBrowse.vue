@@ -54,6 +54,7 @@
       },
       onConfirm (index) {
         this.imgList.splice(index, 1)
+        this.$emit('delImgIndex', index)
       },
       onHide () {
         console.log('on hide')

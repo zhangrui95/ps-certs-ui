@@ -1,7 +1,7 @@
 <template>
   <div class="flex-page">
     <div class="header-box">已完成({{count}})</div>
-    <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
+    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
       <div class="list-wrap">
         <div class="list-group" v-for="group in groups" :key="group.dateStr">
           <div class="group-title">
@@ -71,10 +71,10 @@ export default {
       this.$refs.listView.refresh()
     },
     commitState () {
-      this.$store.commit('updateRouterState', { 
+      this.$store.commit('updateRouterState', {
         params: this.params,
         listData: this.listData,
-        scrollY: this.$refs.listView.getScrollY() 
+        scrollY: this.$refs.listView.getScrollY()
       })
     },
     linkTo (url) {

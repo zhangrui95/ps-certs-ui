@@ -1,7 +1,7 @@
 <template>
   <div class="flex-page approve">
     <top-nav :nav="nav" @navClick="commitState">{{title}}</top-nav>
-    <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
+    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
       <div class="list-wrap">
         <div class="list-item" v-for="(item, index) in listData" :key="index" @click="linkTo(`/Undone?id=${item.id}`)">
           <div class="item-left">
@@ -10,7 +10,7 @@
           <div class="item-right">
             <div class="item-title">{{item.name}}</div>
             <div class="item-desc">{{item.createTime | dateFormat}}</div>
-          </div>    
+          </div>
         </div>
       </div>
     </list-view>
@@ -59,10 +59,10 @@ export default {
       this.listData = [ ...this.listData, ...data.list]
     },
     commitState () {
-      this.$store.commit('updateRouterState', { 
+      this.$store.commit('updateRouterState', {
         params: this.params,
         listData: this.listData,
-        scrollY: this.$refs.listView.getScrollY() 
+        scrollY: this.$refs.listView.getScrollY()
       })
     },
     linkTo (url) {

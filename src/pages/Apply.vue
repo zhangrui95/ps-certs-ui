@@ -5,7 +5,7 @@
       <div class="none-flex cell-border cell-margin" v-for="(imgNews, index) in imgTitle">
         <div class="weui-cell__hd" v-html="imgNews.title"></div>
         <ul class="weui-uploader__files">
-          <img-browse :imgList="imgNews.imgList" :delShow="delShow"></img-browse>
+          <img-browse :imgList="imgNews.imgList" :delShow="delShow" @delImgIndex="delImgIndex" @click.native="ShowImg(index)"></img-browse>
         </ul>
         <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'></up-loading>
       </div>
@@ -185,7 +185,7 @@
         this.$wechat.closeWindow()
       },
       onConfirms () {
-        post('/example/api/studentCert/save.json',
+        post('api/studentCert/save.json',
           {
             'type': this.$route.query.type,
             'info.marray': this.marray[0],
@@ -202,7 +202,7 @@
             'info.faculty': this.department,
             'info.specialty': this.major,
             'selfIds': this.selfLis,
-            'cardIds': this.cardLis,
+            'cardIds': this.cardLis.join(','),
             'proveIds': this.proveLis
           }
         ).then(function (data) {
@@ -214,13 +214,21 @@
       onShow () {
         console.log('on show')
       },
+      ShowImg (index) {
+        this.num = index
+      },
       Ids (ids) {
         if (this.num === 0) {
           this.selfLis = ids.join(',')
         } else if (this.num === 2) {
-          this.cardLis = ids.join(',')
+          this.cardLis = ids
         } else {
           this.proveLis = ids.join(',')
+        }
+      },
+      delImgIndex (delIndex) {
+        if (this.num === 2) {
+          this.cardLis.splice(delIndex, 1)
         }
       }
     }

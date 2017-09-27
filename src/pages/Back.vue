@@ -34,7 +34,7 @@
       clickDics: function () {
         if (this.textArea.length !== 0 || this.val.length !== 0) {
           let id = this.$route.query.id
-          this.$http.post('/example/api/studentCert/fail.json', qs.stringify({type: this.$route.query.type, id: id, items: this.val, remark: this.textArea})
+          this.$http.post('api/studentCert/fail.json', qs.stringify({type: this.$route.query.type, id: id, items: this.val, remark: this.textArea})
           ).then(response => {
             if (response.data.state === 0) {
               this.show1 = true

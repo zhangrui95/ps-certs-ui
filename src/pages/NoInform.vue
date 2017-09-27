@@ -8,7 +8,7 @@
         :start-date="new Date() | dateFormat"/>
       <x-input title="领取地址" :show-clear="false" v-model="address" text-align="right"></x-input>
     </group>
-    <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
+    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
       <div class="list-wrap">
         <div class="list-group" v-for="group in groups" :key="group.dateStr">
           <div class="group-title">
@@ -107,9 +107,9 @@
           }
         })
       },
-      confirm () { 
-        post('/example/api/studentCert/notifyUsers.json',{
-          id: this.listData.filter(item => item.checked).map(item => item.id).join(','), 
+      confirm () {
+        post('api/studentCert/notifyUsers.json',{
+          id: this.listData.filter(item => item.checked).map(item => item.id).join(','),
           all: this.allChecked? 1: 0,
           time: this.dateTime,
           address: this.address,
