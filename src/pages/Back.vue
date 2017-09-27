@@ -19,7 +19,7 @@
 <script>
   import { Checklist, Toast } from 'vux'
   import Btn from '../components/Btn'
-  import qs from 'qs'
+  import { post } from '@/utils/ajax'
 
   export default {
     components: {
@@ -34,9 +34,9 @@
       clickDics: function () {
         if (this.textArea.length !== 0 || this.val.length !== 0) {
           let id = this.$route.query.id
-          this.$http.post('api/studentCert/fail.json', qs.stringify({type: this.$route.query.type, id: id, items: this.val, remark: this.textArea})
+          post('api/studentCert/fail.json', {id: id, items: this.val, remark: this.textArea}
           ).then(response => {
-            if (response.data.state === 0) {
+            if (response.state === 0) {
               this.show1 = true
 //              this.$router.push({path:'/Approve'})
             }

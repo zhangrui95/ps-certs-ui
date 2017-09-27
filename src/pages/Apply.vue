@@ -1,31 +1,31 @@
 <template>
   <div class="page page-list student-page">
     <div class="header-box">{{title}}</div>
-    <div class="center-box padding-min">
-      <div class="none-flex cell-border cell-margin" v-for="(imgNews, index) in imgTitle">
-        <div class="weui-cell__hd" v-html="imgNews.title"></div>
-        <ul class="weui-uploader__files">
-          <img-browse :imgList="imgNews.imgList" :delShow="delShow" @delImgIndex="delImgIndex" @click.native="ShowImg(index)"></img-browse>
-        </ul>
-        <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'></up-loading>
-      </div>
-      <x-input title="姓名" v-model="name"></x-input>
-      <x-input title="身份证号" v-model="card"></x-input>
-      <x-input title="手机号码" v-model="mobile"></x-input>
-      <popup-picker title="婚姻状况" ref="picker3" :data="marrayList" v-model="marray" value-text-align="right" placeholder="请选择" @on-change="onChange" show-name></popup-picker>
-      <popup-picker title="血型" :data="bloodList" v-model="blood" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-      <x-input title="身高(cm)" v-model="height"></x-input>
-      <x-input title="体重(kg)" v-model="weight"></x-input>
-      <popup-picker title="文化程度" :data="cultureList" v-model="culture" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-      <popup-picker title="宗教信仰" :data="religionList" v-model="religion" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-      <popup-picker title="兵役状况" :data="militaryList" v-model="military" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-      <div class="vux-cell-box">
-        <datetime v-model="time" @on-change="change" title="入学时间" :show.sync="visibility" placeholder="请选择" show-name></datetime>
-      </div>
-      <x-input title="所在院系" v-model="department"></x-input>
-      <x-input title="所在专业" v-model="major"></x-input>
-      <div class="height-fixed-min"></div>
-    </div>
+    <group class="center-box padding-min">
+        <div class="none-flex cell-border cell-margin" v-for="(imgNews, index) in imgTitle">
+          <div class="weui-cell__hd" v-html="imgNews.title"></div>
+          <ul class="weui-uploader__files">
+            <img-browse :imgList="imgNews.imgList" :delShow="delShow" @delImgIndex="delImgIndex" @click.native="ShowImg(index)"></img-browse>
+          </ul>
+          <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'></up-loading>
+        </div>
+        <x-input title="姓名" v-model="name"></x-input>
+        <x-input title="身份证号" v-model="card"></x-input>
+        <x-input title="手机号码" v-model="mobile"></x-input>
+        <popup-picker title="婚姻状况" ref="picker3" :data="marrayList" v-model="marray" value-text-align="right" placeholder="请选择" @on-change="onChange" show-name></popup-picker>
+        <popup-picker title="血型" :data="bloodList" v-model="blood" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+        <x-input title="身高(cm)" v-model="height"></x-input>
+        <x-input title="体重(kg)" v-model="weight"></x-input>
+        <popup-picker title="文化程度" :data="cultureList" v-model="culture" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+        <popup-picker title="宗教信仰" :data="religionList" v-model="religion" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+        <popup-picker title="兵役状况" :data="militaryList" v-model="military" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+        <div class="vux-cell-box">
+          <datetime v-model="time" @on-change="change" title="入学时间" :show.sync="visibility" placeholder="请选择" show-name></datetime>
+        </div>
+        <x-input title="所在院系" v-model="department"></x-input>
+        <x-input title="所在专业" v-model="major"></x-input>
+        <div class="height-fixed-min"></div>
+    </group>
     <toast v-model="showPositionValue" type="text" :time="2000" is-show-mask :text="toastText" position="default"></toast>
     <double-btn :leftBtn="leftBtn" :rightBtn="rightBtn" :click="clickUp" :goOut="goOut"></double-btn>
     <confirm v-model="show" title=" " @on-cancel="onCancel" @on-confirm="onConfirm" @on-show="onShow" @on-hide="onHide">
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-  import { XInput, PopupPicker, Datetime, Toast, Confirm } from 'vux'
+  import { XInput, PopupPicker, Datetime, Toast, Confirm, Group } from 'vux'
   import DoubleBtn from '../components/DoubleBtn'
   import { post } from '@/utils/ajax'
   import ImgBrowse from '../components/ImgBrowse'
@@ -53,7 +53,8 @@
       Toast,
       Confirm,
       ImgBrowse,
-      UpLoading
+      UpLoading,
+      Group
     },
     created () {
       this.title = this.$route.query.type == 1 ? '身份证办理申请登记' : '居住证明办理申请登记'
@@ -237,6 +238,10 @@
 
 <style lang="less">
   .student-page{
+    .weui-cells{
+      margin-top: 5px;
+      font-size: 16px;
+    }
     .padding-min{
       padding-top: 5px;
     }
