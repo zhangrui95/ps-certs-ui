@@ -1,7 +1,6 @@
 <template>
-  <div class="img-uploader-box" @click="chooseImage">
-    <input class="weui-uploader__input" type="button"/>
-    <img class="change-upload" src="../assets/photo.png"/>
+  <div @click="chooseImage">
+    <slot></slot>
   </div>
 </template>
 
@@ -23,7 +22,9 @@
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
-            _this.getLocalImgData(res, _this.count)
+            if (/iPhone/gi.test(navigator.userAgent)) {
+              _this.getLocalImgData(res, _this.count)
+            }
             _this.upload(res, _this.count)
           },
           fail: function (err) {

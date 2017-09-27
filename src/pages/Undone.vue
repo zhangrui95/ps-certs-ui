@@ -67,18 +67,18 @@
       post('/example/api/studentCert/detail.json').then(data => {
         let { photos, name, info } = data.data
         photos = photos.map(item => {
-          return  {...item, src: "api/studentCert/photo?id="+item.id}
+          return  {...item, src: "api/studentCert/photo?id=" + item.id}
         })
         this.photoList = [{
-            name: '自拍正面照',
-            list: photos.filter(item => item.type == 1),
-          }, {
-            name: '在读证明',
-            list: photos.filter(item => item.type == 3),
-          }, {
-            name: '学生证',
-            list: photos.filter(item => item.type == 2),
-          }
+          name: '自拍正面照',
+          list: photos.filter(item => item.type === 1)
+        }, {
+          name: '在读证明',
+          list: photos.filter(item => item.type === 3)
+        }, {
+          name: '学生证',
+          list: photos.filter(item => item.type === 2)
+        }
         ]
         this.textList = [
           { name: '姓名', value: name },

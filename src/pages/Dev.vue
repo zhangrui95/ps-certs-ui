@@ -20,7 +20,7 @@ export default {
   methods: {
     changeHref (e) {
       let { hash, menu } = e.target.dataset
-      let userid = querystring.parse().userid || 'value'
+      let userid = querystring.parse().userid
       this.$router.push(`/${hash}?userid=${userid}&type=${menu}`)
     }
   }

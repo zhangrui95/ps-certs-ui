@@ -2,7 +2,6 @@
   <div class="page page-list">
     <div class="header-box" id="title">{{title}}</div>
     <div class="center-box" id="center-box" v-html="text"></div>
-    <btn :btn="btn" :clickDics="clickDics"></btn>
     <div class="btn-box">
       <span class="btn" @click="clickDics">开始申请</span>
     </div>
