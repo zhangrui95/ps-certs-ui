@@ -7,7 +7,12 @@
           <ul class="weui-uploader__files">
             <img-browse :imgList="imgNews.imgList" :delShow="delShow" @delImgIndex="delImgIndex" @click.native="ShowImg(index)"></img-browse>
           </ul>
-          <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'></up-loading>
+          <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'>
+            <div class="img-uploader-box">
+              <input class="weui-uploader__input" type="button"/>
+              <img class="change-upload" src="../assets/photo.png"/>
+            </div>
+          </up-loading>
         </div>
         <x-input title="姓名" v-model="name"></x-input>
         <x-input title="身份证号" v-model="card"></x-input>
