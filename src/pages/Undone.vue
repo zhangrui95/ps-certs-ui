@@ -40,7 +40,7 @@
   import DetailCell from '../components/DetailCell'
   import DoubleBtn from '../components/DoubleBtn'
   import ImgBrowse from '../components/ImgBrowse.vue'
-  import qs from 'qs'
+  import { post } from '@/utils/ajax'
 
   export default {
     directives: {
@@ -212,9 +212,9 @@
         console.log('on cancel')
       },
       onConfirm () {
-        this.$http.post('api/studentCert/done.json', qs.stringify({'userid': '', 'type': '', 'id': ''})
+        post('api/studentCert/done.json', {id: this.$route.query.id}
         ).then(response => {
-          if (response.data.state === 0) {
+          if (response.state === 0) {
           } else {
           }
         })
