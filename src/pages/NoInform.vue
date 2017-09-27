@@ -24,9 +24,9 @@
       </div>
     </list-view>
     <div class="btn-box">
-      <a class="btn-min check-all">
+      <a class="btn check-all">
         <check-icon :checked='allChecked' @click.native="allClick(!allChecked)"/>全部选择({{checkedCount}})</a>
-      <a class="btn-min" @click="submit">通知</a>
+      <a class="btn" @click="submit">通知</a>
     </div>
   </div>
 </template>
@@ -136,7 +136,7 @@
     margin-top: 0;
   }
 }
-.check-all{
+.btn-box .check-all{
   background: none;
   color: #000;
   text-align: left;
