@@ -2,7 +2,7 @@
   <div class="page page-list student-page">
     <div class="header-box">{{title}}</div>
     <group class="center-box padding-min">
-        <div class="none-flex cell-border cell-margin" v-for="(imgNews, index) in imgTitle">
+        <div class="none-flex cell-border cell-margin" v-for="(imgNews, index) in imgTitle" :key="index">
           <div class="weui-cell__hd" v-html="imgNews.title"></div>
           <ul class="weui-uploader__files">
             <img-browse :imgList="imgNews.imgList" :delShow="delShow" @delImgIndex="delImgIndex" @click.native="ShowImg(index)"></img-browse>
@@ -26,36 +26,24 @@
         <x-input title="所在专业" v-model="major"></x-input>
         <div class="height-fixed-min"></div>
     </group>
-    <toast v-model="showPositionValue" type="text" :time="2000" is-show-mask :text="toastText" position="default"></toast>
     <div class="btn-box">
       <span class="btn bg-gray" @click="goOut">取消</span>
       <span class="btn" @click="clickUp">提交</span>
     </div>
-    <confirm v-model="show" title=" " @on-cancel="onCancel" @on-confirm="onConfirm" @on-show="onShow" @on-hide="onHide">
-      <p style="text-align:center;">{{confirmText}}</p>
-    </confirm>
-    <confirm v-model="shows" title=" " @on-cancel="onCancels" @on-confirm="onConfirms" @on-show="onShow" @on-hide="onHide">
-      <p style="text-align:center;">{{confirmTexts}}</p>
-    </confirm>
   </div>
 </template>
 
 <script>
-  import { XInput, PopupPicker, Datetime, Toast, Confirm, Group } from 'vux'
-  import { post } from '@/utils/ajax'
+  import { XInput, PopupPicker, Datetime, Group } from 'vux'
   import ImgBrowse from '../components/ImgBrowse'
   import UpLoading from '../components/UpLoading'
+  import { post } from '@/utils/ajax'
+  import { checkArray } from '@/utils/check'
 
   export default {
     components: {
-      XInput,
-      PopupPicker,
-      Datetime,
-      Toast,
-      Confirm,
-      ImgBrowse,
-      UpLoading,
-      Group
+      XInput, PopupPicker, Datetime, Group,
+      ImgBrowse, UpLoading
     },
     created () {
       this.title = this.$route.query.type == 1 ? '身份证办理申请登记' : '居住证明办理申请登记'
@@ -64,10 +52,6 @@
       return {
         num: '',
         delShow: true,
-        show: false,
-        shows: false,
-        confirmText: '',
-        confirmTexts: '',
         title: '',
         name: '',
         card: '',
@@ -88,8 +72,6 @@
         visibility: false,
         department: '',
         major: '',
-        showPositionValue: false,
-        toastText: '',
         selfLis: '',
         cardLis: '',
         proveLis: '',
@@ -114,80 +96,54 @@
       onChange (index) {
         console.log('val change', index[0])
       },
+      change (value) {
+        console.log('change', value)
+      },
       ImgIndex: function (num) {
         this.num = num
       },
       listenToImgs: function (data) {
         this.imgTitle[this.num].imgList = data
       },
-      change (value) {
-        console.log('change', value)
-      },
       goOut () {
-        this.confirmText = '确定取消当前操作？'
-        this.show = true
+        let that = this
+        this.$vux.confirm.show({
+          title: '确定取消当前操作？',
+          onConfirm () {
+            that.$wechat.closeWindow()
+          }
+        })
       },
       clickUp () {
-        if (this.selfLis.length === 0 || this.cardLis.length === 0 || (this.$route.query.type == 2 && this.proveLis.length === 0)) {
-          this.toastText = '照片不能为空'
-          this.showPositionValue = true
-        } else if (this.name.length === 0) {
-          this.toastText = '请填写姓名'
-          this.showPositionValue = true
-        } else if (this.card.length === 0) {
-          this.toastText = '请填写身份证号'
-          this.showPositionValue = true
-        } else if (this.mobile.length === 0) {
-          this.toastText = '请填写手机号'
-          this.showPositionValue = true
-        } else if (this.marray.length === 0) {
-          this.toastText = '请选择婚姻状况'
-          this.showPositionValue = true
-        } else if (this.blood.length === 0) {
-          this.toastText = '请选择血型'
-          this.showPositionValue = true
-        } else if (this.height.length === 0) {
-          this.toastText = '请填写身高'
-          this.showPositionValue = true
-        } else if (this.weight.length === 0) {
-          this.toastText = '请填写体重'
-          this.showPositionValue = true
-        } else if (this.culture.length === 0) {
-          this.toastText = '请选择文化程度'
-          this.showPositionValue = true
-        } else if (this.religion.length === 0) {
-          this.toastText = '请选择宗教信仰'
-          this.showPositionValue = true
-        } else if (this.military.length === 0) {
-          this.toastText = '请选择兵役情况'
-          this.showPositionValue = true
-        } else if (this.time.length === 0) {
-          this.toastText = '请选择入学时间'
-          this.showPositionValue = true
-        } else if (this.department.length === 0) {
-          this.toastText = '请填写所在院系'
-          this.showPositionValue = true
-        } else if (this.major.length === 0) {
-          this.toastText = '请填写所在专业'
-          this.showPositionValue = true
-        } else {
-          this.confirmTexts = '是否确认提交申请？'
-          this.shows = true
+        let infoArray = [
+          [this.selfLis[0] && this.cardLis[0] && this.proveLis[0], '照片不能为空'],
+          [this.name, '请填写姓名'],
+          [this.card, '请填写身份证号'],
+          [this.mobile, '请填写手机号'],
+          [this.marray[0], '请选择婚姻状况'],
+          [this.blood[0], '请选择血型'],
+          [this.height, '请填写身高'],
+          [this.weight, '请填写体重'],
+          [this.culture[0], '请选择文化程度'],
+          [this.religion[0], '请选择宗教信仰'],
+          [this.military[0], '请选择兵役情况'],
+          [this.time[0], '请选择入学时间'],
+          [this.department, '请填写所在院系'],
+          [this.major, '请填写所在专业'],
+        ]
+        if (checkArray(infoArray)){
+          let that = this
+          this.$vux.confirm.show({
+            title: '是否确认提交申请？',
+            onConfirm () {
+              that.onConfirm()
+            }
+          })
         }
       },
-      onCancel () {
-        console.log('on cancel')
-      },
-      onCancels () {
-        console.log('on cancel')
-      },
-      onConfirm (msg) {
-        this.$wechat.closeWindow()
-      },
-      onConfirms () {
+      onConfirm () {
         post('api/studentCert/save.json',
           {
-            'type': this.$route.query.type,
             'info.marray': this.marray[0],
             'info.blood': this.blood[0],
             'info.education': this.culture[0],
@@ -207,12 +163,6 @@
           }
         ).then(function (data) {
         })
-      },
-      onHide () {
-        console.log('on hide')
-      },
-      onShow () {
-        console.log('on show')
       },
       ShowImg (index) {
         this.num = index
@@ -299,7 +249,7 @@
     }
     .height-fixed-min{
       height: 50px;
-      weight:100%;
+      width: 100%;
     }
     .vux-x-input{
       border-bottom: 1px dashed #ddd;

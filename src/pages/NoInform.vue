@@ -5,7 +5,7 @@
       <datetime
         v-model="dateTime"  title="领取时间" placeholder="请选择"
         year-row="{value}年" month-row="{value}月" day-row="{value}日"
-        :start-date="new Date() | dateFormat"/>
+        :start-date="new Date() | dateFormat('YYYY-MM-DD')"/>
       <x-input title="领取地址" :show-clear="false" v-model="address" text-align="right"></x-input>
     </group>
     <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
