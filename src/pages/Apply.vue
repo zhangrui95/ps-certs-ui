@@ -185,7 +185,7 @@
         this.$wechat.closeWindow()
       },
       onConfirms () {
-        post('/example/api/studentCert/save.json',
+        post('api/studentCert/save.json',
           {
             'type': this.$route.query.type,
             'info.marray': this.marray[0],

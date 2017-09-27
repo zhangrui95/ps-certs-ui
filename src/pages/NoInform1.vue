@@ -8,7 +8,7 @@
         :start-date="new Date() | dateFormat"/>
       <x-input title="领取地址" :show-clear="false" v-model="address" text-align="right"></x-input>
     </group>
-    <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
+    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
       <div class="list-wrap">
         <div class="list-group" v-for="(group, index) in computedListData" :key="index">
           <div class="group-title">
@@ -99,7 +99,7 @@
         this.checkAll = !this.checkAll;
         this.computedListData = this.computedListData.map(group => {
           group.items.map(item => {
-            item.checked = this.checkAll         
+            item.checked = this.checkAll
             return item
           })
           group.checked = this.checkAll
@@ -124,17 +124,17 @@
           group.items.map(item => {
             if (item.id == id) {
               item.checked = !item.checked
-              } 
+              }
             if (!item.checked) {
               group.checked = false
-            }              
+            }
             return item
           })
           if (!group.checked) this.checkAll = false
           return group
         })
       },
-      submit () { 
+      submit () {
         if (!this.dateTime || !this.address) {
           this.$vux.toast.text('请填写领取地址与领取时间')
           return
@@ -153,7 +153,7 @@
               })
               id = id.substring(0,id.length-1)
             }
-            post('/example/api/studentCert/notifyUsers.json',{
+            post('api/studentCert/notifyUsers.json',{
               id, all,
               time: that.dateTime,
               address: that.address,

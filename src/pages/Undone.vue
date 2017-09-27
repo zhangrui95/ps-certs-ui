@@ -41,7 +41,6 @@
   import DoubleBtn from '../components/DoubleBtn'
   import ImgBrowse from '../components/ImgBrowse.vue'
   import qs from 'qs'
-//  import { formatDate } from '../components/DateChange.js'
 
   export default {
     directives: {
@@ -94,7 +93,7 @@
       }
     },
     created: function () {
-      this.$http.post('/example/api/studentCert/detail.json', {id: this.$route.query.id}).then(response => {
+      this.$http.post('api/studentCert/detail.json', {id: this.$route.query.id}).then(response => {
         let item = response.data.data
         let src1 = []
         let src2 = []

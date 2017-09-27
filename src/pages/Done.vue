@@ -1,7 +1,7 @@
 <template>
   <div class="flex-page">
     <div class="header-box">已完成({{count}})</div>
-    <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
+    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
       <div class="list-wrap">
         <div class="list-group" v-for="(group, index) in computedListData" :key="index">
           <div class="group-title">
@@ -69,7 +69,7 @@ export default {
     this.params = {
       state: 2,
     }
-    post('/example/api/studentCert.json').then(data => {
+    post('api/studentCert.json').then(data => {
       this.count = data.count
     })
   },
@@ -83,10 +83,10 @@ export default {
       this.listData = [ ...this.listData, ...data.list]
     },
     commitState () {
-      this.$store.commit('updateRouterState', { 
+      this.$store.commit('updateRouterState', {
         params: this.params,
         listData: this.listData,
-        scrollY: this.$refs.listView.getScrollY() 
+        scrollY: this.$refs.listView.getScrollY()
       })
     },
     linkTo (url) {
