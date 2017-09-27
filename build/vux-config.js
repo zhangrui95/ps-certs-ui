@@ -1,3 +1,6 @@
+const isProduction = process.env.NODE_ENV === 'production'
+
 module.exports = {
-    plugins: ['vux-ui', 'progress-bar', 'duplicate-style']
+  options: { showVuxVersionInfo: !isProduction },
+  plugins: ['vux-ui', 'progress-bar', 'duplicate-style']
 }
