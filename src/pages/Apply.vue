@@ -134,9 +134,9 @@
           [this.military[0], '请选择兵役情况'],
           [this.time[0], '请选择入学时间'],
           [this.department, '请填写所在院系'],
-          [this.major, '请填写所在专业'],
+          [this.major, '请填写所在专业']
         ]
-        if (checkArray(infoArray)){
+        if (checkArray(infoArray)) {
           let that = this
           this.$vux.confirm.show({
             title: '是否确认提交申请？',
