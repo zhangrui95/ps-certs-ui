@@ -10,14 +10,14 @@
     </group>
     <list-view url="/example/api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
       <div class="list-wrap">
-        <div class="list-group" v-for="(group, index) in groups" :key="index">
+        <div class="list-group" v-for="group in groups" :key="group.dateStr">
           <div class="group-title">
             <check-icon :checked='group.checked' @click.native="groupClick(!group.checked, group.dateStr)"/>
             {{group.dateStr}}
           </div>
-          <div class="list-item" v-for="(item, itemIndex) in listData" :key="item.id" v-if="group.dateStr == item.dateStr">
+          <div class="list-item" v-for="(item, index) in listData" :key="item.id" v-if="group.dateStr == item.dateStr">
             <check-icon :checked='item.checked' @click.native="itemClick(item.id)"/>
-            <span class="item-index">{{itemIndex>8?itemIndex+1:'0'+(itemIndex+1)}}.</span>
+            <span class="item-index">{{index>8?index+1:'0'+(index+1)}}.</span>
             <span class="item-title">{{item.name}}</span>
           </div>
         </div>
@@ -25,7 +25,7 @@
     </list-view>
     <div class="btn-box">
       <a class="btn-min check-all">
-        <check-icon :checked='checkedAll' @click.native="checkAllClick(!checkedAll)"/>全部选择({{checkCount}})</a>
+        <check-icon :checked='allChecked' @click.native="allClick(!allChecked)"/>全部选择({{checkedCount}})</a>
       <a class="btn-min" @click="submit">通知</a>
     </div>
   </div>
@@ -53,35 +53,25 @@
         listData: [],
       }
     },
-    computed: {
-      groups () {
-        let groups = []
-        let dateStrArr = []
-        this.listData.forEach(item => {
-          let dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
-          if (dateStrArr.indexOf(dateStr) == -1) dateStrArr.push(dateStr)
-        })
-        dateStrArr.forEach(dateStr => {
-          let checked = true
-          this.listData.forEach(item => {
-            if (item.dateStr == dateStr && !item.checked) {
-              checked = false; return
-            }
-          })
-          groups.push({dateStr, checked})
-        })
-        return groups
-      },
-      checkedAll () {
-        return this.listData.filter(item => item.checked).length === this.listData.length
-      },
-      checkCount () {
-        return this.listData.filter(item => item.checked).length
-      }
-    },
     created () {
       this.params = {
         state: 1,
+      }
+    },
+    computed: {
+      groups () {
+        return this.listData
+          .map(item => dateFormat(item.createTime, 'YYYY年MM月DD日'))
+          .filter((dateStr, i, arr) =>  arr.indexOf(dateStr, i+1) == -1 )
+          .map(dateStr => {
+            return { dateStr, checked: this.listData.every(item => !(item.dateStr == dateStr && !item.checked))}
+          })
+      },
+      allChecked () {
+        return this.listData.filter(item => item.checked).length === this.listData.length
+      },
+      checkedCount () {
+        return this.listData.filter(item => item.checked).length
       }
     },
     methods: {
@@ -91,7 +81,7 @@
           return {...item, dateStr:dateFormat(item.createTime, 'YYYY年MM月DD日'), checked: true,}
         })]
       },
-      checkAllClick (checked) {
+      allClick (checked) {
         this.listData = this.listData.map(item => {
           return {...item, checked}
         })
@@ -106,7 +96,7 @@
           return {...item, checked: item.id == id? !item.checked: item.checked}
         })
       },
-      submit () { 
+      submit () {
         if (!this.dateTime || !this.address) {
           this.$vux.toast.text('请填写领取地址与领取时间')
           return
@@ -115,33 +105,29 @@
         this.$vux.confirm.show({
           title: '是否确认发送通知',
           onConfirm () {
-            let id = '', all = 0
-            if (that.checkedAll) all = 1
-            else {
-              that.listData.forEach(item => id += item.checked? item.id + ',': '')
-              id = id.substring(0,id.length-1)
-            }
-            post('/example/api/studentCert/notifyUsers.json',{
-              id, all,
-              time: that.dateTime,
-              address: that.address,
-            }).then(data => {
-              if (data.state === 0) {
-                that.$vux.toast.show({text:'发送成功'})
-                that.dateTime = ''
-                that.address = ''
-                that.listData = []
-                that.checkAll = true
-                that.$refs.listView.refresh()
-              }else{
-                that.$vux.toast.text('发送失败')
-              }
-            }).catch(err => {
-              that.$vux.toast.text('发送失败')
-            })
+            that.confirm()
           }
         })
       },
+      confirm () { 
+        post('/example/api/studentCert/notifyUsers.json',{
+          id: this.listData.filter(item => item.checked).map(item => item.id).join(','), 
+          all: this.allChecked? 1: 0,
+          time: this.dateTime,
+          address: this.address,
+        }).then(data => {
+          if (data.state === 0) {
+            this.$vux.toast.show({text:'发送成功'})
+            this.dateTime = ''
+            this.address = ''
+            this.allClick()
+            this.listData = []
+            this.$refs.listView.refresh()
+          }else{
+            this.$vux.toast.text('发送失败')
+          }
+        })
+      }
     }
   }
 </script>
