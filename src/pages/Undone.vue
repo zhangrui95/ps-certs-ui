@@ -21,11 +21,6 @@
 <script>
   import { Previewer, dateFormat } from 'vux'
   import DetailCell from '../components/DetailCell'
-<<<<<<< HEAD
-=======
-  import DoubleBtn from '../components/DoubleBtn'
-  import ImgBrowse from '../components/ImgBrowse.vue'
->>>>>>> 793bd732d9f74173704eeb8f255ffa89934038f1
   import { post } from '@/utils/ajax'
 
   export default {
@@ -41,15 +36,9 @@
       }
     },
     methods: {
-<<<<<<< HEAD
       show (index, itemIndex) {
         this.showList = index
         this.$refs.previewer[index].show(itemIndex)
-=======
-      goOut () {
-        let id = this.$route.query.id
-        this.$router.push({path: '/Back', query: {id: id}})
->>>>>>> 793bd732d9f74173704eeb8f255ffa89934038f1
       },
       back () {
         this.$router.back()
@@ -63,17 +52,10 @@
           }
         })
       },
-<<<<<<< HEAD
       confirm () {
         post('api/studentCert/done.json').then(data => {
           if (data.state === 0) {
             this.$vux.toast.show({text:'提交成功'})
-=======
-      onConfirm () {
-        post('api/studentCert/done.json', {id: this.$route.query.id}
-        ).then(response => {
-          if (response.state === 0) {
->>>>>>> 793bd732d9f74173704eeb8f255ffa89934038f1
           } else {
             this.$vux.toast.show({text:'提交失败'})
           }
