@@ -15,6 +15,7 @@ const pages = [
     'Undone',
     'Back',
     'Detail',
+    'Console',
 ]
 
 Vue.use(VueRouter)
