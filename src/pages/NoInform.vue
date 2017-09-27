@@ -54,9 +54,7 @@
       }
     },
     created () {
-      this.params = {
-        state: 1,
-      }
+      this.params = { state: 1 }
     },
     computed: {
       groups () {
