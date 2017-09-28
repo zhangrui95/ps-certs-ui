@@ -7,7 +7,7 @@ let Random = Mock.Random
 let tableListData = {};
 if (!global.tableListData) {
   const data = Mock.mock({
-    'list|33': [{
+    'list|100': [{
       'id|+1': 1,
       'aid': '@guid',
       'createTime|+19999999': Random.date('T') * 1,
@@ -18,7 +18,7 @@ if (!global.tableListData) {
       'state|0-2': 0,
       'type|1-2': 1,
       'user': '@cname',
-      'result': () => Random.boolean(1, 7, true) ? -1 : 1,
+      'result': () => Random.boolean(1, 2, true) ? -1 : 1,
     }],
   });
   tableListData = data
@@ -45,11 +45,12 @@ const routes = {
         const params = qs.parse(buf);
         const offset = params.offset * 1 || 0;
         const max = params.max * 1 || 10;
-        const total = tableListData.list.length;
+        let list = tableListData.list.filter(item => item.state == params.state)
+        if (params.name) list = list.filter(item => item.name.indexOf(params.name) != -1)
         const ret = {
           'state': 0,
-          'count': total,
-          'list': tableListData.list.sort((a, b) => a.result - b.result).slice(offset, offset + max)
+          'count': list.length,
+          'list': list.slice(offset, offset + max)
         }
         res.end(JSON.stringify(ret))
       });

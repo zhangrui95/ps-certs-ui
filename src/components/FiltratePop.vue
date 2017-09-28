@@ -10,7 +10,7 @@
       <div class="input-border">
         <div class="weui-search-bar__box">
           <i class="weui-icon-search"></i>
-          <x-input v-model="value1" placeholder="请输入您要查询的企业名称"></x-input>
+          <x-input v-model="value1" placeholder="请输入您要查询的学生姓名"></x-input>
         </div>
       </div>
     </div>
