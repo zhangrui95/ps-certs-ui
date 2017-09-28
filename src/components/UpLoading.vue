@@ -23,56 +23,44 @@
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
-            if (/iPhone/gi.test(navigator.userAgent)) {
-              _this.getLocalImgData(res, _this.count)
-            } else {
-              _this.getAddImages(res, _this.count)
-            }
+            _this.getLocalImgData(res, _this.count)
           },
           fail: function (err) {
             console.log('error')
           }
         })
       },
-      getAddImages: function (res, count) {
-        let AndroidlocId = []
+      getLocalImgData: function (res, count) {
         let _this = this
+        let ioslocId = []
         for (let i in res.localIds) {
-          let localId = res.localIds[i]
-          let imgs = {}
-          imgs.src = localId
-          if (count === 9) {
-            _this.ViewImages.push(imgs)
+          if (/iPhone/gi.test(navigator.userAgent)) {
+            this.$wechat.getLocalImgData({
+              localId: res.localIds[i],
+              success: function (res) {
+                let localData = res.localData
+                _this.getAdd(res, count, localData, ioslocId)
+              },
+              fail: function (err) {
+              }
+            })
           } else {
-            AndroidlocId.push(imgs)
-            _this.ViewImages = AndroidlocId
+            let localId = res.localIds[i]
+            _this.getAdd(res, count, localId, ioslocId)
           }
-          _this.$emit('addImages', _this.ViewImages)
-          _this.getuploadImage(res, count, i)
+          this.getuploadImage(res, count, i)
         }
       },
-      getLocalImgData: function (res, count) {
-        let ioslocId = []
-        let _this = this
-        for (let i in res.localIds) {
-          this.$wechat.getLocalImgData({
-            localId: res.localIds[i],
-            success: function (res) {
-              let localData = res.localData
-              let imgs = {}
-              imgs.src = localData
-              if (count === 9) {
-                _this.ViewImages.push(imgs)
-              } else {
-                ioslocId.push(imgs)
-                _this.ViewImages = ioslocId
-              }
-              _this.$emit('addImages', _this.ViewImages)
-            },
-            fail: function (err) {
-            }
-          })
-          this.getuploadImage(res, count, i)
+      getAdd: function (res, count, localId, iosLocId) {
+        let imgs = {}
+        imgs.src = localId
+        if (count === 9) {
+          this.ViewImages.push(imgs)
+          this.$emit('addImages', this.ViewImages)
+        } else {
+          iosLocId.push(imgs)
+          this.ViewImages = iosLocId
+          this.$emit('addImages', this.ViewImages)
         }
       },
       getuploadImage: function (res, count, i) {
