@@ -24,7 +24,7 @@
 import { Badge, dateFormat } from 'vux'
 import ListView from '@/components/ListView'
 import FiltratePop from '@/components/FiltratePop'
-import { post } from '@/utils/ajax'
+import service from '../service/studentCert'
 
 export default {
   components: {
@@ -57,7 +57,9 @@ export default {
   },
   created () {
     this.params = { state: 2 }
-    post('/example/api/studentCert.json').then(data => this.count = data.count)
+    const data = service.list(this)
+    console.log('post2 data', data)
+//    this.count = data.count
   },
   methods: {
     update (data) {

@@ -16,6 +16,10 @@ export function post(url, params = {}) {
   })
 }
 
+export function postx (url, params = {}) {
+  return Vue.http.post(url, qs.stringify({ ...params, ...querystring.parse() }))
+}
+
 const startProxyTime = {};
 
 // 延迟执行函数
