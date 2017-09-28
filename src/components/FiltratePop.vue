@@ -1,21 +1,25 @@
 <template>
   <div>
-    <drag-box class="drag-box" @click.native="show=true">
+    <drag-box class="drag-box" @click.native="show=true" :style="{background: color}">
       <img src="../assets/Iconset.png" class="choice-img">
     </drag-box>
     <div class="filtrate" v-show="show">
-    <div class="filtrate-header">
+    <div class="filtrate-header" :style="{background: color}">
       <div class="fire-header-left-top">筛选条件</div>
-      <div class="fire-header-right" @click="cancle">取消</div>
+      <div class="fire-header-right" @click="onCancle">取消</div>
       <div class="input-border">
         <div class="weui-search-bar__box">
           <i class="weui-icon-search"></i>
-          <x-input v-model="value1" placeholder="请输入您要查询的学生姓名"></x-input>
+          <x-input v-model="searchInput" :placeholder="placeholder" ></x-input>
         </div>
       </div>
     </div>
+    <div class="filtate-content">
+      <slot></slot>
+    </div>
     <div class="btn-box">
-      <span class="btn" @click="submit">确定</span>
+      <span class="btn btn-reset" @click="onReset" v-if="reset" :style="{color: color}">重置</span>
+      <span class="btn" @click="onSubmit" :style="{background: color}">确定</span>
     </div>
   </div>
 </div>
@@ -29,25 +33,53 @@
     components: {
       XInput, DragBox
     },
+    props: {
+      placeholder: {
+        type: String,
+        default: '请输入关键字'
+      },
+      color: {
+        type: String,
+        default: '#5f60bd'
+      },
+      reset: {
+        type: Boolean,
+        default: false
+      },
+    },
     data () {
       return {
-        value1: '',
+        searchInput: '',
         show: false,
       }
     },
     methods: {
-      cancle () {
+      onCancle () {
         this.show = false
+        this.onReset()
       },
-      submit () {
-        this.$emit('submit', this.value1)
-        this.cancle()
+      onReset () {
+        this.searchInput = '',
+        this.$emit('reset')
+      },
+      onSubmit () {
+        this.$emit('submit', this.searchInput)
+        this.onCancle()
       }
     }
   }
 </script>
 
 <style lang="less">
+  .btn-reset{
+    background: none!important;
+    color: #605fbd;
+    width: 60px;
+    display: block;
+    flex: inherit;
+    margin-right: 30px;
+    font-size: 16px;
+  }
   .drag-box{
     position: fixed;
     top: 78%;
@@ -79,10 +111,13 @@
     color: #FFFFFF;
     font-size: 16px;
     font-family:"Microsoft YaHei", "\5b8b\4f53", "Arial", "Helvetica", "sans-serif";
-  .fire-header-left-top{
-    float: left;
-    margin-top: 15px;
+    .fire-header-left-top{
+      float: left;
+      margin-top: 15px;
+    }
   }
+  .filtate-content{
+    margin-bottom: 77px;
   }
   .classification-box,.area-box{
     border: none;
