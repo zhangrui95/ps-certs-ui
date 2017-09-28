@@ -15,13 +15,6 @@
         </div>
       </transition>
     </div>
-    <confirm v-model="showCom"
-             title=" "
-             @on-confirm="onConfirm(index)"
-             @on-show="onShow"
-             @on-hide="onHide">
-      <p style="text-align:center;">{{confirmText}}</p>
-    </confirm>
   </div>
 </template>
 
@@ -47,20 +40,17 @@
       },
       deleteImage: function () {
         this.del = false
-        this.showCom = true
+        let _this = this
+        this.$vux.confirm.show({
+          title: '确定删除该照片？',
+          onConfirm () {
+            _this.imgList.splice(_this.index, 1)
+            _this.$emit('delImgIndex', _this.index)
+          }
+        })
       },
       hideImg () {
         this.del = false
-      },
-      onConfirm (index) {
-        this.imgList.splice(index, 1)
-        this.$emit('delImgIndex', index)
-      },
-      onHide () {
-        console.log('on hide')
-      },
-      onShow () {
-        console.log('on show')
       },
       change (index) {
         this.index = index
@@ -72,8 +62,6 @@
         del: false,
         index: '',
         src: '',
-        confirmText: '确定删除该照片？',
-        showCom: false,
         ImgIndex: 0
       }
     }

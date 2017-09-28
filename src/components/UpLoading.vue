@@ -21,7 +21,7 @@
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
-            _this.$vux.loading.show({text: '提交中...'})
+            _this.$vux.loading.show({text: '上传中...'})
             let localIds = res.localIds // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
             let localData = res.localData
             let getImgData = res.getImgData
@@ -80,14 +80,14 @@
             if (limit === 1) {
               iosLocId.push(imgs)
               _this.ViewImages = iosLocId
-              _this.$emit('addImages', _this.ViewImages)
               ids.push(serverId)
               _this.Ids = ids
             } else {
               _this.ViewImages.push(imgs)
-              _this.$emit('addImages', _this.ViewImages)
               _this.Ids.push(serverId)
             }
+            _this.$emit('addImages', _this.ViewImages)
+            _this.$emit('ids', _this.Ids)
           }
           _this.upload(localId, serverCb, next)
         })
