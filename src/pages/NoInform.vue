@@ -8,7 +8,7 @@
         :start-date="new Date() | dateFormat('YYYY-MM-DD')"/>
       <x-input title="领取地址" :show-clear="false" v-model="address" text-align="right"></x-input>
     </group>
-    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
+    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView" style="margin-bottom: 77px;">
       <div class="list-wrap">
         <div class="list-group" v-for="group in groups" :key="group.dateStr">
           <div class="group-title">

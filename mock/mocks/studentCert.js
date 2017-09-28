@@ -1,6 +1,31 @@
 const fs = require('fs')
+const qs = require('qs');
 const path = require('path')
+const Mock = require('mockjs');
+let Random = Mock.Random
 
+let tableListData = {};
+if (!global.tableListData) {
+  const data = Mock.mock({
+    'list|33': [{
+      'id|+1': 1,
+      'aid': '@guid',
+      'createTime|+19999999': Random.date('T') * 1,
+      'info': '@csentence',
+      'name': '@cname',
+      'age|11-99': 1,
+      'photos': Random.image(),
+      'state|0-2': 0,
+      'type|1-2': 1,
+      'user': '@cname',
+      'result': () => Random.boolean(1, 7, true) ? -1 : 1,
+    }],
+  });
+  tableListData = data
+  global.tableListData = tableListData;
+} else {
+  tableListData = global.tableListData;
+}
 const routes = {
   /**
    * @param name like name
@@ -10,24 +35,24 @@ const routes = {
    * @return studentCert list pageable
    */
   '/api/studentCert.json': {
+    timeout: 500,
     handle: function(req, res, next) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
-      const ret = {
-        'state': 0,
-        'count': 9,
-        'list': [
-          { 'id': '1', 'aid': '4028b881594edc0301594edc1ec20030', 'createTime': 1502175965000, 'info': null, 'name': 'test三1', 'photos': null, 'state': 0, 'type': 1, 'user': null, result: 1 },
-          { 'id': '2', 'aid': '4028b881594edc0301594edc1ec20030', 'createTime': 1502175985000, 'info': null, 'name': 'test三2', 'photos': null, 'state': 0, 'type': 1, 'user': null, result: 1 },
-          { 'id': '3', 'aid': '4028b881594edc0301594edc1ec20030', 'createTime': 1502175985000, 'info': null, 'name': 'test三3', 'photos': null, 'state': 0, 'type': 1, 'user': null, result: -1 },
-          { 'id': '4', 'aid': '4028b881594edc0301594edc1ec20030', 'createTime': 1502175985000, 'info': null, 'name': 'test三4', 'photos': null, 'state': 0, 'type': 1, 'user': null, result: 1 },
-          { 'id': '5', 'aid': '4028b881594edc0301594edc1ec20030', 'createTime': 1492175985000, 'info': null, 'name': 'test三5', 'photos': null, 'state': 0, 'type': 1, 'user': null, result: 1 },
-          { 'id': '6', 'aid': '4028b881594edc0301594edc1ec20030', 'createTime': 1492175985000, 'info': null, 'name': 'test三6', 'photos': null, 'state': 0, 'type': 1, 'user': null, result: -1 },
-          { 'id': '7', 'aid': '4028b881594edc0301594edc1ec20030', 'createTime': 1492175985000, 'info': null, 'name': 'test三7', 'photos': null, 'state': 0, 'type': 1, 'user': null, result: -1 },
-          { 'id': '8', 'aid': '4028b881594edc0301594edc1ec20030', 'createTime': 1482175985000, 'info': null, 'name': 'test三8', 'photos': null, 'state': 0, 'type': 1, 'user': null, result: 1 },
-          { 'id': '9', 'aid': '4028b881594edc0301594edc1ec20030', 'createTime': 1482175985000, 'info': null, 'name': 'test三9', 'photos': null, 'state': 0, 'type': 1, 'user': null, result: -1 }
-        ]
-      }
-      res.end(JSON.stringify(ret))
+      var buf = '';
+      req.setEncoding('utf8');
+      req.on('data', function(chunk) { buf += chunk });
+      req.on('end', function() {
+        const params = qs.parse(buf);
+        const offset = params.offset * 1 || 0;
+        const max = params.max * 1 || 10;
+        const total = tableListData.list.length;
+        const ret = {
+          'state': 0,
+          'count': total,
+          'list': tableListData.list.sort((a, b) => a.result - b.result).slice(offset, offset + max)
+        }
+        res.end(JSON.stringify(ret))
+      });
     }
   },
   /**
