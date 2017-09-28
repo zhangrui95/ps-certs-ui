@@ -1,5 +1,5 @@
 <template>
-  <div @click="chooseImage">
+  <div @click="addItem(index, count)">
     <slot></slot>
   </div>
 </template>
@@ -14,72 +14,82 @@
     },
     props: ['count', 'index'],
     methods: {
-      chooseImage: function () {
-        this.$emit('num', this.index)
+      choose: function (limit, localCb) {
         let _this = this
         this.$wechat.chooseImage({
-          count: _this.count, // 默认9
+          count: limit, // 默认9
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
-            _this.getLocalImgData(res, _this.count)
+            _this.$vux.loading.show({text: '提交中...'})
+            let localIds = res.localIds // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            let localData = res.localData
+            let getImgData = res.getImgData
+            let nextFun = function () {
+              _this.$vux.loading.hide()
+            }
+            let localId = localIds.pop()
+            while (localId) {
+              nextFun = (function (imLocalId, next) {
+                return function () {
+                  if (getImgData) {
+                    getImgData(imLocalId, function (dataRes) {
+                      localCb(imLocalId, dataRes.localData, next)
+                    })
+                  } else {
+                    let url = localData || imLocalId
+                    localCb(imLocalId, url, next)
+                  }
+                }
+              })(localId, nextFun)
+              localId = localIds.pop()
+            }
+            nextFun()
           },
           fail: function (err) {
-            console.log('error')
+            _this.$vux.toast.text('提交失败！')
           }
         })
       },
-      getLocalImgData: function (res, count) {
-        let _this = this
-        let ioslocId = []
-        let ids = []
-        for (let i in res.localIds) {
-          if (/iPhone/gi.test(navigator.userAgent)) {
-            this.$wechat.getLocalImgData({
-              localId: res.localIds[i],
-              success: function (res) {
-                let localData = res.localData
-                _this.getAdd(res, count, localData, ioslocId)
-              },
-              fail: function (err) {
-              }
-            })
-          } else {
-            let localId = res.localIds[i]
-            _this.getAdd(res, count, localId, ioslocId)
-          }
-          this.getuploadImage(res, count, i, ids)
-        }
-      },
-      getAdd: function (res, count, localId, iosLocId) {
-        let imgs = {}
-        imgs.src = localId
-        if (count === 9) {
-          this.ViewImages.push(imgs)
-          this.$emit('addImages', this.ViewImages)
-        } else {
-          iosLocId.push(imgs)
-          this.ViewImages = iosLocId
-          this.$emit('addImages', this.ViewImages)
-        }
-      },
-      getuploadImage: function (res, count, i, ids) {
+      upload: function (localId, serverCb, next) {
         let _this = this
         this.$wechat.uploadImage({
-          localId: res.localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
-          isShowProgressTips: 1, // 默认为1，显示进度提示
+          localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+          isShowProgressTips: 0, // 默认为1，显示进度提示
           success: function (res) {
-            let serverId = res.serverId
-            if (count === 9) {
-              _this.Ids.push(serverId)
-            } else {
-              ids.push(serverId)
-              _this.Ids = ids
+            let serverId = res.serverId // 返回图片的服务器端ID
+            serverCb(localId, serverId)
+            if (next) {
+              next()
             }
-            _this.$emit('ids', _this.Ids)
           },
           fail: function (err) {
+            _this.$vux.toast.text('提交失败！')
           }
+        })
+      },
+      addItem: function (index, limit) {
+        let _this = this
+        let iosLocId = []
+        let ids = []
+        this.$emit('num', this.index)
+        this.choose(limit, function (localId, url, next) {
+          let serverCb = function (localId, serverId) {
+            let imgs = {}
+            imgs.src = localId
+            if (limit === 1) {
+              iosLocId.push(imgs)
+              _this.ViewImages = iosLocId
+              _this.$emit('addImages', _this.ViewImages)
+              ids.push(serverId)
+              _this.Ids = ids
+            } else {
+              _this.ViewImages.push(imgs)
+              _this.$emit('addImages', _this.ViewImages)
+              _this.Ids.push(serverId)
+            }
+          }
+          _this.upload(localId, serverCb, next)
         })
       }
     }
