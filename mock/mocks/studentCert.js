@@ -1,10 +1,10 @@
 const fs = require('fs')
-const qs = require('qs');
+const qs = require('qs')
 const path = require('path')
-const Mock = require('mockjs');
+const Mock = require('mockjs')
 let Random = Mock.Random
 
-let tableListData = {};
+let tableListData = {}
 if (!global.tableListData) {
   const data = Mock.mock({
     'list|33': [{
@@ -18,13 +18,13 @@ if (!global.tableListData) {
       'state|0-2': 0,
       'type|1-2': 1,
       'user': '@cname',
-      'result': () => Random.boolean(1, 7, true) ? -1 : 1,
-    }],
-  });
+      'result': () => Random.boolean(1, 7, true) ? -1 : 1
+    }]
+  })
   tableListData = data
-  global.tableListData = tableListData;
+  global.tableListData = tableListData
 } else {
-  tableListData = global.tableListData;
+  tableListData = global.tableListData
 }
 const routes = {
   /**
@@ -36,23 +36,23 @@ const routes = {
    */
   '/api/studentCert.json': {
     timeout: 500,
-    handle: function(req, res, next) {
+    handle: function (req, res) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
-      var buf = '';
-      req.setEncoding('utf8');
-      req.on('data', function(chunk) { buf += chunk });
-      req.on('end', function() {
-        const params = qs.parse(buf);
-        const offset = params.offset * 1 || 0;
-        const max = params.max * 1 || 10;
-        const total = tableListData.list.length;
+      var buf = ''
+      req.setEncoding('utf8')
+      req.on('data', function (chunk) { buf += chunk })
+      req.on('end', function () {
+        const params = qs.parse(buf)
+        const offset = params.offset * 1 || 0
+        const max = params.max * 1 || 10
+        const total = tableListData.list.length
         const ret = {
           'state': 0,
           'count': total,
           'list': tableListData.list.sort((a, b) => a.result - b.result).slice(offset, offset + max)
         }
         res.end(JSON.stringify(ret))
-      });
+      })
     }
   },
   /**
@@ -62,7 +62,7 @@ const routes = {
    * @return studentCert list
    */
   '/api/studentCert/all.json': {
-    handle: function(req, res, next) {
+    handle: function (req, res) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = {
         'state': 0,
@@ -87,7 +87,7 @@ const routes = {
    *        type 1正面照2学生证3在读证明
    */
   '/api/studentCert/detail.json': {
-    handle: function(req, res, next) {
+    handle: function (req, res) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = {
         'state': 0,
@@ -120,9 +120,9 @@ const routes = {
    * @return img or 404
    */
   '/api/studentCert/photo': {
-    handle: function(req, res, next) {
+    handle: function (req, res) {
       res.setHeader('Content-Type', 'image/png')
-      res.end(fs.readFileSync(__dirname + '/../../static/images/header.jpg'))
+      res.end(fs.readFileSync(path.resolve(__dirname, '../../static/images/header.jpg')))
     }
   },
   /**
@@ -135,7 +135,7 @@ const routes = {
    * @return result
    */
   '/api/studentCert/save.json': {
-    handle: function(req, res, next) {
+    handle: function (req, res) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = {
         'state': 0,
@@ -165,7 +165,7 @@ const routes = {
    *      notify 已完成
    */
   '/api/studentCert/groupByState.json': {
-    handle: function(req, res, next) {
+    handle: function (req, res) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = { 'init': 1, 'done': 0, 'notify': 0 }
       res.end(JSON.stringify(ret))
@@ -176,7 +176,7 @@ const routes = {
    * @return state 0 or -1
    */
   '/api/studentCert/done.json': {
-    handle: function(req, res, next) {
+    handle: function (req, res) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = { 'state': 0 }
       res.end(JSON.stringify(ret))
@@ -189,7 +189,7 @@ const routes = {
    * @return state 0 or -1
    */
   '/api/studentCert/fail.json': {
-    handle: function(req, res, next) {
+    handle: function (req, res) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = { 'state': 0 }
       res.end(JSON.stringify(ret))
@@ -202,7 +202,7 @@ const routes = {
    * @return state 0 or -1
    */
   '/api/studentCert/notifyUsers.json': {
-    handle: function(req, res, next) {
+    handle: function (req, res) {
       res.setHeader('Content-Type', 'application/json charset=UTF-8')
       const ret = { 'state': 0 }
       res.end(JSON.stringify(ret))
