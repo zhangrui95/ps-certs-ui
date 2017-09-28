@@ -5,6 +5,7 @@
 </template>
 
 <script>
+  let ids = []
   export default {
     data () {
       return {
@@ -24,18 +25,36 @@
           success: function (res) {
             if (/iPhone/gi.test(navigator.userAgent)) {
               _this.getLocalImgData(res, _this.count)
+            } else {
+              _this.getAddImages(res, _this.count)
             }
-            _this.upload(res, _this.count)
           },
           fail: function (err) {
             console.log('error')
           }
         })
       },
+      getAddImages: function (res, count) {
+        let AndroidlocId = []
+        let _this = this
+        for (let i in res.localIds) {
+          let localId = res.localIds[i]
+          let imgs = {}
+          imgs.src = localId
+          if (count === 9) {
+            _this.ViewImages.push(imgs)
+          } else {
+            AndroidlocId.push(imgs)
+            _this.ViewImages = AndroidlocId
+          }
+          _this.$emit('addImages', _this.ViewImages)
+          _this.getuploadImage(res, count, i)
+        }
+      },
       getLocalImgData: function (res, count) {
         let ioslocId = []
         let _this = this
-        for (let i = 0, len = res.localIds.length; i < len; i++) {
+        for (let i in res.localIds) {
           this.$wechat.getLocalImgData({
             localId: res.localIds[i],
             success: function (res) {
@@ -53,30 +72,27 @@
             fail: function (err) {
             }
           })
+          this.getuploadImage(res, count, i)
         }
       },
-      upload: function (res, count) {
-        let _localIds = res.localIds
+      getuploadImage: function (res, count, i) {
         let _this = this
-        let ids = []
-        for (let i = 0, len = _localIds.length; i < len; i++) {
-          this.$wechat.uploadImage({
-            localId: _localIds, // 需要上传的图片的本地ID，由chooseImage接口获得
-            isShowProgressTips: 1, // 默认为1，显示进度提示
-            success: function (res) {
-              let serverId = res.serverId
-              if (count === 9) {
-                _this.Ids.push(serverId)
-              } else {
-                ids.push(serverId)
-                _this.Ids = ids
-              }
-              _this.$emit('ids', _this.Ids)
-            },
-            fail: function (err) {
+        this.$wechat.uploadImage({
+          localId: res.localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
+          isShowProgressTips: 1, // 默认为1，显示进度提示
+          success: function (res) {
+            let serverId = res.serverId
+            if (count === 9) {
+              _this.Ids.push(serverId)
+            } else {
+              ids.push(serverId)
+              _this.Ids = ids
             }
-          })
-        }
+            _this.$emit('ids', _this.Ids)
+          },
+          fail: function (err) {
+          }
+        })
       }
     }
   }
