@@ -1,7 +1,7 @@
 <template>
   <div class="page page-list student-page">
     <div class="header-box">未办理</div>
-    <div class="center-box">
+    <group class="center-box padding-min">
       <detail-cell v-for="(group, index) in photoList" :key="index" :title="group.name" class="previewer-box">
         <span v-for="(item, itemIndex) in group.list" :key="itemIndex">
           <img class="previewer-img previewer-demo-img" :src="item.src" @click="show(index, itemIndex)">
@@ -9,7 +9,7 @@
       </detail-cell>
       <detail-cell v-for="item in textList" :key="item.name" :title="item.name" :detail="item.value"></detail-cell>
       <div class="height-fixed-min"></div>
-    </div>
+    </group>
     <div class="btn-box">
       <span class="btn bg-gray" @click="back">退回</span>
       <span class="btn" @click="submit">办理完成</span>
@@ -19,13 +19,13 @@
 </template>
 
 <script>
-  import { Previewer, dateFormat } from 'vux'
+  import { Previewer, dateFormat, Group } from 'vux'
   import DetailCell from '../components/DetailCell'
   import { post } from '@/utils/ajax'
 
   export default {
     components: {
-      Previewer, DetailCell
+      Previewer, DetailCell, Group
     },
     data () {
       return {
@@ -108,9 +108,16 @@
   }
 </script>
 
-<style>
+<style lang="less">
   .bd-right{
     line-height: 53px;
     text-align: right;
+    flex: 1;
+  }
+  .previewer-demo-img{
+    width: 45px;
+    height: 45px;
+    float: right;
+    margin: 5px;
   }
 </style>

@@ -7,7 +7,7 @@
           <span>{{isNoMore? '暂时没有更多': '加载更多'}}</span>
         </div>
         <div class="after-trigger" v-else>
-          <inline-loading></inline-loading>
+          加载中<inline-loading></inline-loading>
         </div>
       </div>
     </div>

@@ -134,3 +134,109 @@ ul{
 .bg-gray{
   background: #979797;
 }
+.student-page{
+  .weui-cells{
+    margin-top: 5px;
+    font-size: 16px;
+    &:before {
+      display: none;
+    }
+  }
+  .padding-min{
+    padding-top: 5px;
+  }
+  .none-flex{
+    display: flex;
+    position: relative;
+  }
+  .cell-border{
+    border-bottom: 1px dashed #ddd;
+    padding: 15px 5px;
+  }
+  .cell-margin{
+    min-height:20px;
+    height:auto;
+    background: #FFFFFF;
+    position: relative;
+  }
+  .weui-label{
+    width:100px;
+    font-size: 18px;
+    line-height: 55px;
+  }
+  .weui-uploader__files{
+    width: 100%;
+  }
+  .img-uploader-box{
+    margin: 0 auto;
+    border: 5px solid #FFFFFF;
+    background: #ddd;
+    height: 45px;
+    width: 45px;
+    position: relative;
+    top: 0;
+    right: 0;
+    flex: 0 0 45px;
+  }
+  .weui-uploader__input{
+    z-index: 9999;
+  }
+  .change-upload {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    z-index: 500;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+  .weui-label.student-prove{
+    height:24px;
+    line-height: 34px;
+  }
+  .field-comment{
+    color: #605fbd;
+    font-size: 14px;
+  }
+  .height-fixed-min{
+    height: 50px;
+    width: 100%;
+  }
+  .vux-x-input{
+    border-bottom: 1px dashed #ddd;
+    padding: 15px 5px;
+  }
+  .vux-cell-box{
+    border-bottom: 1px dashed #ddd;
+    padding: 15px 5px;
+    .weui-cell{
+      padding: 0;
+    }
+    &:before{
+      border: none;
+    }
+  }
+  .vux-datetime{
+    p{
+      font-size: 18px;
+      color: #333;
+    }
+  }
+  .vux-datetime.weui-cell{
+    padding: 12.5px 0;
+  }
+  .vux-cell-box{
+    &:before{
+      border-top: none;
+    }
+  }
+  .weui-cell:before{
+    border-top: none;
+  }
+  .weui-input{
+    text-align: right;
+  }
+  .weui-dialog__btn_primary{
+    color: #5f60bd;
+  }
+}

@@ -134,9 +134,9 @@
           [this.military[0], '请选择兵役情况'],
           [this.time[0], '请选择入学时间'],
           [this.department, '请填写所在院系'],
-          [this.major, '请填写所在专业'],
+          [this.major, '请填写所在专业']
         ]
-        if (checkArray(infoArray)){
+        if (checkArray(infoArray)) {
           let that = this
           this.$vux.confirm.show({
             title: '是否确认提交申请？',
@@ -147,26 +147,33 @@
         }
       },
       onConfirm () {
-        post('api/studentCert/save.json',
+        post('api/studentCert/save.json?userid=' + this.$route.query.userid,
           {
-            'info.marray': this.marray[0],
-            'info.blood': this.blood[0],
-            'info.education': this.culture[0],
-            'info.military': this.military[0],
-            'info.religion': this.religion[0],
-            'info.enterSchoolTime': this.time,
-            'name': this.name,
-            'info.card': this.card,
-            'info.mobile': this.mobile,
-            'info.height': this.height,
-            'info.weight': this.weight,
-            'info.faculty': this.department,
-            'info.specialty': this.major,
-            'selfIds': this.selfLis,
-            'cardIds': this.cardLis.join(','),
-            'proveIds': this.proveLis
+            info:{
+              marray: this.marray[0],
+              blood: this.blood[0],
+              education: this.culture[0],
+              military: this.military[0],
+              religion: this.religion[0],
+              enterSchoolTime: this.time,
+              card: this.card,
+              mobile: this.mobile,
+              height: this.height,
+              weight: this.weight,
+              faculty: this.department,
+              specialty: this.major,
+            },
+            name: this.name,
+            selfIds: this.selfLis,
+            cardIds: this.cardLis.join(','),
+            proveIds: this.proveLis
           }
-        ).then(function (data) {
+        ).then(data => {
+          if(data.state === 0){
+            this.$vux.toast.text(this.$route.query.type == 1? '请注意查看系统通知领取个人信息表': '请注意查看系统通知领取居住证明')
+          }else{
+            this.$vux.toast.text('提交失败！');
+          }
         })
       },
       ShowImg (index) {
@@ -190,108 +197,3 @@
   }
 </script>
 
-<style lang="less">
-  .student-page{
-    .weui-cells{
-      margin-top: 5px;
-      font-size: 16px;
-    }
-    .padding-min{
-      padding-top: 5px;
-    }
-    .none-flex{
-      display: flex;
-      position: relative;
-    }
-    .cell-border{
-      border-bottom: 1px dashed #ddd;
-      padding: 15px 5px;
-    }
-    .cell-margin{
-      min-height:20px;
-      height:auto;
-      background: #FFFFFF;
-      position: relative;
-    }
-    .weui-label{
-      width:100px;
-      font-size: 18px;
-      line-height: 55px;
-    }
-    .weui-uploader__files{
-      width: 100%;
-    }
-    .img-uploader-box{
-      margin: 0 auto;
-      border: 5px solid #FFFFFF;
-      background: #ddd;
-      height: 45px;
-      width: 45px;
-      position: relative;
-      top: 0;
-      right: 0;
-      flex: 0 0 45px;
-    }
-    .weui-uploader__input{
-      z-index: 9999;
-    }
-    .change-upload {
-      width: 25px;
-      height: 25px;
-      cursor: pointer;
-      z-index: 500;
-      position: absolute;
-      top: 10px;
-      left: 10px;
-    }
-    .weui-label.student-prove{
-      height:24px;
-      line-height: 34px;
-    }
-    .field-comment{
-      color: #605fbd;
-      font-size: 14px;
-    }
-    .height-fixed-min{
-      height: 50px;
-      width: 100%;
-    }
-    .vux-x-input{
-      border-bottom: 1px dashed #ddd;
-      padding: 15px 5px;
-    }
-    .vux-cell-box{
-      border-bottom: 1px dashed #ddd;
-      padding: 15px 5px;
-      .weui-cell{
-        padding: 0;
-      }
-      &:before{
-        border: none;
-      }
-    }
-    .vux-datetime{
-      p{
-        font-size: 18px;
-        color: #333;
-      }
-    }
-    .vux-datetime.weui-cell{
-      padding: 12.5px 0;
-    }
-    .vux-cell-box{
-      &:before{
-        border-top: none;
-      }
-    }
-    .weui-cell:before{
-      border-top: none;
-    }
-    .weui-input{
-      text-align: right;
-    }
-    .weui-dialog__btn_primary{
-      color: #5f60bd;
-    }
-  }
-</style>

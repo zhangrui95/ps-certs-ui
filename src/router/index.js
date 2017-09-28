@@ -35,7 +35,6 @@ const router = new VueRouter((() => {
 const init = store => {
   router.beforeEach((to, from, next) => {
     window.history.replaceState(store.state.router, '', from.fullPath) // 将状态保存到跳转前的页面
-    store.commit('updateRouterState', {})
     store.commit('updateLoadingStatus', { isLoading: true })
     if (to.query.userid) {
       next()
@@ -45,6 +44,7 @@ const init = store => {
   })
 
   router.afterEach(to => {
+    store.commit('updateRouterState', {})
     store.commit('updateLoadingStatus', { isLoading: false })
   })
 
