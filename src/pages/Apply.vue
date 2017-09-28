@@ -43,7 +43,7 @@
   import ImgBrowse from '../components/ImgBrowse'
   import UpLoading from '../components/UpLoading'
   import { post } from '@/utils/ajax'
-  import { checkArray } from '@/utils/check'
+  import * as valid from '@/utils/valid'
 
   export default {
     components: {
@@ -119,16 +119,37 @@
           }
         })
       },
+      ShowImg (index) {
+        this.num = index
+      },
+      Ids (ids) {
+        if (this.num === 0) {
+          this.selfLis = ids.join(',')
+        } else if (this.num === 2) {
+          this.cardLis = ids
+        } else {
+          this.proveLis = ids.join(',')
+        }
+      },
+      delImgIndex (delIndex) {
+        if (this.num === 2) {
+          this.cardLis.splice(delIndex, 1)
+        }
+      },
       clickUp () {
         let infoArray = [
           [this.selfLis[0] && this.cardLis[0] && this.proveLis[0], '照片不能为空'],
           [this.name, '请填写姓名'],
           [this.card, '请填写身份证号'],
+          [valid.card(this.card), '请填写正确的身份证号'],
           [this.mobile, '请填写手机号'],
+          [valid.mobile(this.mobile), '请填写正确的手机号'],
           [this.marray[0], '请选择婚姻状况'],
           [this.blood[0], '请选择血型'],
           [this.height, '请填写身高'],
+          [valid.height(this.height), '请填写正确的身高'],
           [this.weight, '请填写体重'],
+          [valid.weight(this.weight), '请填写正确的体重'],
           [this.culture[0], '请选择文化程度'],
           [this.religion[0], '请选择宗教信仰'],
           [this.military[0], '请选择兵役情况'],
@@ -136,7 +157,7 @@
           [this.department, '请填写所在院系'],
           [this.major, '请填写所在专业']
         ]
-        if (checkArray(infoArray)) {
+        if (valid.array(infoArray)) {
           let that = this
           this.$vux.confirm.show({
             title: '是否确认提交申请？',
@@ -169,29 +190,15 @@
             proveIds: this.proveLis
           }
         ).then(data => {
-          if(data.state === 0){
-            this.$vux.toast.text(this.$route.query.type == 1? '请注意查看系统通知领取个人信息表': '请注意查看系统通知领取居住证明')
-          }else{
-            this.$vux.toast.text('提交失败！');
+          if (data.state === 0) {
+            this.$vux.alert.show({
+              title: '提交成功',
+              content: this.$route.query.type == 1 ? '请注意查看系统通知领取个人信息表' : '请注意查看系统通知领取居住证明'
+            })
+          } else {
+            this.$vux.toast.text('提交失败！')
           }
         })
-      },
-      ShowImg (index) {
-        this.num = index
-      },
-      Ids (ids) {
-        if (this.num === 0) {
-          this.selfLis = ids.join(',')
-        } else if (this.num === 2) {
-          this.cardLis = ids
-        } else {
-          this.proveLis = ids.join(',')
-        }
-      },
-      delImgIndex (delIndex) {
-        if (this.num === 2) {
-          this.cardLis.splice(delIndex, 1)
-        }
       }
     }
   }

@@ -45,6 +45,7 @@
             this.scrollY = this.startY || 0
             this.scroll.scrollTo(0,this.scrollY,0)
           })
+          if (this.list.length < 10) this.isNoMore = true
         } else { 
           this.getListData()
         }
@@ -54,7 +55,7 @@
         this.isPullUpLoad = true
         post(this.url, { max: 10, offset: this.list.length, ... this.params, ...params }).then(data => {
           this.$emit('update', data) // 将获取的数据传递给父组件
-          if (!data.list.length) this.isNoMore = true  // 如果list长度为0  显示“暂时没有更多”
+          if (data.list.length < 10) this.isNoMore = true  // 如果list长度为0  显示“暂时没有更多”
           this.$nextTick(() => {
             this.scroll.refresh()
             this.scroll.finishPullUp()
@@ -63,9 +64,9 @@
         })
       },
       refresh () {  // 刷新
-        this.getListData({offset: 0})
         this.$nextTick(() => {
           this.scroll.scrollTo(0,0,0)
+          this.getListData({offset: 0})
         })
       },
       bindScrollEvent() {  // 绑定滚动和上拉事件

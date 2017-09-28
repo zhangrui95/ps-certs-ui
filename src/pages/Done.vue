@@ -63,6 +63,7 @@ export default {
   },
   methods: {
     update (data) {
+      this.count = data.count
       this.listData = [ ...this.listData, ...data.list.map(item => {
         return {...item, dateStr:dateFormat(item.createTime, 'YYYY年MM月DD日')}
       })]
