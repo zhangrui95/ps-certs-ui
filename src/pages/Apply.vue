@@ -143,7 +143,7 @@
           [this.card, '请填写身份证号'],
           [valid.card(this.card), '请填写正确的身份证号'],
           [this.mobile, '请填写手机号'],
-          [valid.mobile(this.mobile), '请填写正确的手机号'],  
+          [valid.mobile(this.mobile), '请填写正确的手机号'],
           [this.marray[0], '请选择婚姻状况'],
           [this.blood[0], '请选择血型'],
           [this.height, '请填写身高'],
@@ -190,10 +190,13 @@
             proveIds: this.proveLis
           }
         ).then(data => {
-          if(data.state === 0){
-            this.$vux.toast.text(this.$route.query.type == 1? '请注意查看系统通知领取个人信息表': '请注意查看系统通知领取居住证明')
-          }else{
-            this.$vux.toast.text('提交失败！');
+          if (data.state === 0) {
+            this.$vux.alert.show({
+              title: '提交成功',
+              content: this.$route.query.type == 1 ? '请注意查看系统通知领取个人信息表' : '请注意查看系统通知领取居住证明'
+            })
+          } else {
+            this.$vux.toast.text('提交失败！')
           }
         })
       }
