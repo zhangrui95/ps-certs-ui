@@ -5,7 +5,6 @@
 </template>
 
 <script>
-  let ids = []
   export default {
     data () {
       return {
@@ -33,6 +32,7 @@
       getLocalImgData: function (res, count) {
         let _this = this
         let ioslocId = []
+        let ids = []
         for (let i in res.localIds) {
           if (/iPhone/gi.test(navigator.userAgent)) {
             this.$wechat.getLocalImgData({
@@ -48,7 +48,7 @@
             let localId = res.localIds[i]
             _this.getAdd(res, count, localId, ioslocId)
           }
-          this.getuploadImage(res, count, i)
+          this.getuploadImage(res, count, i, ids)
         }
       },
       getAdd: function (res, count, localId, iosLocId) {
@@ -63,7 +63,7 @@
           this.$emit('addImages', this.ViewImages)
         }
       },
-      getuploadImage: function (res, count, i) {
+      getuploadImage: function (res, count, i, ids) {
         let _this = this
         this.$wechat.uploadImage({
           localId: res.localIds[i], // 需要上传的图片的本地ID，由chooseImage接口获得
