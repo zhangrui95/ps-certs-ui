@@ -1,4 +1,5 @@
 import * as types from '../mutation-types'
+import * as api from '../../api/studentCert'
 
 const state = {
   list: []
@@ -9,18 +10,20 @@ const getters = {
 }
 
 const actions = {
-  listM ({commit}) {
-    // async
-    commit(types.SC_LIST, {})
+  async list ({commit}) {
+    const resp = await api.list({state: 2})
+    commit(types.SC_LIST, resp.data)
   }
 }
 
 const mutations = {
-  [types.REC_LIST_M] (state, {list}) {
+  [types.SC_LIST] (state, {list}) {
     state.list = list
   }
 }
 
+const namespaced = true
+
 export default {
-  state, getters, actions, mutations
+  namespaced, state, getters, actions, mutations
 }

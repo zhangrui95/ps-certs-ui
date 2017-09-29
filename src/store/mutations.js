@@ -1,8 +1,17 @@
+import * as types from './mutation-types'
 
-export const updateLoadingStatus = (state, payload) => {
-  state.isLoading = payload.isLoading
+const mutations = {
+  updateLoadingStatus: (state, payload) => {
+    state.isLoading = payload.isLoading
+  },
+  updateRouterState: (state, payload) => {
+    state.router = payload
+  },
+  [types.DEMO_LIST]: (state, list) => {
+    console.log('demo state', state)
+    console.log('demo list', list)
+    state.demoList = list
+  }
 }
 
-export const updateRouterState = (state, payload) => {
-  state.router = payload
-}
+export default mutations
