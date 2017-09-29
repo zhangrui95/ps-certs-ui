@@ -15,7 +15,7 @@
             <check-icon :checked='group.checked' @click.native="groupClick(!group.checked, group.dateStr)"/>
             {{group.dateStr}}
           </div>
-          <div class="list-item" v-for="(item, index) in listData" :key="item.id" v-if="group.dateStr == item.dateStr">
+          <div class="list-item" v-for="(item, index) in group.items" :key="item.id" v-if="group.dateStr == item.dateStr">
             <check-icon :checked='item.checked' @click.native="itemClick(item.id)"/>
             <span class="item-index">{{index>8?index+1:'0'+(index+1)}}.</span>
             <span class="item-title">{{item.name}}</span>
@@ -62,7 +62,10 @@
           .map(item => dateFormat(item.createTime, 'YYYY年MM月DD日'))
           .filter((dateStr, i, arr) =>  arr.indexOf(dateStr, i+1) == -1 )
           .map(dateStr => {
-            return { dateStr, checked: this.listData.every(item => !(item.dateStr == dateStr && !item.checked))}
+            return { dateStr, 
+              checked: this.listData.every(item => !(item.dateStr == dateStr && !item.checked)),
+              items: this.listData.filter(item => item.dateStr == dateStr)
+            }
           })
       },
       allChecked () {
