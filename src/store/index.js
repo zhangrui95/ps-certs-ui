@@ -26,4 +26,17 @@ const store = new Vuex.Store({
   strict: !isProduction
 })
 
+// hot reload
+// if (module.hot) {
+//   module.hot.accept(['./actions', './getters', './modules/studentCert'], () => {
+//     store.hotUpdate({
+//       actions: () => import('./actions'),
+//       getters: () => import('./getters'),
+//       modules: {
+//         studentCert: () => import('./modules/studentCert')
+//       }
+//     })
+//   })
+// }
+
 export default store
