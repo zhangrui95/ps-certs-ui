@@ -8,8 +8,8 @@
         :start-date="new Date() | dateFormat('YYYY-MM-DD')"/>
       <x-input title="领取地址" :show-clear="false" v-model="address" text-align="right"></x-input>
     </group>
-    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView" style="margin-bottom: 77px;">
-      <div class="list-wrap">
+    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
+      <div class="approve-list">
         <div class="list-group" v-for="group in groups" :key="group.dateStr">
           <div class="group-title">
             <check-icon :checked='group.checked' @click.native="groupClick(!group.checked, group.dateStr)"/>
@@ -23,7 +23,7 @@
         </div>
       </div>
     </list-view>
-    <div class="btn-box">
+    <div class="footer-box">
       <a class="btn check-all">
         <check-icon :checked='allChecked' @click.native="allClick(!allChecked)"/>全部选择({{checkedCount}})</a>
       <a class="btn" @click="submit">通知</a>
@@ -136,7 +136,7 @@
     margin-top: 0;
   }
 }
-.btn-box .check-all{
+.check-all{
   background: none;
   color: #000;
   text-align: left;

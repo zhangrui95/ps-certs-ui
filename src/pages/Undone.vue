@@ -1,16 +1,15 @@
 <template>
-  <div class="page page-list student-page">
+  <div class="flex-page student-page">
     <div class="header-box">未办理</div>
-    <group class="center-box padding-min">
+    <div class="center-box">
       <detail-cell v-for="(group, index) in photoList" :key="index" :title="group.name" class="previewer-box">
         <span v-for="(item, itemIndex) in group.list" :key="itemIndex">
           <img class="previewer-img previewer-demo-img" :src="item.src" @click="show(index, itemIndex)">
         </span>
       </detail-cell>
       <detail-cell v-for="item in textList" :key="item.name" :title="item.name" :detail="item.value"></detail-cell>
-      <div class="height-fixed-min"></div>
-    </group>
-    <div class="btn-box">
+    </div>
+    <div class="footer-box">
       <span class="btn bg-gray" @click="back">退回</span>
       <span class="btn" @click="submit">办理完成</span>
     </div>

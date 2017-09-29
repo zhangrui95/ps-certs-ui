@@ -3,7 +3,7 @@
     <div class="header-box">已完成({{count}})</div>
     <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
       <div class="list-wrap">
-        <div class="list-group" v-for="group in groups" :key="group.dateStr">
+        <div class="approve-list" v-for="group in groups" :key="group.dateStr">
           <div class="group-title">
             {{group.dateStr}}
           </div>

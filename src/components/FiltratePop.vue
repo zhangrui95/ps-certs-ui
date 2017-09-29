@@ -3,7 +3,7 @@
     <drag-box class="drag-box" @click.native="show=true" :style="{background: color}">
       <img src="../assets/Iconset.png" class="choice-img">
     </drag-box>
-    <div class="filtrate" v-show="show">
+    <div class="flex-page filtrate" v-show="show">
     <div class="filtrate-header" :style="{background: color}">
       <div class="fire-header-left-top">筛选条件</div>
       <div class="fire-header-right" @click="onCancle">取消</div>
@@ -17,7 +17,7 @@
     <div class="filtate-content">
       <slot></slot>
     </div>
-    <div class="btn-box">
+    <div class="footer-box">
       <span class="btn btn-reset" @click="onReset" v-if="reset" :style="{color: color}">重置</span>
       <span class="btn" @click="onSubmit" :style="{background: color}">确定</span>
     </div>
@@ -102,7 +102,6 @@
     top:0;
     left: 0;
     z-index: 9999;
-    /*display: none;*/
     font-family: "Microsoft YaHei", "\5b8b\4f53", "Arial", "Helvetica", "sans-serif";
   .filtrate-header{
     padding: 0 20px;
@@ -118,6 +117,7 @@
   }
   .filtate-content{
     margin-bottom: 77px;
+    flex: 1;
   }
   .classification-box,.area-box{
     border: none;

@@ -1,5 +1,5 @@
 <template>
-  <div ref="wrapper" class="list-wrapper">
+  <div ref="wrapper" class="list-box">
     <div class="scroll-content">
       <slot ref="list"></slot>
       <div class="pullup-wrapper">
@@ -21,8 +21,7 @@
 
   export default {
     components: {
-      BScroll,
-      InlineLoading,
+      BScroll, InlineLoading,
     },
     props: ['url', 'params', 'list', 'startY'],
     data() {
@@ -83,7 +82,7 @@
 </script>
 
 <style lang="less">
-  .list-wrapper{
+  .list-box{
     flex: 1;
     overflow: hidden;
     background: #fff;

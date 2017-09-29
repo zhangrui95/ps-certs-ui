@@ -2,7 +2,7 @@
   <div class="flex-page approve">
     <top-nav :nav="nav" @navClick="commitState">{{title}}</top-nav>
     <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
-      <div class="list-wrap">
+      <div class="approve-list">
         <div class="list-item" v-for="(item, index) in listData" :key="index" @click="linkTo(`/Undone?id=${item.id}`)">
           <div class="item-left">
             <div class="item-index">{{index>8?index+1:'0'+(index+1)}}.</div>
@@ -74,7 +74,7 @@ export default {
 </script>
 <style lang="less">
   .approve{
-    .list-wrap{
+    .approve-list{
       padding-top: 20px;
     }
     .top-nav{

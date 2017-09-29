@@ -1,5 +1,5 @@
 <template>
-  <div class="top-nav">
+  <div class="top-nav" :style="{background: color}">
     <slot></slot>
     <flexbox class="body">
       <flexbox-item v-for="(item, index) in nav" :key="index">
@@ -13,22 +13,28 @@
 </template>
 
 <script>
-import { Flexbox, FlexboxItem } from 'vux'
+  import { Flexbox, FlexboxItem } from 'vux'
 
-export default {
-  components: {
-    Flexbox, FlexboxItem
-  },
-  props: ['nav'],
-  methods: {
-    itemClick (url) {
-      if (url) {
-        this.$emit("navClick")
-        this.$router.push(url)
+  export default {
+    components: {
+      Flexbox, FlexboxItem
+    },
+    props: {
+      nav: Array,
+      color: {
+        type: String,
+        default: '#5f60bd'
+      },
+    },
+    methods: {
+      itemClick (url) {
+        if (url) {
+          this.$emit("navClick")
+          this.$router.push(url)
+        }
       }
     }
   }
-}
 </script>
 
 <style scoped lang="less">
