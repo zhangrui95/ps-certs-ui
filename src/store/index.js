@@ -10,7 +10,7 @@ const store = new Vuex.Store({
       state.isLoading = payload.isLoading
     },
     updateRouterState(state, payload) {
-      state.router = payload
+      state.router = {...state.router, ...payload }
     }
   }
 })
