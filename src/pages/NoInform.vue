@@ -50,7 +50,7 @@
         address: '',
         scrollTop: 0,
         params: {},
-        listData: [],
+        listData: []
       }
     },
     created () {
@@ -62,7 +62,7 @@
           .map(item => dateFormat(item.createTime, 'YYYY年MM月DD日'))
           .filter((dateStr, i, arr) =>  arr.indexOf(dateStr, i+1) == -1 )
           .map(dateStr => {
-            return { dateStr, 
+            return { dateStr,
               checked: this.listData.every(item => !(item.dateStr == dateStr && !item.checked)),
               items: this.listData.filter(item => item.dateStr == dateStr)
             }

@@ -46,7 +46,7 @@
       width: 86%;
       height: 75px;
       background: #fff;
-      box-shadow: -2px 0 0 #faeded,0 0 0 #ffe1e0,0 2px 15px #ffe1e0,2px 0 0 #fbf6f6;
+      box-shadow: -2px 0 0 #e4e3f5, 0 0 0 #e4e3f5, 0 2px 15px #e4e3f5, 2px 0 0 #e4e3f5;
       border-radius: 10px;
       position: absolute;
       bottom: -25px;
@@ -62,8 +62,9 @@
         a{
           color: #999;
           .num{
-            font-size: 32px;
-            line-height: 24px;
+            font-size: 30px;
+            line-height: 30px;
+            font-family: '黑体';
           }
           .text{
             font-size: 14px;
