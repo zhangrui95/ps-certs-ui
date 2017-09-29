@@ -1,6 +1,6 @@
 <template>
   <div class="detail-cell">
-    {{title}}<div class="detail">{{detail}}<slot></slot>  
+    {{title}}<div class="detail">{{detail}}<slot></slot>
     </div>
   </div>
 </template>
@@ -26,7 +26,7 @@
     border-bottom: 1px dashed #ddd;
     font-size: 18px;
     line-height: 55px;
-    color: #888;
+    color: #444;
     .detail{
       flex: 1;
       color: #444;

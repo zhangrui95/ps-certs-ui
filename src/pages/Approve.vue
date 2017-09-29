@@ -48,7 +48,7 @@ export default {
     this.params = { state: 0 }
     post('/example/api/studentCert/groupByState.json').then(data => {
       this.nav = [
-        { text: '未办理', num: data.init }, 
+        { text: '未办理', num: data.init },
         { text: '未通知', num: data.done, link: '/NoInform' },
         { text: '已完成', num: data.notify, link: '/Done' }
       ]
@@ -81,6 +81,11 @@ export default {
       .vux-flexbox-item:first-child{
         .num{
           color: #6c6bbd;
+        }
+      }
+      .vux-flexbox-item{
+        .num{
+          color: #666;
         }
       }
     }
