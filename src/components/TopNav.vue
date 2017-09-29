@@ -3,7 +3,11 @@
     <slot></slot>
     <flexbox class="body">
       <flexbox-item v-for="(item, index) in nav" :key="index">
-        <a @click="itemClick(item.link)">
+        <router-link v-if="item.link" :to="item.link">
+          <div class="num">{{item.num}}</div>
+          <div class="text">{{item.text}}</div>
+        </router-link>
+        <a v-else>
           <div class="num">{{item.num}}</div>
           <div class="text">{{item.text}}</div>
         </a>
@@ -26,14 +30,6 @@
         default: '#5f60bd'
       },
     },
-    methods: {
-      itemClick (url) {
-        if (url) {
-          this.$emit("navClick")
-          this.$router.push(url)
-        }
-      }
-    }
   }
 </script>
 
@@ -50,7 +46,7 @@
       width: 86%;
       height: 75px;
       background: #fff;
-      box-shadow: -2px 0 0 #faeded,0 0 0 #ffe1e0,0 2px 15px #ffe1e0,2px 0 0 #fbf6f6;
+      box-shadow: -2px 0 0 #e4e3f5, 0 0 0 #e4e3f5, 0 2px 15px #e4e3f5, 2px 0 0 #e4e3f5;
       border-radius: 10px;
       position: absolute;
       bottom: -25px;
@@ -66,8 +62,9 @@
         a{
           color: #999;
           .num{
-            font-size: 32px;
-            line-height: 24px;
+            font-size: 30px;
+            line-height: 30px;
+            font-family: '黑体';
           }
           .text{
             font-size: 14px;

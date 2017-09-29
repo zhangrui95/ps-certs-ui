@@ -2,10 +2,13 @@
   <div class="flex-page student-page">
     <div class="header-box">{{title}}</div>
     <div class="center-box padding-min">
-      <div class="none-flex cell-border cell-margin" v-for="(imgNews, index) in imgTitle" :key="index">
+      <div class="none-flex cell-border cell-margin previewer-box" v-for="(imgNews, index) in imgTitle" :key="index">
         <div class="weui-cell__hd" v-html="imgNews.title"></div>
         <ul class="weui-uploader__files">
-          <img-browse :imgList="imgNews.imgList" :delShow="delShow" @delImgIndex="delImgIndex" @click.native="ShowImg(index)"></img-browse>
+          <!--<img-browse :imgList="imgNews.imgList" :delShow="delShow" @delImgIndex="delImgIndex" @click.native="ShowImg(index)"></img-browse>-->
+          <span v-for="(item, itemIndex) in imgNews.imgList" :key="itemIndex">
+            <img class="src-img previewer-demo-img" :src="item.src" @click="show(index, itemIndex)">
+          </span>
         </ul>
         <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'>
           <div class="img-uploader-box">
@@ -14,6 +17,7 @@
           </div>
         </up-loading>
       </div>
+      <previewer v-for="group in imgTitle" :list="group.imgList" ref="previewer" :options="options"></previewer>
       <x-input title="姓名" v-model="name"></x-input>
       <x-input title="身份证号" v-model="card"></x-input>
       <x-input title="手机号码" v-model="mobile"></x-input>
@@ -39,7 +43,7 @@
 </template>
 
 <script>
-  import { XInput, PopupPicker, Datetime, Group } from 'vux'
+  import { Previewer, XInput, PopupPicker, Datetime, Group } from 'vux'
   import ImgBrowse from '../components/ImgBrowse'
   import UpLoading from '../components/UpLoading'
   import { post } from '@/utils/ajax'
@@ -47,11 +51,20 @@
 
   export default {
     components: {
-      XInput, PopupPicker, Datetime, Group,
+      Previewer, XInput, PopupPicker, Datetime, Group,
       ImgBrowse, UpLoading
     },
     created () {
       this.title = this.$route.query.type == 1 ? '身份证办理申请登记' : '居住证明办理申请登记'
+      this.options = {
+        getThumbBoundsFn: (index) =>{
+          let thumbnail = document.querySelectorAll('.previewer-box')[this.num].querySelectorAll('.src-img')[index]
+          console.log(thumbnail)
+          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
+          let rect = thumbnail.getBoundingClientRect()
+          return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
+        }
+      }
     },
     data () {
       return {
@@ -80,6 +93,7 @@
         selfLis: '',
         cardLis: '',
         proveLis: '',
+        options: {},
         imgTitle: [
           {
             title: '<label class="weui-label">自拍正面照</label>',
@@ -98,6 +112,10 @@
       }
     },
     methods: {
+      show (index, itemIndex) {
+        this.num = index
+        this.$refs.previewer[index].show(itemIndex)
+      },
       onChange (index) {
         console.log('val change', index[0])
       },
@@ -118,9 +136,6 @@
             that.$wechat.closeWindow()
           }
         })
-      },
-      ShowImg (index) {
-        this.num = index
       },
       Ids (ids) {
         if (this.num === 0) {
@@ -182,7 +197,7 @@
               height: this.height,
               weight: this.weight,
               faculty: this.department,
-              specialty: this.major,
+              specialty: this.major
             },
             name: this.name,
             selfIds: this.selfLis,
@@ -203,4 +218,11 @@
     }
   }
 </script>
-
+<style lang="less">
+  .previewer-demo-img{
+    width: 45px;
+    height: 45px;
+    float: right;
+    margin: 5px;
+  }
+</style>

@@ -1,9 +1,9 @@
 <template>
   <div class="flex-page approve">
-    <top-nav :nav="nav" @navClick="commitState">{{title}}</top-nav>
-    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
+    <top-nav :nav="nav">{{title}}</top-nav>
+    <list-view url="api/studentCert.json" ref="listView" :list="listData" :params="params" :startY="scrollY" @update="update" @onScroll="onScroll">
       <div class="approve-list">
-        <div class="list-item" v-for="(item, index) in listData" :key="index" @click="linkTo(`/Undone?id=${item.id}`)">
+        <div class="list-item" v-for="(item, index) in listData" :key="index" @click="linkTo('/Undone?id='+item.id)">
           <div class="item-left">
             <div class="item-index">{{index>8?index+1:'0'+(index+1)}}.</div>
           </div>
@@ -30,17 +30,21 @@ export default {
   data () {
     return {
       title: '',
-      nav: '',
-      scrollY: 0,
-      params: {},
-      listData: []
+      nav: [],
     }
   },
-  watch : {
-    '$store.state.router' () {
-      this.scrollY = this.$store.state.router.scrollY
-      this.params = this.$store.state.router.params
-      this.listData = this.$store.state.router.listData
+  computed: {
+    scrollY: {
+      get () { return this.$store.state.router.scrollY || 0 },
+      set (val) { this.$store.commit('updateRouterState', { scrollY: val }) }
+    },
+    params: {
+      get () { return this.$store.state.router.params || {} },
+      set (val) { this.$store.commit('updateRouterState', { params: val }) }
+    },
+    listData: {
+      get () { return this.$store.state.router.listData || {} },
+      set (val) { this.$store.commit('updateRouterState', { listData: val }) }
     }
   },
   created () {
@@ -48,7 +52,7 @@ export default {
     this.params = { state: 0 }
     post('/example/api/studentCert/groupByState.json').then(data => {
       this.nav = [
-        { text: '未办理', num: data.init }, 
+        { text: '未办理', num: data.init },
         { text: '未通知', num: data.done, link: '/NoInform' },
         { text: '已完成', num: data.notify, link: '/Done' }
       ]
@@ -58,15 +62,10 @@ export default {
     update (data) {
       this.listData = [ ...this.listData, ...data.list]
     },
-    commitState () {
-      this.$store.commit('updateRouterState', {
-        params: this.params,
-        listData: this.listData,
-        scrollY: this.$refs.listView.getScrollY()
-      })
+    onScroll (y) {
+      this.scrollY = y
     },
     linkTo (url) {
-      this.commitState()
       this.$router.push(url)
     }
   }
@@ -81,6 +80,11 @@ export default {
       .vux-flexbox-item:first-child{
         .num{
           color: #6c6bbd;
+        }
+      }
+      .vux-flexbox-item{
+        .num{
+          color: #666;
         }
       }
     }

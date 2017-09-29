@@ -1,4 +1,6 @@
 import VueRouter from 'vue-router'
+import routerStringifyQuery from './stringifyQuery'
+import { querystring } from 'vux'
 
 const pages = [
   'Dev',
@@ -29,6 +31,13 @@ const router = new VueRouter((() => {
     routes,
     base: 'example',
     mode: 'history',
+    stringifyQuery(obj) {
+      return routerStringifyQuery({
+        userid: querystring.parse()['userid'],
+        type: querystring.parse()['type'],
+        ...obj,
+      })
+    }
   }
 })())
 
@@ -36,15 +45,11 @@ const init = store => {
   router.beforeEach((to, from, next) => {
     window.history.replaceState(store.state.router, '', from.fullPath) // 将状态保存到跳转前的页面
     store.commit('updateLoadingStatus', { isLoading: true })
-    if (to.query.userid) {
-      next()
-    } else {
-      next({...to, query: {...to.query, userid: from.query.userid || 'value', type: from.query.type || 1 } })
-    }
+    next()
   })
 
   router.afterEach(to => {
-    store.commit('updateRouterState', {})
+    store.commit('updateRouterState', { scrollY: 0, params: {}, listData: [] })
     store.commit('updateLoadingStatus', { isLoading: false })
   })
 

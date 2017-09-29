@@ -8,7 +8,7 @@
         :start-date="new Date() | dateFormat('YYYY-MM-DD')"/>
       <x-input title="领取地址" :show-clear="false" v-model="address" text-align="right"></x-input>
     </group>
-    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
+    <list-view url="api/studentCert.json" ref="listView" :list="listData" :params="params" :startY="scrollTop" @update="update">
       <div class="approve-list">
         <div class="list-group" v-for="group in groups" :key="group.dateStr">
           <div class="group-title">
@@ -50,7 +50,7 @@
         address: '',
         scrollTop: 0,
         params: {},
-        listData: [],
+        listData: []
       }
     },
     created () {
@@ -62,7 +62,7 @@
           .map(item => dateFormat(item.createTime, 'YYYY年MM月DD日'))
           .filter((dateStr, i, arr) =>  arr.indexOf(dateStr, i+1) == -1 )
           .map(dateStr => {
-            return { dateStr, 
+            return { dateStr,
               checked: this.listData.every(item => !(item.dateStr == dateStr && !item.checked)),
               items: this.listData.filter(item => item.dateStr == dateStr)
             }
