@@ -8,14 +8,14 @@
         :start-date="new Date() | dateFormat('YYYY-MM-DD')"/>
       <x-input title="领取地址" :show-clear="false" v-model="address" text-align="right"></x-input>
     </group>
-    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView" style="margin-bottom: 77px;">
-      <div class="list-wrap">
+    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollTop" @update="update" ref="listView">
+      <div class="approve-list">
         <div class="list-group" v-for="group in groups" :key="group.dateStr">
           <div class="group-title">
             <check-icon :checked='group.checked' @click.native="groupClick(!group.checked, group.dateStr)"/>
             {{group.dateStr}}
           </div>
-          <div class="list-item" v-for="(item, index) in listData" :key="item.id" v-if="group.dateStr == item.dateStr">
+          <div class="list-item" v-for="(item, index) in group.items" :key="item.id" v-if="group.dateStr == item.dateStr">
             <check-icon :checked='item.checked' @click.native="itemClick(item.id)"/>
             <span class="item-index">{{index>8?index+1:'0'+(index+1)}}.</span>
             <span class="item-title">{{item.name}}</span>
@@ -23,7 +23,7 @@
         </div>
       </div>
     </list-view>
-    <div class="btn-box">
+    <div class="footer-box">
       <a class="btn check-all">
         <check-icon :checked='allChecked' @click.native="allClick(!allChecked)"/>全部选择({{checkedCount}})</a>
       <a class="btn" @click="submit">通知</a>
@@ -62,7 +62,10 @@
           .map(item => dateFormat(item.createTime, 'YYYY年MM月DD日'))
           .filter((dateStr, i, arr) =>  arr.indexOf(dateStr, i+1) == -1 )
           .map(dateStr => {
-            return { dateStr, checked: this.listData.every(item => !(item.dateStr == dateStr && !item.checked))}
+            return { dateStr, 
+              checked: this.listData.every(item => !(item.dateStr == dateStr && !item.checked)),
+              items: this.listData.filter(item => item.dateStr == dateStr)
+            }
           })
       },
       allChecked () {
@@ -136,7 +139,7 @@
     margin-top: 0;
   }
 }
-.btn-box .check-all{
+.check-all{
   background: none;
   color: #000;
   text-align: left;

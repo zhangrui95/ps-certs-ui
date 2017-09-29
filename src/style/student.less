@@ -1,129 +1,38 @@
-body,html {
-  background-color: #fff;
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
-}
-::-webkit-scrollbar
-{
-  width: 1px;
-  height: 1px;
-  background-color: #FFFFFF;
-}
-::-webkit-scrollbar-thumb
-{
-  border-radius: 10px;
-  background-color: #FFFFFF;
-}
-ul{
-  list-style: none;
-}
-.app{
-  height: 100%;
-  width: 100%;
-}
-.page{
-  height: 100%;
-  overflow: hidden;
-}
 .header-box{
-  width: 90%;
   height: 60px;
   line-height: 60px;
+  font-size: 18px;
+  padding:0 5vw;
   color: #fff;
   background: #605fbd;
-  font-size: 18px;
-  padding:0 5%;
 }
 .center-box{
-  width: 90%;
-  margin: 0 5%;
+  flex: 1;
   line-height: 30px;
+  padding: 15px 5vw;
   font-size: 16px;
   color: #444;
-  padding-top: 20px;
   overflow-y: scroll;
-  height: 80%;
-  overflow-x: hidden;
 }
-
-// 带滚动列表的页面样式
-.flex-page{
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  .flex-section{
-    flex: 1;
-  }
-}
-.list-wrap{
-  margin: 0 30px;
-}
-.group-title{
-  color: #444;
-  font-weight: 900;
-  font-size: 18px;
-  padding-top: 20px;
-}
-
-// 列表item样式
-.list-item{
-  position: relative;
-  display: block;
-  padding: 12px 20px;
-  border-bottom: 1px dashed #ddd;
-  overflow: hidden;
-  .vux-badge{
-    padding: 2px 7px;
-    border-radius: 10px;
-    position: absolute;
-    right: 5px;
-    top: 50%;
-    margin-top: -10px;
-  }
-}
-.item-index{
-  padding: 0 8px;
-  color: #999;
-  font-style: italic;
-  font-family: 黑体;
-  font-size: 18px;
-}
-.item-title{
-    color: #5f60bd;
-    font-weight: 900;
-    font-size: 18px;
-}
-.item-desc{
-  color: #999;
-  font-size: 16px;
-  font-family: 黑体;
-}
-
-// 底部按钮样式
-.btn-box{
+.footer-box{
   display: flex;
   flex-flow: row nowrap;
-  width: 100vw;
-  padding:15px;
-  box-sizing: border-box;
+  padding: 15px 5vw;
   background: #FFFFFF;
   border-top:1px solid #eee;
-  position: absolute;
-  bottom: 0;
 }
 .btn{
   flex: 1;
   display: block;
-  margin-right: 15px;
+  margin-right: 5vw;
   background: #605fbd;
   border-radius: 5px;
   height: 46px;
+  line-height: 46px;
   color: #FFFFFF;
   font-size: 18px;
   font-family: "Microsoft YaHei", "\5b8b\4f53", "Arial", "Helvetica", "sans-serif";
   text-align: center;
-  line-height: 46px;
   &:active{
     background: #6c6bbd;
   }
@@ -134,17 +43,51 @@ ul{
 .bg-gray{
   background: #979797;
 }
-.student-page{
-  .weui-cells{
-    margin-top: 5px;
-    font-size: 16px;
-    &:before {
-      display: none;
+  
+// 列表item样式
+.approve-list{
+  margin: 0 30px;
+  .group-title{
+    color: #444;
+    font-weight: 900;
+    font-size: 18px;
+    padding-top: 20px;
+  }
+  .list-item{
+    position: relative;
+    display: block;
+    padding: 12px 20px;
+    border-bottom: 1px dashed #ddd;
+    overflow: hidden;
+    .vux-badge{
+      padding: 2px 7px;
+      border-radius: 10px;
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      margin-top: -10px;
     }
   }
-  .padding-min{
-    padding-top: 5px;
+  .item-index{
+    padding: 0 8px;
+    color: #999;
+    font-style: italic;
+    font-family: 黑体;
+    font-size: 18px;
   }
+  .item-title{
+      color: #5f60bd;
+      font-weight: 900;
+      font-size: 18px;
+  }
+  .item-desc{
+    color: #999;
+    font-size: 16px;
+    font-family: 黑体;
+  }
+}
+
+.student-page{
   .none-flex{
     display: flex;
     position: relative;

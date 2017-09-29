@@ -1,5 +1,5 @@
 <template>
-  <div class="page detail">
+  <div class="flex-page detail">
     <div class="header-box">
       <span>{{name}}</span>
       <span>{{createTime | dateFormat('YYYY-MM-DD hh:mm:ss')}}</span>

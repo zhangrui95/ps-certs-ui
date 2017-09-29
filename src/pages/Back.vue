@@ -1,5 +1,5 @@
 <template>
-  <div class="page page-list student-page student-page-back">
+  <div class="flex-page page-list student-page student-page-back">
     <div class="header-box">退回原因</div>
     <div class="center-box padding-min">
       <div class="choice-problem">选择存在问题项</div>
@@ -10,7 +10,7 @@
         <div class="height-fixed-min"></div>
       </div>
     </div>
-    <div class="btn-box">
+    <div class="footer-box">
       <span class="btn" @click="clickDics">发送</span>
     </div>
     <toast v-model="show1">发送成功</toast>

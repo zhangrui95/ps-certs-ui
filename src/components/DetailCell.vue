@@ -1,8 +1,6 @@
 <template>
-  <div class="none-flex cell-border cell-margin cell-border-padding">
-    <div class="weui-cell__hd"><label class="weui-label label-line-height">{{title}}</label></div>
-    <div class="weui-cell__bd bd-right font-color blur label-line-height">
-      {{detail}}<slot></slot>  
+  <div class="detail-cell">
+    {{title}}<div class="detail">{{detail}}<slot></slot>  
     </div>
   </div>
 </template>
@@ -20,12 +18,19 @@
   }
 </script>
 
-<style lang="less">
-  .student-page{
-    .cell-border-padding{
-      padding: 10px 0px;
-      width: 90%;
-      margin-left: 5%;
+<style scoped lang="less">
+  .detail-cell{
+    display: flex;
+    padding: 10px 5px;
+    background: #FFFFFF;
+    border-bottom: 1px dashed #ddd;
+    font-size: 18px;
+    line-height: 55px;
+    color: #888;
+    .detail{
+      flex: 1;
+      color: #444;
+      text-align: right;
     }
   }
 </style>

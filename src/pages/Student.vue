@@ -1,8 +1,8 @@
 <template>
-  <div class="page page-list">
-    <div class="header-box" id="title">{{title}}</div>
-    <div class="center-box" id="center-box" v-html="text"></div>
-    <div class="btn-box">
+  <div class="flex-page">
+    <div class="header-box">{{title}}</div>
+    <div class="center-box" v-html="text"></div>
+    <div class="footer-box">
       <span class="btn" @click="clickDics">开始申请</span>
     </div>
   </div>

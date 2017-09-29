@@ -1,37 +1,37 @@
 <template>
-  <div class="page page-list student-page">
+  <div class="flex-page student-page">
     <div class="header-box">{{title}}</div>
-    <group class="center-box padding-min">
-        <div class="none-flex cell-border cell-margin" v-for="(imgNews, index) in imgTitle" :key="index">
-          <div class="weui-cell__hd" v-html="imgNews.title"></div>
-          <ul class="weui-uploader__files">
-            <img-browse :imgList="imgNews.imgList" :delShow="delShow" @delImgIndex="delImgIndex" @click.native="ShowImg(index)"></img-browse>
-          </ul>
-          <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'>
-            <div class="img-uploader-box">
-              <input class="weui-uploader__input" type="button"/>
-              <img class="change-upload" src="../assets/photo.png"/>
-            </div>
-          </up-loading>
-        </div>
-        <x-input title="姓名" v-model="name"></x-input>
-        <x-input title="身份证号" v-model="card"></x-input>
-        <x-input title="手机号码" v-model="mobile"></x-input>
-        <popup-picker title="婚姻状况" ref="picker3" :data="marrayList" v-model="marray" value-text-align="right" placeholder="请选择" @on-change="onChange" show-name></popup-picker>
-        <popup-picker title="血型" :data="bloodList" v-model="blood" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-        <x-input title="身高(cm)" v-model="height"></x-input>
-        <x-input title="体重(kg)" v-model="weight"></x-input>
-        <popup-picker title="文化程度" :data="cultureList" v-model="culture" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-        <popup-picker title="宗教信仰" :data="religionList" v-model="religion" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-        <popup-picker title="兵役状况" :data="militaryList" v-model="military" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-        <div class="vux-cell-box">
-          <datetime v-model="time" @on-change="change" title="入学时间" :show.sync="visibility" placeholder="请选择" show-name></datetime>
-        </div>
-        <x-input title="所在院系" v-model="department"></x-input>
-        <x-input title="所在专业" v-model="major"></x-input>
-        <div class="height-fixed-min"></div>
-    </group>
-    <div class="btn-box">
+    <div class="center-box padding-min">
+      <div class="none-flex cell-border cell-margin" v-for="(imgNews, index) in imgTitle" :key="index">
+        <div class="weui-cell__hd" v-html="imgNews.title"></div>
+        <ul class="weui-uploader__files">
+          <img-browse :imgList="imgNews.imgList" :delShow="delShow" @delImgIndex="delImgIndex" @click.native="ShowImg(index)"></img-browse>
+        </ul>
+        <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'>
+          <div class="img-uploader-box">
+            <input class="weui-uploader__input" type="button"/>
+            <img class="change-upload" src="../assets/photo.png"/>
+          </div>
+        </up-loading>
+      </div>
+      <x-input title="姓名" v-model="name"></x-input>
+      <x-input title="身份证号" v-model="card"></x-input>
+      <x-input title="手机号码" v-model="mobile"></x-input>
+      <popup-picker title="婚姻状况" ref="picker3" :data="marrayList" v-model="marray" value-text-align="right" placeholder="请选择" @on-change="onChange" show-name></popup-picker>
+      <popup-picker title="血型" :data="bloodList" v-model="blood" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+      <x-input title="身高(cm)" v-model="height"></x-input>
+      <x-input title="体重(kg)" v-model="weight"></x-input>
+      <popup-picker title="文化程度" :data="cultureList" v-model="culture" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+      <popup-picker title="宗教信仰" :data="religionList" v-model="religion" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+      <popup-picker title="兵役状况" :data="militaryList" v-model="military" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+      <div class="vux-cell-box">
+        <datetime v-model="time" @on-change="change" title="入学时间" :show.sync="visibility" placeholder="请选择" show-name></datetime>
+      </div>
+      <x-input title="所在院系" v-model="department"></x-input>
+      <x-input title="所在专业" v-model="major"></x-input>
+      <div class="height-fixed-min"></div>
+    </div>
+    <div class="footer-box">
       <span class="btn bg-gray" @click="goOut">取消</span>
       <span class="btn" @click="clickUp">提交</span>
     </div>
