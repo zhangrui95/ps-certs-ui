@@ -1,7 +1,7 @@
 <template>
   <div class="flex-page">
     <div class="header-box">已完成({{count}})</div>
-    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
+    <list-view url="api/studentCert.json" ref="listView" :list="listData" :params="params" :startY="scrollY" @update="update" @onScroll="onScroll">
       <div class="list-wrap">
         <div class="approve-list" v-for="group in groups" :key="group.dateStr">
           <div class="group-title">
@@ -24,7 +24,6 @@
 import { Badge, dateFormat } from 'vux'
 import ListView from '@/components/ListView'
 import FiltratePop from '@/components/FiltratePop'
-import service from '../service/studentCert'
 
 export default {
   components: {
@@ -33,9 +32,6 @@ export default {
   data () {
     return {
       count: 0,
-      scrollY: 0,
-      params: {},
-      listData: []
     }
   },
   computed: {
@@ -46,20 +42,22 @@ export default {
         .map(dateStr => {
           return { dateStr, items: this.listData.filter(item => item.dateStr == dateStr)}
         })
-    }
-  },
-  watch : {
-    '$store.state.router' () {
-      this.scrollY = this.$store.state.router.scrollY
-      this.params = this.$store.state.router.params
-      this.listData = this.$store.state.router.listData
+    },
+    scrollY: {
+      get () { return this.$store.state.router.scrollY || 0 },
+      set (val) { this.$store.commit('updateRouterState', { scrollY: val }) }
+    },
+    params: {
+      get () { return this.$store.state.router.params || {} },
+      set (val) { this.$store.commit('updateRouterState', { params: val }) }
+    },
+    listData: {
+      get () { return this.$store.state.router.listData || [] },
+      set (val) { this.$store.commit('updateRouterState', { listData: val }) }
     }
   },
   created () {
     this.params = { state: 2 }
-    const data = service.list(this)
-    console.log('post2 data', data)
-//    this.count = data.count
   },
   methods: {
     update (data) {
@@ -68,20 +66,15 @@ export default {
         return {...item, dateStr:dateFormat(item.createTime, 'YYYY年MM月DD日')}
       })]
     },
+    onScroll (y) {
+      this.scrollY = y
+    },
     submit (val) {
       this.params = {...this.params, name: val}
       this.listData = []
       this.$refs.listView.refresh()
     },
-    commitState () {
-      this.$store.commit('updateRouterState', {
-        params: this.params,
-        listData: this.listData,
-        scrollY: this.$refs.listView.getScrollY()
-      })
-    },
     linkTo (url) {
-      this.commitState()
       this.$router.push(url)
     }
   }

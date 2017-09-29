@@ -3,7 +3,11 @@
     <slot></slot>
     <flexbox class="body">
       <flexbox-item v-for="(item, index) in nav" :key="index">
-        <a @click="itemClick(item.link)">
+        <router-link v-if="item.link" :to="item.link">
+          <div class="num">{{item.num}}</div>
+          <div class="text">{{item.text}}</div>
+        </router-link>
+        <a v-else>
           <div class="num">{{item.num}}</div>
           <div class="text">{{item.text}}</div>
         </a>
@@ -26,14 +30,6 @@
         default: '#5f60bd'
       },
     },
-    methods: {
-      itemClick (url) {
-        if (url) {
-          this.$emit("navClick")
-          this.$router.push(url)
-        }
-      }
-    }
   }
 </script>
 
