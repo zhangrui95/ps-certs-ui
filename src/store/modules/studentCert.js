@@ -5,18 +5,18 @@ const state = {
 }
 
 const getters = {
-  done: state => state.done
+  doneM: state => state.done
 }
 
 const actions = {
-  list ({commit}) {
+  listM ({commit}) {
     // async
     commit(types.SC_LIST, {})
   }
 }
 
 const mutations = {
-  [types.REC_LIST] (state, {list}) {
+  [types.REC_LIST_M] (state, {list}) {
     state.list = list
   }
 }

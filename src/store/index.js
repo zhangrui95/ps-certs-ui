@@ -1,7 +1,8 @@
 import Vuex from 'vuex'
+import modules from './modules'
 import * as actions from './actions'
 import * as getters from './getters'
-import studentCert from './modules/studentCert'
+import * as mutations from './mutations'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -10,17 +11,8 @@ const store = new Vuex.Store({
     isLoading: false,
     router: {} // 将要保存到history中的state
   },
-  mutations: {
-    updateLoadingStatus (state, payload) {
-      state.isLoading = payload.isLoading
-    },
-    updateRouterState (state, payload) {
-      state.router = payload
-    }
-  },
-  modules: {
-    studentCert
-  },
+  modules,
+  mutations,
   actions,
   getters,
   strict: !isProduction

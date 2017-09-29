@@ -22,9 +22,9 @@
 
 <script>
 import { Badge, dateFormat } from 'vux'
-import ListView from '@/components/ListView'
-import FiltratePop from '@/components/FiltratePop'
-import service from '../service/studentCert'
+import ListView from '../components/ListView'
+import FiltratePop from '../components/FiltratePop'
+import service from '../api/studentCert'
 
 export default {
   components: {
