@@ -5,7 +5,7 @@ const mutations = {
     state.isLoading = payload.isLoading
   },
   updateRouterState: (state, payload) => {
-    state.router = payload
+    state.router = { ...state.router, ...payload }
   },
   [types.DEMO_LIST]: (state, list) => {
     console.log('demo state', state)
