@@ -5,7 +5,6 @@
       <div class="none-flex cell-border cell-margin previewer-box" v-for="(imgNews, index) in imgTitle" :key="index">
         <div class="weui-cell__hd" v-html="imgNews.title"></div>
         <ul class="weui-uploader__files">
-          <!--<img-browse :imgList="imgNews.imgList" :delShow="delShow" @delImgIndex="delImgIndex" @click.native="ShowImg(index)"></img-browse>-->
           <span v-for="(item, itemIndex) in imgNews.imgList" :key="itemIndex">
             <img class="src-img previewer-demo-img" :src="item.src" @click="show(index, itemIndex)">
           </span>
@@ -17,7 +16,11 @@
           </div>
         </up-loading>
       </div>
-      <previewer v-for="group in imgTitle" :list="group.imgList" ref="previewer" :options="options"></previewer>
+      <previewer v-for="group in imgTitle" :list="group.imgList" ref="previewer">
+        <template slot="button-after">
+          <div class="del-btn" @click.prevent.stop="deleteImage"><i class="weui-icon-delete weui-icon_gallery-delete"></i></div>
+        </template>
+      </previewer>
       <x-input title="姓名" v-model="name"></x-input>
       <x-input title="身份证号" v-model="card"></x-input>
       <x-input title="手机号码" v-model="mobile"></x-input>
@@ -44,27 +47,16 @@
 
 <script>
   import { Previewer, XInput, PopupPicker, Datetime, Group } from 'vux'
-  import ImgBrowse from '../components/ImgBrowse'
   import UpLoading from '../components/UpLoading'
   import { post } from '@/utils/ajax'
   import * as valid from '@/utils/valid'
 
   export default {
     components: {
-      Previewer, XInput, PopupPicker, Datetime, Group,
-      ImgBrowse, UpLoading
+      Previewer, XInput, PopupPicker, Datetime, Group, UpLoading
     },
     created () {
       this.title = this.$route.query.type == 1 ? '身份证办理申请登记' : '居住证明办理申请登记'
-      this.options = {
-        getThumbBoundsFn: (index) =>{
-          let thumbnail = document.querySelectorAll('.previewer-box')[this.num].querySelectorAll('.src-img')[index]
-          console.log(thumbnail)
-          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
-          let rect = thumbnail.getBoundingClientRect()
-          return {x: rect.left, y: rect.top + pageYScroll, w: rect.width}
-        }
-      }
     },
     data () {
       return {
@@ -93,7 +85,7 @@
         selfLis: '',
         cardLis: '',
         proveLis: '',
-        options: {},
+        imgIndex: 0,
         imgTitle: [
           {
             title: '<label class="weui-label">自拍正面照</label>',
@@ -114,6 +106,7 @@
     methods: {
       show (index, itemIndex) {
         this.num = index
+        this.imgIndex = itemIndex
         this.$refs.previewer[index].show(itemIndex)
       },
       onChange (index) {
@@ -146,10 +139,18 @@
           this.proveLis = ids.join(',')
         }
       },
-      delImgIndex (delIndex) {
-        if (this.num === 2) {
-          this.cardLis.splice(delIndex, 1)
-        }
+      deleteImage: function () {
+        let _this = this
+        this.$vux.confirm.show({
+          title: '确定删除该照片？',
+          onConfirm () {
+            _this.imgTitle[_this.num].imgList.splice(this.imgIndex, 1)
+            _this.$emit('delImgIndex', _this.index)
+            if (_this.num === 2) {
+              _this.cardLis.splice(_this.index, 1)
+            }
+          }
+        })
       },
       clickUp () {
         let infoArray = [
@@ -224,5 +225,28 @@
     height: 45px;
     float: right;
     margin: 5px;
+  }
+  .del-btn{
+    color: #fff;
+    position: absolute;
+    bottom: 0;
+    height: 60px;
+    width: 100%;
+    z-index: 99999;
+    background: #0d0d0d;
+    font-size: 18px;
+    text-align: center;
+    line-height: 60px;
+    letter-spacing: 2px;
+  }
+  .student-page{
+    .pswp__top-bar {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      margin-top: -60px;
+      height: 60px;
+      width: 100%;
+    }
   }
 </style>
