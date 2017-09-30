@@ -3,7 +3,8 @@ import * as api from '../../api/studentCert'
 
 const state = {
   list: [],
-  stat: []
+  stat: [],
+  count: 0
 }
 
 const getters = {
@@ -11,11 +12,17 @@ const getters = {
 }
 
 const actions = {
-  async list ({commit}, params) {
-    const resp = await api.list(params)
-    commit(types.SC_LIST, resp.data)
+  async list({ commit, state }, params) {
+    const offset = state.list.length
+    const resp = await api.list({ max: 10, offset, ...params })
+    if (offset > 0) {
+      commit(types.SC_LIST, { count: resp.data.count, list: [...state.list, ...resp.data.list] })
+    } else {
+      commit(types.SC_LIST, resp.data)
+    }
+
   },
-  async groupByState ({commit}, params) {
+  async groupByState({ commit }, params) {
     const resp = await api.groupByState(params)
     commit(types.SC_STAT, resp.data)
   },
@@ -26,10 +33,11 @@ const actions = {
 }
 
 const mutations = {
-  [types.SC_LIST] (state, {list}) {
+  [types.SC_LIST](state, { list, count }) {
     state.list = list
+    state.count = count
   },
-  [types.SC_STAT] (state, stat) {
+  [types.SC_STAT](state, stat) {
     state.stat = [
       { text: '未办理', num: stat.init },
       { text: '未通知', num: stat.done, link: '/NoInform' },
@@ -45,5 +53,9 @@ const mutations = {
 const namespaced = true
 
 export default {
-  namespaced, state, getters, actions, mutations
+  namespaced,
+  state,
+  getters,
+  actions,
+  mutations
 }
