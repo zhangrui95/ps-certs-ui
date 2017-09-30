@@ -18,6 +18,10 @@ const actions = {
   async groupByState ({commit}, params) {
     const resp = await api.groupByState(params)
     commit(types.SC_STAT, resp.data)
+  },
+  async detail ({commit}, params) {
+    const resp = await api.detail(params)
+    commit(types.SC_DETAIL, resp.data)
   }
 }
 
@@ -31,6 +35,10 @@ const mutations = {
       { text: '未通知', num: stat.done, link: '/NoInform' },
       { text: '已完成', num: stat.notify, link: '/Done' }
     ]
+  },
+  [types.SC_DETAIL] (state, list) {
+    state.detail = [list]
+    console.log(state)
   }
 }
 

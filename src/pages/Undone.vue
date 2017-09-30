@@ -18,9 +18,12 @@
 </template>
 
 <script>
+  import { createNamespacedHelpers } from 'vuex'
   import { Previewer, dateFormat, Group } from 'vux'
   import DetailCell from '../components/DetailCell'
   import { post } from '@/utils/ajax'
+
+  const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
   export default {
     components: {
@@ -34,7 +37,15 @@
         options: {}
       }
     },
+    computed: {
+      ...mapState({
+        listData: state => state
+      })
+    },
     methods: {
+      ...mapActions({
+        detail: 'detail'
+      }),
       show (index, itemIndex) {
         this.showList = index
         this.$refs.previewer[index].show(itemIndex)
