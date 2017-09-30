@@ -7,7 +7,7 @@
     <div class="filtrate-header" :style="{background: color}">
       <div class="fire-header-left-top">筛选条件</div>
       <div class="fire-header-right" @click="onCancle">取消</div>
-      <div class="input-border">
+      <div class="input-border" v-if="inputShow">
         <div class="weui-search-bar__box">
           <i class="weui-icon-search"></i>
           <x-input v-model="searchInput" :placeholder="placeholder" ></x-input>
@@ -37,14 +37,18 @@
       placeholder: {
         type: String,
         default: '请输入关键字'
-      },
+      }, 
       color: {
         type: String,
         default: '#5f60bd'
-      },
+      }, 
       reset: {
         type: Boolean,
         default: false
+      }, 
+      inputShow: {
+        type: Boolean,
+        default: true
       },
     },
     data () {
@@ -105,7 +109,7 @@
     font-family: "Microsoft YaHei", "\5b8b\4f53", "Arial", "Helvetica", "sans-serif";
   .filtrate-header{
     padding: 0 20px;
-    height: 110px;
+    padding-bottom: 16px;
     background: #605fbd;
     color: #FFFFFF;
     font-size: 16px;
