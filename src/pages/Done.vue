@@ -92,8 +92,8 @@ export default {
 //      })
     },
     linkTo (url) {
-//      this.commitState()
-//      this.$router.push(url)
+      this.commitState()
+      this.$router.push(url)
     }
   }
 }

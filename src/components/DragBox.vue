@@ -6,6 +6,8 @@
     @touchmove="move"
     @mousemove="move"
     @mouseout="end"
+    @mouseleave="end"
+    @touchend="end"
     @mouseup="end">
     <slot></slot>
   </div>
