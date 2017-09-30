@@ -6,11 +6,7 @@
 </template>
 
 <script>
-  import ImgBrowse from '../components/ImgBrowse.vue'
   export default {
-    components: {
-      ImgBrowse
-    },
     props: [
       'title',
       'detail'
