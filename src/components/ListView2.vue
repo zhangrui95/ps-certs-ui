@@ -31,8 +31,8 @@
       }
     },
     watch: {
-      list () {
-        if (this.list.length < 10) this.isNoMore = true
+      list (arr) {
+        if (arr.length < 10) this.isNoMore = true
         this.refresh()
       }
     },

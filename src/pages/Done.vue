@@ -4,7 +4,7 @@
     <list-view :list="listData"  @pullingUp="pullingUp" class="approve-list" ref="listView">
       <template scope="props">
         <div class="list-group">
-          <div class="group-title" v-if="props.item.dateStr">{{props.item.dateStr}}</div>
+          <div class="group-title" v-if="props.item.first">{{props.item.dateStr}}</div>
           <div class="list-item" @click="linkTo(`/Detail?id=${props.item.id}`)" >
             <span class="item-index">{{props.index > 8? props.index + 1: '0' + (props.index + 1)}}.</span>
             <span class="item-title">{{props.item.name}}</span>
@@ -35,10 +35,10 @@ export default {
       listData: state =>  {
         let arr = []
         return state.list.map(item => {
-          let dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
-          if (arr.indexOf(dateStr) == -1) {
-            item.dateStr = dateStr
-            arr.push(dateStr)
+          item.dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
+          if (arr.indexOf(item.dateStr) == -1) {
+            item.first = true
+            arr.push(item.dateStr)
           }
           return item
         })
