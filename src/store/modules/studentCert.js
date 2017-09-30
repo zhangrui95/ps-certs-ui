@@ -1,10 +1,14 @@
 import * as types from '../mutation-types'
 import * as api from '../../api/studentCert'
+import { dateFormat } from 'vux'
 
 const state = {
   list: [],
   stat: [],
-  count: 0
+  detail: [],
+  count: 0,
+  photo: [],
+  data:[]
 }
 
 const getters = {
@@ -33,20 +37,49 @@ const actions = {
 }
 
 const mutations = {
-  [types.SC_LIST](state, { list, count }) {
+  [types.SC_LIST] (state, { list, count }) {
     state.list = list
     state.count = count
   },
-  [types.SC_STAT](state, stat) {
+  [types.SC_STAT] (state, stat) {
     state.stat = [
       { text: '未办理', num: stat.init },
       { text: '未通知', num: stat.done, link: '/NoInform' },
       { text: '已完成', num: stat.notify, link: '/Done' }
     ]
   },
-  [types.SC_DETAIL] (state, list) {
-    state.detail = [list]
-    console.log(state)
+  [types.SC_DETAIL] (state, {data}) {
+    state.data = data
+    state.detail = [
+      { name: '姓名', value: data.name },
+      { name: '身份证号', value: data.info.card },
+      { name: '手机号', value: data.info.mobile },
+      { name: '婚姻状况', value: ['未婚', '已婚', '离异', '其他'][data.info.marray - 1] },
+      { name: '血型', value: ['A', 'B', 'O', 'AB', '其他', '不详'][data.info.blood - 1] },
+      { name: '身高(cm)', value: data.info.height },
+      { name: '体重(kg)', value: data.info.weight },
+      { name: '文化程度', value: ['本科', '本科以上'][data.info.education - 1] },
+      { name: '宗教信仰', value: ['佛教', '道教', '天主教', '基督教', '伊斯兰教', '喇嘛教', '其他', '无宗教信仰'][data.info.religion - 1] },
+      { name: '兵役状况', value: ['未服兵役', '退出现役', '国防生', '服现役'][data.info.education - 1] },
+      { name: '入学时间', value: dateFormat(data.info.enterSchoolTime, 'YYYY-MM-DD')},
+      { name: '所在院系', value: data.info.faculty },
+      { name: '所在专业', value: data.info.specialty }
+    ]
+    let { photos } = data
+    photos = photos.map(item => {
+      return  {...item, src: "api/studentCert/photo?id=" + item.id}
+    })
+    state.photo = [{
+      name: '自拍正面照',
+      list: photos.filter(item => item.type == 1)
+    }, {
+      name: '在读证明',
+      list: photos.filter(item => item.type == 3)
+    }, {
+      name: '学生证',
+      list: photos.filter(item => item.type == 2)
+    }
+    ]
   }
 }
 

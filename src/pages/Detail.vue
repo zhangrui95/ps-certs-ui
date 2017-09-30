@@ -1,11 +1,11 @@
 <template>
   <div class="flex-page detail">
     <div class="header-box">
-      <span>{{name}}</span>
-      <span>{{createTime | dateFormat('YYYY-MM-DD hh:mm:ss')}}</span>
+      <span v-text="dataNews.name"></span>
+      <span>{{dataNews.createTime | dateFormat('YYYY-MM-DD hh:mm:ss')}}</span>
     </div>
     <div class="center-box">
-      <div class="cell" v-for="(group, index) in lists" :key="index">
+      <div class="cell" v-for="(group, index) in photoList" :key="index">
         <div class="cell-title">{{group.name}}</div>
         <div class="cell-content previewer-box">
           <span v-for="(item, itemIndex) in group.list" :key="itemIndex">
@@ -16,23 +16,26 @@
       <div class="cell">
         <div class="cell-title">联系方式</div>
         <div class="cell-content">
-          <a class="text phone-blue" href="tel:13012345678">{{mobile}}</a>
+          <a class="text phone-blue" href="tel:13012345678">{{dataNews.mobile}}</a>
         </div>
       </div>
-      <div class="cell" v-if="back">
+      <div class="cell" v-if="dataNews.result === -1">
         <div class="cell-title">退回原因</div>
         <div class="cell-content">
-          <span class="text">{{remark}}</span>
+          <span class="text">{{dataNews.remark}}</span>
         </div>
       </div>
     </div>
-    <previewer v-for="(group, index) in lists" :key="index" :list="group.list" ref="previewer" :options="options"></previewer>
+    <previewer v-for="(group, index) in photoList" :key="index" :list="group.list" ref="previewer" :options="options"></previewer>
   </div>
 </template>
 
 <script>
 import { Previewer } from 'vux'
 import { post } from '@/utils/ajax'
+import { createNamespacedHelpers } from 'vuex'
+
+const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
 export default {
   components: {
@@ -40,44 +43,28 @@ export default {
   },
   data () {
     return {
-      name: '',
-      createTime: '',
-      back: false,
-      remark: '',
-      mobile: '',
-      lists: [],
       showList: 0,
       options: {}
     }
   },
+  computed: {
+    ...mapState({
+      listDetail: state => state.detail,
+      photoList: state => state.photo,
+      dataNews: state => state.data
+    })
+  },
   methods: {
+    ...mapActions({
+      detail: 'detail'
+    }),
     show (index, itemIndex) {
       this.showList = index
       this.$refs.previewer[index].show(itemIndex)
     }
   },
   created () {
-    post('api/studentCert/detail.json').then(data => {
-        this.name = data.data.name
-        this.createTime = data.data.createTime
-        this.back = data.data.result === -1
-        this.remark = data.data.remark
-        this.mobile = data.data.mobile
-        let list = data.data.photos.map(item => {
-          return  {...item, src: "api/studentCert/photo?id="+item.id}
-        })
-        this.lists = [{
-            name: '自拍正面照',
-            list: list.filter(item => item.type == 1),
-          }, {
-            name: '在读证明',
-            list: list.filter(item => item.type == 3),
-          }, {
-            name: '学生证',
-            list: list.filter(item => item.type == 2),
-          }
-        ]
-    })
+    this.detail()
     this.options = {
       getThumbBoundsFn: (index) =>{
         let thumbnail = document.querySelectorAll('.previewer-box')[this.showList].querySelectorAll('.previewer-img')[index]
