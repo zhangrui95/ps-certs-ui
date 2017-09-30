@@ -1,27 +1,31 @@
 <template>
   <div class="flex-page approve">
-    <top-nav :nav="nav">{{title}}</top-nav>
-    <list-view url="api/studentCert.json" ref="listView" :list="listData" :params="params" :startY="scrollY" @update="update" @onScroll="onScroll">
+    <top-nav :nav="stat">{{title}}</top-nav>
       <div class="approve-list">
-        <div class="list-item" v-for="(item, index) in listData" :key="index" @click="linkTo('/Undone?id='+item.id)">
-          <div class="item-left">
-            <div class="item-index">{{index>8?index+1:'0'+(index+1)}}.</div>
-          </div>
-          <div class="item-right">
-            <div class="item-title">{{item.name}}</div>
-            <div class="item-desc">{{item.createTime | dateFormat}}</div>
-          </div>
-        </div>
+        <list-view url="api/studentCert.json" ref="listView" :list="listData" :params="params" :startY="scrollY" @update="update" @onScroll="onScroll">
+          <template scope="props">
+            <div class="list-item"  @click="linkTo('/Undone?id='+props.item.id)">
+              <div class="item-left">
+                <div class="item-index">{{props.index>8?props.index+1:'0'+(props.index+1)}}.</div>
+              </div>
+              <div class="item-right">
+                <div class="item-title">{{props.item.name}}</div>
+                <div class="item-desc">{{props.item.createTime | dateFormat}}</div>
+              </div>
+            </div>
+          </template>
+        </list-view>
       </div>
-    </list-view>
   </div>
 </template>
 
 <script>
-import ListView from '@/components/ListView'
+import { createNamespacedHelpers } from 'vuex'
+import ListView from '../components/ListView2'
 import TopNav from '@/components/TopNav'
 import DragBox from '@/components/DragBox'
-import { post } from '@/utils/ajax'
+
+const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
 export default {
   components: {
@@ -29,11 +33,14 @@ export default {
   },
   data () {
     return {
-      title: '',
-      nav: [],
+      title: ''
     }
   },
   computed: {
+    ...mapState({
+      listData: state => state.list,
+      stat: state => state.stat
+    }),
     scrollY: {
       get () { return this.$store.state.router.scrollY || 0 },
       set (val) { this.$store.commit('updateRouterState', { scrollY: val }) }
@@ -41,26 +48,21 @@ export default {
     params: {
       get () { return this.$store.state.router.params || {} },
       set (val) { this.$store.commit('updateRouterState', { params: val }) }
-    },
-    listData: {
-      get () { return this.$store.state.router.listData || {} },
-      set (val) { this.$store.commit('updateRouterState', { listData: val }) }
     }
   },
   created () {
-    this.title = this.$route.query.type == 1? '身份证申请': '居住证明申请'
-    this.params = { state: 0 }
-    post('/example/api/studentCert/groupByState.json').then(data => {
-      this.nav = [
-        { text: '未办理', num: data.init },
-        { text: '未通知', num: data.done, link: '/NoInform' },
-        { text: '已完成', num: data.notify, link: '/Done' }
-      ]
-    })
+    this.title = this.$route.query.type === 1 ? '身份证申请' : '居住证明申请'
+//    this.params = { state: 0 }
+    this.list({state: 0})
+    this.groupByState()
   },
   methods: {
+    ...mapActions({
+      list: 'list',
+      groupByState: 'groupByState'
+    }),
     update (data) {
-      this.listData = [ ...this.listData, ...data.list]
+//      this.listData = [ ...this.listData, ...data.list]
     },
     onScroll (y) {
       this.scrollY = y

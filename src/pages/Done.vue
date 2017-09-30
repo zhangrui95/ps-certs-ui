@@ -1,15 +1,17 @@
 <template>
   <div class="flex-page">
     <div class="header-box">已完成({{count}})</div>
-    <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
-      <template scope="props">
-        <div @click="linkTo(`/Detail?id=${props.item.id}`)" class="list-item">
-          <span class="item-index">{{props.index > 8? props.index + 1: '0' + (props.index + 1)}}.</span>
-          <span class="item-title">{{props.item.name}}</span>
-          <badge v-if="props.item.result == -1" text="已退回"/>
-        </div>
-      </template>
-    </list-view>
+    <div class="approve-list">
+      <list-view url="api/studentCert.json" :list="listData" :params="params" :startY="scrollY" @update="update" ref="listView">
+        <template scope="props">
+          <div @click="linkTo(`/Detail?id=${props.item.id}`)" class="list-item">
+            <span class="item-index">{{props.index > 8? props.index + 1: '0' + (props.index + 1)}}.</span>
+            <span class="item-title">{{props.item.name}}</span>
+            <badge v-if="props.item.result == -1" text="已退回"/>
+          </div>
+        </template>
+      </list-view>
+    </div>
     <filtrate-pop ref="filtrate" @submit="submit"/>
   </div>
 </template>
@@ -64,8 +66,8 @@ export default {
 //    }
 //  },
   created () {
-    this.params = { state: 2 }
-    this.list()
+//    this.params = { state: 2 }
+    this.list({state: 2})
   },
   methods: {
     ...mapActions({
