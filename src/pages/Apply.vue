@@ -132,11 +132,11 @@
       },
       Ids (ids) {
         if (this.num === 0) {
-          this.selfLis = ids.join(',')
+          this.selfLis = ids
         } else if (this.num === 2) {
           this.cardLis = ids
         } else {
-          this.proveLis = ids.join(',')
+          this.proveLis = ids
         }
       },
       deleteImage: function () {
@@ -146,8 +146,12 @@
           onConfirm () {
             _this.imgTitle[_this.num].imgList.splice(this.imgIndex, 1)
             _this.$emit('delImgIndex', _this.index)
-            if (_this.num === 2) {
+            if (_this.num === 0) {
+              _this.selfLis.splice(_this.index, 1)
+            } else if (_this.num === 2) {
               _this.cardLis.splice(_this.index, 1)
+            } else {
+              _this.proveLis.splice(_this.index, 1)
             }
           }
         })
@@ -201,9 +205,9 @@
               specialty: this.major
             },
             name: this.name,
-            selfIds: this.selfLis,
+            selfIds: this.selfLis.join(','),
             cardIds: this.cardLis.join(','),
-            proveIds: this.proveLis
+            proveIds: this.proveLis.join(',')
           }
         ).then(data => {
           if (data.state === 0) {
