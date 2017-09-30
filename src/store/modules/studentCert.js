@@ -8,7 +8,8 @@ const state = {
   detail: [],
   count: 0,
   photo: [],
-  data:[]
+  data: [],
+  notify: 0
 }
 
 const getters = {
@@ -33,6 +34,10 @@ const actions = {
   async detail ({commit}, params) {
     const resp = await api.detail(params)
     commit(types.SC_DETAIL, resp.data)
+  },
+  async notifyUsers ({commit}, params) {
+    const resp = await api.notifyUsers(params)
+    commit(types.SC_NOTIFYUSERS, resp.data)
   }
 }
 
@@ -80,6 +85,18 @@ const mutations = {
       list: photos.filter(item => item.type == 2)
     }
     ]
+  },
+  [types.SC_NOTIFYUSERS] (state, notify) {
+    // if (data.state === 0) {
+    //    this.$vux.toast.show({text:'发送成功'})
+    //    this.dateTime = ''
+    //    this.address = ''
+    //    this.allClick()
+    //    this.listData = []
+    //    this.$refs.listView.refresh()
+    //  }else{
+    //    this.$vux.toast.text('发送失败')
+    //  }
   }
 }
 

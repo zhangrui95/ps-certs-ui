@@ -37,6 +37,9 @@
   import TopNav from '@/components/TopNav'
   import CheckIcon from '@/components/CheckIcon'
   import { post } from '@/utils/ajax'
+  import { createNamespacedHelpers } from 'vuex'
+
+  const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
   export default {
     components: {
@@ -57,6 +60,9 @@
       this.params = { state: 1 }
     },
     computed: {
+      ...mapState({
+
+      }),
       groups () {
         return this.listData
           .map(item => dateFormat(item.createTime, 'YYYY年MM月DD日'))
@@ -76,6 +82,9 @@
       }
     },
     methods: {
+      ...mapActions({
+        notifyUsers: 'notifyUsers'
+      }),
       update (data) {
         this.count = data.count
         this.listData = [ ...this.listData, ...data.list.map(item => {
@@ -111,23 +120,24 @@
         })
       },
       confirm () {
-        post('api/studentCert/notifyUsers.json',{
-          id: this.listData.filter(item => item.checked).map(item => item.id).join(','),
-          all: this.allChecked? 1: 0,
-          time: this.dateTime,
-          address: this.address,
-        }).then(data => {
-          if (data.state === 0) {
-            this.$vux.toast.show({text:'发送成功'})
-            this.dateTime = ''
-            this.address = ''
-            this.allClick()
-            this.listData = []
-            this.$refs.listView.refresh()
-          }else{
-            this.$vux.toast.text('发送失败')
-          }
-        })
+        this.notifyUsers({id: this.listData.filter(item => item.checked).map(item => item.id).join(','), all: this.allChecked? 1: 0, time: this.dateTime, address: this.address})
+//        post('api/studentCert/notifyUsers.json',{
+//          id: this.listData.filter(item => item.checked).map(item => item.id).join(','),
+//          all: this.allChecked? 1: 0,
+//          time: this.dateTime,
+//          address: this.address,
+//        }).then(data => {
+//          if (data.state === 0) {
+//            this.$vux.toast.show({text:'发送成功'})
+//            this.dateTime = ''
+//            this.address = ''
+//            this.allClick()
+//            this.listData = []
+//            this.$refs.listView.refresh()
+//          }else{
+//            this.$vux.toast.text('发送失败')
+//          }
+//        })
       }
     }
   }
