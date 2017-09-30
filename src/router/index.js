@@ -32,11 +32,8 @@ const router = new VueRouter((() => {
     base: 'example',
     mode: 'history',
     stringifyQuery(obj) {
-      return routerStringifyQuery({
-        userid: querystring.parse()['userid'],
-        type: querystring.parse()['type'],
-        ...obj,
-      })
+      const { userid, type } = querystring.parse()
+      return routerStringifyQuery({ userid, type, ...obj, })
     }
   }
 })())
