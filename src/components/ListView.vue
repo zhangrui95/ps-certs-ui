@@ -25,6 +25,13 @@
       list: {
         type: Array,
         'default': []
+      },
+      groupBy: {
+        type: Function
+      },
+      listInOrder: {
+        type: Boolean,
+        'default': false
       }
     },
     watch: {
@@ -44,6 +51,7 @@
     },
     methods: {
       initScroll() {
+        console.log('this.groupBy', this.groupBy)
         this.scroll = new BScroll(this.$refs.wrapper, { click: true, pullUpLoad: true })
         this.scroll.on('scrollEnd', position => this.$emit('scrollEnd', position))
         this.scroll.on('pullingUp', () => {

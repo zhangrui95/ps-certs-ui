@@ -1,10 +1,10 @@
 <template>
   <div class="flex-page">
     <div class="header-box">已完成({{count}})</div>
-    <list-view :list="listData"  @pullingUp="pullingUp" class="approve-list" ref="listView">
+    <list-view :list="listData"  @pullingUp="pullingUp" :groupBy="groupBy" class="approve-list" ref="listView">
       <template scope="props">
         <div class="list-group">
-          <div class="group-title" v-if="props.item.first">{{props.item.dateStr}}</div>
+          <div class="list-item group-title" v-if="props.item.first">{{props.item.dateStr}}</div>
           <div class="list-item" @click="linkTo(`/Detail?id=${props.item.id}`)" >
             <span class="item-index">{{props.index > 8? props.index + 1: '0' + (props.index + 1)}}.</span>
             <span class="item-title">{{props.item.name}}</span>
@@ -32,11 +32,11 @@ export default {
   computed: {
     ...mapState({
       count: state => state.count,
-      listData: state =>  {
-        let arr = []
+      listData: state => {
+        const arr = []
         return state.list.map(item => {
           item.dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
-          if (arr.indexOf(item.dateStr) == -1) {
+          if (arr.indexOf(item.dateStr) === -1) {
             item.first = true
             arr.push(item.dateStr)
           }
@@ -60,7 +60,10 @@ export default {
       this.$refs.listView.scrollTo(0)
     },
     linkTo (url) {
-     this.$router.push(url)
+      this.$router.push(url)
+    },
+    groupBy (item) {
+      return dateFormat(item.createTime, 'YYYY年MM月DD日')
     }
   }
 }
