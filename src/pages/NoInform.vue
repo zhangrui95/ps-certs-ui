@@ -39,7 +39,7 @@
   import { createNamespacedHelpers } from 'vuex'
   import * as types from '@/store/mutation-types'
 
-  const { mapActions, mapMutations, mapState, mapGetters } = createNamespacedHelpers('studentCert')
+  const { mapActions,  mapState } = createNamespacedHelpers('studentCert')
 
   export default {
     components: {
@@ -127,12 +127,8 @@
         })
       },
       confirm () {
-        post('api/studentCert/notifyUsers.json',{
-          id: this.listData.filter(item => item.checked).map(item => item.id).join(','),
-          all: this.allChecked? 1: 0,
-          time: this.dateTime,
-          address: this.address,
-        }).then(data => {
+        this.notifyUsers({id: this.listData.filter(item => item.checked).map(item => item.id).join(','), all: this.allChecked? 1: 0, time: this.dateTime, address: this.address})
+        post('api/studentCert/notifyUsers.json').then(data => {
           if (data.state === 0) {
             this.$vux.toast.show({text:'发送成功'})
             this.dateTime = ''
