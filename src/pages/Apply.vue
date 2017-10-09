@@ -218,16 +218,6 @@
           cardIds: this.cardLis.join(','),
           proveIds: this.proveLis.join(',')
         })
-//        post('api/studentCert/save.json').then(data => {
-//          if (data.state === 0) {
-//            this.$vux.alert.show({
-//              title: '提交成功',
-//              content: this.$route.query.type == 1 ? '请注意查看系统通知领取个人信息表' : '请注意查看系统通知领取居住证明'
-//            })
-//          } else {
-//            this.$vux.toast.text('提交失败！')
-//          }
-//        })
       }
     }
   }

@@ -44,14 +44,6 @@
         if (this.textArea.length !== 0 || this.val.length !== 0) {
           let id = this.$route.query.id
           this.fail({id: id, items: this.val.join(','), remark: this.textArea})
-//          post('api/studentCert/fail.json').then(response => {
-//            if (response.state === 0) {
-//              this.show1 = true
-//              setTimeout(() => {
-//                this.$router.push({path: '/Approve'})
-//              }, 2500)
-//            }
-//          })
         } else {
           this.show2 = true
         }
