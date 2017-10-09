@@ -49,7 +49,6 @@
   import { createNamespacedHelpers } from 'vuex'
   import { Previewer, XInput, PopupPicker, Datetime, Group } from 'vux'
   import UpLoading from '../components/UpLoading'
-  import { post } from '@/utils/ajax'
   import * as valid from '@/utils/valid'
 
   const { mapActions, mapState } = createNamespacedHelpers('studentCert')

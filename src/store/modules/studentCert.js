@@ -12,7 +12,8 @@ const state = {
   notify: 0,
   fail: [],
   save: [],
-  reload: []
+  reload: [],
+  done: []
 }
 
 const getters = {
@@ -52,6 +53,10 @@ const actions = {
   async reload ({commit}, params) {
     const resp = await api.reload(params)
     commit(types.CL_RELOAD, resp.data)
+  },
+  async done ({commit}, params) {
+    const resp = await api.done(params)
+    commit(types.SC_DONE, resp.data)
   }
 }
 
@@ -111,6 +116,9 @@ const mutations = {
   },
   [types.CL_RELOAD] (state, reload) {
     state.reload = reload
+  },
+  [types.SC_DONE] (state, done) {
+    state.done = done
   }
 }
 

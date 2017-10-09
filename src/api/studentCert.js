@@ -34,3 +34,8 @@ export const reload = async (params = {}) => {
   const ret = await postx('api/app/reload.json', params)
   return ret
 }
+
+export const done = async (params = {}) => {
+  const ret = await postx('api/studentCert/done.json', params)
+  return ret
+}
