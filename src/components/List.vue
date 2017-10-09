@@ -10,6 +10,13 @@
       list: {
         type: Array,
         'default': []
+      },
+      groupBy: {
+        type: Function
+      },
+      listInOrder: {
+        type: Boolean,
+        'default': false
       }
     }
   }
