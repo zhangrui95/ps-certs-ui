@@ -1,5 +1,5 @@
 <template>
-  <div class="list-wrap">
+  <div>
     <slot v-for="(item, index) in list" :item="item" :index="index"></slot>
   </div>
 </template>
