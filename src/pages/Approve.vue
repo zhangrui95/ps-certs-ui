@@ -21,13 +21,12 @@
 import { createNamespacedHelpers } from 'vuex'
 import ListView from '../components/ListView'
 import TopNav from '@/components/TopNav'
-import DragBox from '@/components/DragBox'
 
 const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
 export default {
   components: {
-    TopNav, ListView, DragBox
+    TopNav, ListView
   },
   data () {
     return {
