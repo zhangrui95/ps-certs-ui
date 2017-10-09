@@ -9,7 +9,8 @@ const state = {
   count: 0,
   photo: [],
   data: [],
-  notify: 0
+  notify: 0,
+  fail: []
 }
 
 const getters = {
@@ -17,7 +18,7 @@ const getters = {
 }
 
 const actions = {
-  async list({ commit, state }, params) {
+  async list ({ commit, state }, params) {
     const offset = state.list.length
     const resp = await api.list({ max: 10, offset, ...params })
     if (offset > 0) {
@@ -25,9 +26,8 @@ const actions = {
     } else {
       commit(types.SC_LIST, resp.data)
     }
-
   },
-  async groupByState({ commit }, params) {
+  async groupByState ({ commit }, params) {
     const resp = await api.groupByState(params)
     commit(types.SC_STAT, resp.data)
   },
@@ -38,6 +38,10 @@ const actions = {
   async notifyUsers ({commit}, params) {
     const resp = await api.notifyUsers(params)
     commit(types.SC_NOTIFYUSERS, resp.data)
+  },
+  async fail ({commit}, params) {
+    const resp = await api.fail(params)
+    commit(types.SC_FAIL, resp.data)
   }
 }
 
@@ -87,16 +91,10 @@ const mutations = {
     ]
   },
   [types.SC_NOTIFYUSERS] (state, notify) {
-    // if (data.state === 0) {
-    //    this.$vux.toast.show({text:'发送成功'})
-    //    this.dateTime = ''
-    //    this.address = ''
-    //    this.allClick()
-    //    this.listData = []
-    //    this.$refs.listView.refresh()
-    //  }else{
-    //    this.$vux.toast.text('发送失败')
-    //  }
+    state.notify = notify
+  },
+  [types.SC_FAIL] (state, fail) {
+    state.fail = fail
   }
 }
 

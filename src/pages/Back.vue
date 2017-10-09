@@ -1,6 +1,7 @@
 <template>
   <div class="flex-page page-list student-page student-page-back">
     <div class="header-box">退回原因</div>
+    <div v-text="failData"></div>
     <div class="center-box padding-min">
       <div class="choice-problem">选择存在问题项</div>
       <div class="list-all-checkbox">
@@ -21,20 +22,26 @@
 <script>
   import { Checklist, Toast } from 'vux'
   import { post } from '@/utils/ajax'
+  import { createNamespacedHelpers } from 'vuex'
+
+  const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
   export default {
     components: {
       Checklist, Toast
     },
     methods: {
+      ...mapActions({
+        fail: 'fail'
+      }),
       change (val) {
         this.val = val
       },
       clickDics: function () {
         if (this.textArea.length !== 0 || this.val.length !== 0) {
           let id = this.$route.query.id
-          post('api/studentCert/fail.json', {id: id, items: this.val.join(','), remark: this.textArea}
-          ).then(response => {
+          this.fail({id: id, items: this.val.join(','), remark: this.textArea})
+          post('api/studentCert/fail.json').then(response => {
             if (response.state === 0) {
               this.show1 = true
               setTimeout(() => {

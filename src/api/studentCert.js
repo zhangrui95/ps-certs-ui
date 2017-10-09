@@ -19,3 +19,8 @@ export const notifyUsers = async (params = {}) => {
   const ret = await postx('api/studentCert/notifyUsers.json', params)
   return ret
 }
+
+export const fail = async (params = {}) => {
+  const ret = await postx('api/studentCert/fail.json', params)
+  return ret
+}
