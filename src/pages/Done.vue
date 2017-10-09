@@ -20,7 +20,7 @@
 <script>
 import { Badge, dateFormat } from 'vux'
 import { createNamespacedHelpers } from 'vuex'
-import ListView from '../components/ListView2'
+import ListView from '../components/ListView'
 import FiltratePop from '../components/FiltratePop'
 
 const { mapActions, mapState } = createNamespacedHelpers('studentCert')

@@ -16,7 +16,7 @@
           </div>
         </up-loading>
       </div>
-      <previewer v-for="group in imgTitle" :list="group.imgList" ref="previewer">
+      <previewer v-for="(group, index) in imgTitle" :list="group.imgList" ref="previewer" :key="index">
         <template slot="button-after">
           <div class="del-btn" @click.prevent.stop="deleteImage"><i class="weui-icon-delete weui-icon_gallery-delete"></i></div>
         </template>

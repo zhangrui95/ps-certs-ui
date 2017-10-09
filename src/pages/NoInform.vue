@@ -33,7 +33,7 @@
 
 <script>
   import { Group, XInput, Datetime, dateFormat } from 'vux'
-  import ListView from '@/components/ListView2'
+  import ListView from '@/components/ListView'
   import TopNav from '@/components/TopNav'
   import CheckIcon from '@/components/CheckIcon'
   import { createNamespacedHelpers } from 'vuex'
