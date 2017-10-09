@@ -6,7 +6,7 @@ import routerInit from './router'
 import store from './store'
 import App from './App'
 
-require('es6-promise').polyfill()
+// require('es6-promise').polyfill()
 
 pluginsInit(store)
 const router = routerInit(store)
