@@ -10,7 +10,10 @@ const state = {
   photo: [],
   data: [],
   notify: 0,
-  fail: []
+  fail: [],
+  save: [],
+  reload: [],
+  done: []
 }
 
 const getters = {
@@ -42,6 +45,18 @@ const actions = {
   async fail ({commit}, params) {
     const resp = await api.fail(params)
     commit(types.SC_FAIL, resp.data)
+  },
+  async save ({commit}, params) {
+    const resp = await api.save(params)
+    commit(types.SC_SAVE, resp.data)
+  },
+  async reload ({commit}, params) {
+    const resp = await api.reload(params)
+    commit(types.CL_RELOAD, resp.data)
+  },
+  async done ({commit}, params) {
+    const resp = await api.done(params)
+    commit(types.SC_DONE, resp.data)
   }
 }
 
@@ -95,6 +110,15 @@ const mutations = {
   },
   [types.SC_FAIL] (state, fail) {
     state.fail = fail
+  },
+  [types.SC_SAVE] (state, save) {
+    state.save = save
+  },
+  [types.CL_RELOAD] (state, reload) {
+    state.reload = reload
+  },
+  [types.SC_DONE] (state, done) {
+    state.done = done
   }
 }
 

@@ -21,7 +21,6 @@
   import { createNamespacedHelpers } from 'vuex'
   import { Previewer, dateFormat, Group } from 'vux'
   import DetailCell from '../components/DetailCell'
-  import { post } from '@/utils/ajax'
 
   const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
@@ -44,7 +43,8 @@
     },
     methods: {
       ...mapActions({
-        detail: 'detail'
+        detail: 'detail',
+        done: 'done'
       }),
       show (index, itemIndex) {
         this.showList = index
@@ -64,13 +64,7 @@
         })
       },
       confirm () {
-        post('api/studentCert/done.json').then(data => {
-          if (data.state === 0) {
-            this.$vux.toast.show({text:'提交成功'})
-          } else {
-            this.$vux.toast.show({text:'提交失败'})
-          }
-        })
+        this.done()
       }
     },
     created: function () {

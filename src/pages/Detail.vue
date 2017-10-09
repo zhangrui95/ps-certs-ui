@@ -32,7 +32,6 @@
 
 <script>
 import { Previewer } from 'vux'
-import { post } from '@/utils/ajax'
 import { createNamespacedHelpers } from 'vuex'
 
 const { mapActions, mapState } = createNamespacedHelpers('studentCert')

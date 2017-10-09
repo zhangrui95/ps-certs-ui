@@ -1,7 +1,9 @@
 <template>
   <div ref="wrapper" class="list-box">
-    <div class="scroll-content">
-      <slot ref="list"></slot>
+    <div class="scroll-content" >
+      <div class="list-wrap">
+          <slot v-for="(item, index) in list" :item="item" :index="index"></slot>
+      </div>
       <div class="pullup-wrapper">
         <div class="before-trigger" v-if="!isPullUpLoad">
           <span>{{isNoMore? '暂时没有更多': '加载更多'}}</span>
@@ -17,13 +19,23 @@
 <script>
   import BScroll from 'better-scroll'
   import { InlineLoading } from 'vux'
-  import { post } from '@/utils/ajax'
 
   export default {
     components: {
       BScroll, InlineLoading,
     },
-    props: ['url', 'params', 'list', 'startY'],
+    props: {
+      list: {
+        type: Array,
+        default: []
+      }
+    },
+    watch: {
+      list (arr) {
+        if (arr.length < 10) this.isNoMore = true
+        this.refresh()
+      }
+    },
     data() {
       return {
         isPullUpLoad: false,
@@ -31,56 +43,31 @@
       }
     },
     mounted() {
-      setTimeout(() => {
-        this.initScroll()
-      },200)   
+      this.initScroll()
     },
     methods: {
-      initScroll() { //初始化scroll
+      initScroll() {
         this.scroll = new BScroll(this.$refs.wrapper, { click: true, pullUpLoad: true })
-        if (this.list.length > 0) {
-          this.scroll.scrollTo(0, this.startY, 0)
-          if (this.list.length < 10) this.isNoMore = true
-        } else { 
-          this.getListData()
-        }
-        this.bindScrollEvent()
-      },
-      getListData(params) {
-        this.isPullUpLoad = true
-        post(this.url, { max: 10, offset: this.list.length || 0, ... this.params, ...params }).then(data => {
-          this.$emit('update', data) // 将获取的数据传递给父组件
-          if (data.list.length < 10) this.isNoMore = true  // 如果list长度为0  显示“暂时没有更多”
-          this.$nextTick(() => {
-            this.scroll.refresh()
-            this.scroll.finishPullUp()
-            this.isPullUpLoad = false
-          })
-        })
-      },
-      refresh () {  // 刷新
-        this.$nextTick(() => {
-          this.scroll.scrollTo(0,0,0)
-          this.getListData({offset: 0})
-        })
-      },
-      bindScrollEvent() {  // 绑定滚动和上拉事件
-        this.scroll.on('scrollEnd', ({x = 0, y = 0}) => this.$emit("onScroll", y))
+        this.scroll.on('scrollEnd', position => this.$emit('scrollEnd', position))
         this.scroll.on('pullingUp', () => {
-          if (!this.isPullUpLoad && !this.isNoMore) this.getListData()
+          if (!this.isPullUpLoad && !this.isNoMore) this.$emit('pullingUp')
         })
+      },
+      refresh () {
+        this.$nextTick(() => {
+          this.scroll.refresh()
+          this.scroll.finishPullUp()
+          this.isPullUpLoad = false
+        })
+      },
+      scrollTo (y) {
+        this.scroll.scrollTo(0,y,0)
       },
     },
   }
 </script>
 
 <style lang="less">
-  .list-box{
-    flex: 1;
-    overflow: hidden;
-    background: #fff;
-    box-sizing: border-box;
-  }
   .pullup-wrapper{
     width: 100%;
     display: flex;
@@ -88,5 +75,4 @@
     align-items: center;
     padding: 16px 0;
   }
-
 </style>

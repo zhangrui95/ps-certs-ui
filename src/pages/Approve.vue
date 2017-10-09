@@ -19,7 +19,7 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
-import ListView from '../components/ListView2'
+import ListView from '../components/ListView'
 import TopNav from '@/components/TopNav'
 import DragBox from '@/components/DragBox'
 

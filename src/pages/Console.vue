@@ -9,19 +9,22 @@
 </template>
 
 <script>
-  import { post } from '@/utils/ajax'
+  import { createNamespacedHelpers } from 'vuex'
+
+  const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
   export default {
-    data () {
-      return {
-        result: ''
-      }
+    computed: {
+      ...mapState({
+        result: state => state.reload
+      })
     },
     methods: {
+      ...mapActions({
+        reload: 'reload'
+      }),
       clickDics: function () {
-        post('/example/api/app/reload.json').then(data => {
-            this.result = JSON.stringify(data)
-        })
+        this.reload()
       }
     }
   }
