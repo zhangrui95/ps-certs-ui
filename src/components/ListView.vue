@@ -1,7 +1,7 @@
 <template>
   <div ref="wrapper" class="list-box">
     <div class="scroll-content" >
-      <list class="list-wrap" :list="list">
+      <list class="list-wrap" :list="list" :groupBy="groupBy" :listInOrder="listInOrder">
         <template scope="props">
           <slot :item="props.item" :index="props.index"></slot>
         </template>
