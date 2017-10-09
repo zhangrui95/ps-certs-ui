@@ -46,10 +46,13 @@
 </template>
 
 <script>
+  import { createNamespacedHelpers } from 'vuex'
   import { Previewer, XInput, PopupPicker, Datetime, Group } from 'vux'
   import UpLoading from '../components/UpLoading'
   import { post } from '@/utils/ajax'
   import * as valid from '@/utils/valid'
+
+  const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
   export default {
     components: {
@@ -57,6 +60,11 @@
     },
     created () {
       this.title = this.$route.query.type == 1 ? '身份证办理申请登记' : '居住证明办理申请登记'
+    },
+    computed: {
+      ...mapState({
+        saveState: state => state.save
+      })
     },
     data () {
       return {
@@ -104,6 +112,9 @@
       }
     },
     methods: {
+      ...mapActions({
+        save: 'save'
+      }),
       show (index, itemIndex) {
         this.num = index
         this.imgIndex = itemIndex
@@ -188,37 +199,36 @@
         }
       },
       onConfirm () {
-        post('api/studentCert/save.json?userid=' + this.$route.query.userid,
-          {
-            info:{
-              marray: this.marray[0],
-              blood: this.blood[0],
-              education: this.culture[0],
-              military: this.military[0],
-              religion: this.religion[0],
-              enterSchoolTime: this.time,
-              card: this.card,
-              mobile: this.mobile,
-              height: this.height,
-              weight: this.weight,
-              faculty: this.department,
-              specialty: this.major
-            },
-            name: this.name,
-            selfIds: this.selfLis.join(','),
-            cardIds: this.cardLis.join(','),
-            proveIds: this.proveLis.join(',')
-          }
-        ).then(data => {
-          if (data.state === 0) {
-            this.$vux.alert.show({
-              title: '提交成功',
-              content: this.$route.query.type == 1 ? '请注意查看系统通知领取个人信息表' : '请注意查看系统通知领取居住证明'
-            })
-          } else {
-            this.$vux.toast.text('提交失败！')
-          }
+        this.save({
+          info: {
+            marray: this.marray[0],
+            blood: this.blood[0],
+            education: this.culture[0],
+            military: this.military[0],
+            religion: this.religion[0],
+            enterSchoolTime: this.time,
+            card: this.card,
+            mobile: this.mobile,
+            height: this.height,
+            weight: this.weight,
+            faculty: this.department,
+            specialty: this.major
+          },
+          name: this.name,
+          selfIds: this.selfLis.join(','),
+          cardIds: this.cardLis.join(','),
+          proveIds: this.proveLis.join(',')
         })
+//        post('api/studentCert/save.json').then(data => {
+//          if (data.state === 0) {
+//            this.$vux.alert.show({
+//              title: '提交成功',
+//              content: this.$route.query.type == 1 ? '请注意查看系统通知领取个人信息表' : '请注意查看系统通知领取居住证明'
+//            })
+//          } else {
+//            this.$vux.toast.text('提交失败！')
+//          }
+//        })
       }
     }
   }

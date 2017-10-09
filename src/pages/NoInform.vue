@@ -120,13 +120,13 @@
         this.notifyUsers({id: this.listData.filter(item => item.checked).map(item => item.id).join(','), all: this.allChecked? 1: 0, time: this.dateTime, address: this.address})
         post('api/studentCert/notifyUsers.json').then(data => {
           if (data.state === 0) {
-            this.$vux.toast.show({text:'发送成功'})
+            this.$vux.toast.show({text: '发送成功'})
             this.dateTime = ''
             this.address = ''
             this.allClick()
             this.listData = []
             this.$refs.listView.refresh()
-          }else{
+          } else {
             this.$vux.toast.text('发送失败')
           }
         })

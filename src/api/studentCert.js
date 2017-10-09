@@ -24,3 +24,13 @@ export const fail = async (params = {}) => {
   const ret = await postx('api/studentCert/fail.json', params)
   return ret
 }
+
+export const save = async (params = {}) => {
+  const ret = await postx('api/studentCert/save.json', params)
+  return ret
+}
+
+export const reload = async (params = {}) => {
+  const ret = await postx('api/app/reload.json', params)
+  return ret
+}

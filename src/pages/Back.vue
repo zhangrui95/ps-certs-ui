@@ -1,7 +1,6 @@
 <template>
   <div class="flex-page page-list student-page student-page-back">
     <div class="header-box">退回原因</div>
-    <div v-text="failData"></div>
     <div class="center-box padding-min">
       <div class="choice-problem">选择存在问题项</div>
       <div class="list-all-checkbox">
@@ -29,6 +28,11 @@
   export default {
     components: {
       Checklist, Toast
+    },
+    computed: {
+      ...mapState({
+        showFail: state => state.fail
+      })
     },
     methods: {
       ...mapActions({
