@@ -1,4 +1,5 @@
 import VueRouter from 'vue-router'
+import {sync} from 'vuex-router-sync'
 import routerStringifyQuery from './stringifyQuery'
 import { querystring } from 'vux'
 
@@ -23,17 +24,16 @@ const router = new VueRouter((() => {
   pages.forEach(page => {
     routes.push({
       path: `/${page}`,
-      component: () =>
-        import (`../pages/${page}`)
+      component: () => import(`../pages/${page}`)
     })
   })
   return {
     routes,
     base: 'example',
     mode: 'history',
-    stringifyQuery(obj) {
+    stringifyQuery (obj) {
       const { userid, type } = querystring.parse()
-      return routerStringifyQuery({ userid, type, ...obj, })
+      return routerStringifyQuery({ userid, type, ...obj })
     }
   }
 })())
@@ -46,13 +46,14 @@ const init = store => {
   })
 
   router.afterEach(to => {
-    store.commit('updateRouterState', { scrollY: 0, params: {}, listData: [] })
+    store.commit('updateRouterState', {params: {}})
     store.commit('updateLoadingStatus', { isLoading: false })
   })
 
   window.addEventListener('popstate', popstate => { // 监听popstate事件  将history中的状态还原到当前页面
-    store.commit('updateRouterState', {...popstate.state })
+    store.commit('updateRouterState', { ...popstate.state })
   })
+  sync(store, router)
   return router
 }
 
