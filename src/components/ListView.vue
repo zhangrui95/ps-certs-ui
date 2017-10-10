@@ -25,45 +25,68 @@
       list: {
         type: Array,
         'default': []
+      },
+      page: {
+        type: Number,
+        'default': 10
+      },
+      init: {
+        type: Boolean,
+        'default': true
+      },
+      total: {
+        type: Number,
+        'default': -1
+      },
+      currLen: {
+        type: Number,
+        'default': -1
       }
     },
     watch: {
-      list (arr) {
-        if (arr.length < 10) this.isNoMore = true
+      list () {
         this.refresh()
       }
     },
-    data() {
+    data () {
       return {
         isPullUpLoad: false,
         isNoMore: false,
+        offset: 0
       }
     },
-    mounted() {
+    mounted () {
       this.initScroll()
     },
     methods: {
-      initScroll() {
-        console.log('this.groupBy', this.groupBy)
+      initScroll () {
         this.scroll = new BScroll(this.$refs.wrapper, { click: true, pullUpLoad: true })
         this.scroll.on('scrollEnd', position => this.$emit('scrollEnd', position))
         this.scroll.on('pullingUp', () => {
-          if (!this.isPullUpLoad && !this.isNoMore) {
+          if (!this.isPullUpLoad) {
+            this.offset = this.list.length
             this.isPullUpLoad = true
-            this.$emit('pullingUp')
+            this.next()
           }
         })
+        if (this.init) {
+          this.next()
+        }
+      },
+      next () {
+        this.$emit('pullingUp', {max: this.page, offset: this.offset})
       },
       refresh () {
         this.$nextTick(() => {
           this.scroll.refresh()
           this.scroll.finishPullUp()
           this.isPullUpLoad = false
+          this.isNoMore = (this.total !== -1 && this.total === this.currLen) || this.currLen === 0
         })
       },
       scrollTo (y) {
-        this.scroll.scrollTo(0,y,0)
-      },
-    },
+        this.scroll.scrollTo(0, y, 0)
+      }
+    }
   }
 </script>

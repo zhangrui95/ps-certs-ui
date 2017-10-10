@@ -1,12 +1,14 @@
 import * as types from '../mutation-types'
 import * as api from '../../api/studentCert'
 import { dateFormat } from 'vux'
+import Vue from 'vue'
 
 const state = {
   list: [],
   stat: [],
   detail: [],
   count: 0,
+  currLen: 0,
   photo: [],
   data: [],
   notify: 0,
@@ -22,12 +24,18 @@ const getters = {
 
 const actions = {
   async list ({ commit, state }, params) {
-    const offset = state.list.length
-    const resp = await api.list({ max: 10, offset, ...params })
-    if (offset > 0) {
-      commit(types.SC_LIST, { count: resp.data.count, list: [...state.list, ...resp.data.list] })
-    } else {
-      commit(types.SC_LIST, resp.data)
+    try {
+      if (params.offset === 0) {
+        commit(types.SC_LIST, {currLen: 0, count: 0, list: []})
+      }
+      const resp = await api.list({...params })
+      const count = resp.data.count || 0
+      const list = resp.data.list || []
+      const currLen = list.length
+      commit(types.SC_LIST, { currLen, count, list: [...state.list, ...list] })
+    } catch (e) {
+      Vue.$vux.alert.show('load error')
+      commit(types.SC_LIST, state)
     }
   },
   async groupByState ({ commit }, params) {
@@ -61,9 +69,10 @@ const actions = {
 }
 
 const mutations = {
-  [types.SC_LIST] (state, { list, count }) {
+  [types.SC_LIST] (state, { list, count, currLen }) {
     state.list = list
     state.count = count
+    state.currLen = currLen
   },
   [types.SC_STAT] (state, stat) {
     state.stat = [
@@ -85,23 +94,23 @@ const mutations = {
       { name: '文化程度', value: ['本科', '本科以上'][data.info.education - 1] },
       { name: '宗教信仰', value: ['佛教', '道教', '天主教', '基督教', '伊斯兰教', '喇嘛教', '其他', '无宗教信仰'][data.info.religion - 1] },
       { name: '兵役状况', value: ['未服兵役', '退出现役', '国防生', '服现役'][data.info.education - 1] },
-      { name: '入学时间', value: dateFormat(data.info.enterSchoolTime, 'YYYY-MM-DD')},
+      { name: '入学时间', value: dateFormat(data.info.enterSchoolTime, 'YYYY-MM-DD') },
       { name: '所在院系', value: data.info.faculty },
       { name: '所在专业', value: data.info.specialty }
     ]
     let { photos } = data
     photos = photos.map(item => {
-      return  {...item, src: "api/studentCert/photo?id=" + item.id}
+      return {...item, src: 'api/studentCert/photo?id=' + item.id}
     })
     state.photo = [{
       name: '自拍正面照',
-      list: photos.filter(item => item.type == 1)
+      list: photos.filter(item => item.type === 1)
     }, {
       name: '在读证明',
-      list: photos.filter(item => item.type == 3)
+      list: photos.filter(item => item.type === 3)
     }, {
       name: '学生证',
-      list: photos.filter(item => item.type == 2)
+      list: photos.filter(item => item.type === 2)
     }
     ]
   },

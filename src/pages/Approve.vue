@@ -1,7 +1,7 @@
 <template>
   <div class="flex-page approve">
     <top-nav :nav="stat">{{title}}</top-nav>
-    <list-view class="approve-list" :list="listData"  @pullingUp="pullingUp">
+    <list-view class="approve-list" :list="listData" :total="count" :currLen="currLen" @pullingUp="pullingUp">
       <template scope="props">
         <div class="list-item"  @click="linkTo('/Undone?id='+props.item.id)">
           <div class="item-left">
@@ -20,7 +20,7 @@
 <script>
 import { createNamespacedHelpers } from 'vuex'
 import ListView from '../components/ListView'
-import TopNav from '@/components/TopNav'
+import TopNav from '../components/TopNav'
 
 const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
@@ -36,12 +36,13 @@ export default {
   computed: {
     ...mapState({
       listData: state => state.list,
-      stat: state => state.stat
+      stat: state => state.stat,
+      currLen: state => state.currLen,
+      count: state => state.count
     })
   },
   created () {
     this.title = this.$route.query.type === 1 ? '身份证申请' : '居住证明申请'
-    this.list({state: 0, offset: 0})
     this.groupByState()
   },
   methods: {
@@ -49,8 +50,8 @@ export default {
       list: 'list',
       groupByState: 'groupByState'
     }),
-    pullingUp (data) {
-      this.list({state: 0})
+    pullingUp (pageParams) {
+      this.list({state: 0, ...pageParams})
     },
     linkTo (url) {
       this.$router.push(url)
