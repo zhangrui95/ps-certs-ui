@@ -58,8 +58,8 @@ export default {
       this.list({state: 2, ...pageParams})
     },
     submit (val) {
-      this.list({state: 2, offset: 0})
-      this.$refs.listView.scrollTo(0)
+      this.list({name: val, state: 2, offset: 0, max: 10})
+//      this.$refs.listView.scrollTo(0)
     },
     linkTo (url) {
       this.$router.push(url)
