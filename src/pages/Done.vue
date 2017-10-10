@@ -1,7 +1,7 @@
 <template>
   <div class="flex-page">
     <div class="header-box">已完成({{count}})</div>
-    <list-view :list="listData"  @pullingUp="pullingUp" :groupBy="groupBy" class="approve-list" ref="listView">
+    <list-view :list="listData"  @pullingUp="pullingUp" class="approve-list" ref="listView">
       <template scope="props">
         <div class="list-group">
           <div class="list-item group-title" v-if="props.item.first">{{props.item.dateStr}}</div>

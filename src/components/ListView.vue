@@ -1,7 +1,7 @@
 <template>
   <div ref="wrapper" class="list-box">
     <div class="scroll-content" >
-      <list class="list-wrap" :list="list" :groupBy="groupBy" :listInOrder="listInOrder">
+      <list class="list-wrap" :list="list">
         <template scope="props">
           <slot :item="props.item" :index="props.index"></slot>
         </template>
@@ -25,13 +25,6 @@
       list: {
         type: Array,
         'default': []
-      },
-      groupBy: {
-        type: Function
-      },
-      listInOrder: {
-        type: Boolean,
-        'default': false
       }
     },
     watch: {
