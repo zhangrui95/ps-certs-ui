@@ -6,7 +6,7 @@
         <div class="list-group">
           <div class="list-item group-title" v-if="props.item.first">{{props.item.dateStr}}</div>
           <div class="list-item" @click="linkTo(`/Detail?id=${props.item.id}`)" >
-            <span class="item-index">{{props.index > 8? props.index + 1: '0' + (props.index + 1)}}.</span>
+            <span class="item-index">{{props.item.index > 8? props.item.index + 1: '0' + (props.item.index + 1)}}.</span>
             <span class="item-title">{{props.item.name}}</span>
             <badge v-if="props.item.result == -1" text="已退回"/>
           </div>
@@ -34,12 +34,16 @@ export default {
       count: state => state.count,
       listData: state => {
         const arr = []
+        let idx = 0
         return state.list.map(item => {
           item.dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
           if (arr.indexOf(item.dateStr) === -1) {
             item.first = true
             arr.push(item.dateStr)
+            idx = 0
           }
+          item.index = idx
+          idx++
           return item
         })
       }
