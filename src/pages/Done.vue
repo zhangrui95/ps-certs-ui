@@ -1,7 +1,7 @@
 <template>
   <div class="flex-page">
-    <div class="header-box">已完成({{count}})</div>
-    <list-view :list="listData"  @pullingUp="pullingUp" class="approve-list" ref="listView">
+    <div class="header-box">已完成({{listData.count}})</div>
+    <list-view :list="listData.list" :total="listData.count" :currLen="listData.currLen" @pullingUp="pullingUp" class="approve-list" ref="listView">
       <template scope="props">
         <div class="list-group">
           <div class="list-item group-title" v-if="props.item.first">{{props.item.dateStr}}</div>
@@ -31,11 +31,11 @@ export default {
   },
   computed: {
     ...mapState({
-      count: state => state.count,
       listData: state => {
         const arr = []
         let idx = 0
-        return state.list.map(item => {
+        const listData = {count: state.list.count, currLen: state.list.currLen}
+        listData.list = state.list.list.map(item => {
           item.dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
           if (arr.indexOf(item.dateStr) === -1) {
             item.first = true
@@ -46,18 +46,16 @@ export default {
           idx++
           return item
         })
+        return listData
       }
     })
-  },
-  created () {
-    this.list({state: 2, offset: 0})
   },
   methods: {
     ...mapActions({
       list: 'list'
     }),
-    pullingUp (data) {
-      this.list({state: 2})
+    pullingUp (pageParams) {
+      this.list({state: 2, ...pageParams})
     },
     submit (val) {
       this.list({state: 2, offset: 0})

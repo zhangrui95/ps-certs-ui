@@ -1,6 +1,6 @@
 <template>
   <div class="flex-page">
-    <div class="header-box">未通知({{count}})</div>
+    <div class="header-box">未通知({{listData.count}})</div>
     <group class="no-margin">
       <datetime
         v-model="dateTime"  title="领取时间" placeholder="请选择"
@@ -8,7 +8,7 @@
         :start-date="new Date() | dateFormat('YYYY-MM-DD')"/>
       <x-input title="领取地址" :show-clear="false" v-model="address" text-align="right"></x-input>
     </group>
-    <list-view :list="listData"  @pullingUp="pullingUp" class="approve-list" ref="listView">
+    <list-view :list="listData.list" :total="listData.count" :currLen="listData.currLen" @pullingUp="pullingUp" class="approve-list" ref="listView">
       <template scope="props">
         <div class="list-group">
           <div class="group-title" v-if="props.item.first">
@@ -25,7 +25,7 @@
     </list-view>
     <div class="footer-box">
       <a class="btn check-all">
-        <check-icon :checked='getAllChecked()' @click.native="setAllChecked()"/>全部选择({{count}})</a>
+        <check-icon :checked='getAllChecked()' @click.native="setAllChecked()"/>全部选择({{listData.count}})</a>
       <a class="btn" @click="submit">通知</a>
     </div>
   </div>
@@ -33,35 +33,30 @@
 
 <script>
   import { Group, XInput, Datetime, dateFormat } from 'vux'
-  import ListView from '@/components/ListView'
-  import TopNav from '@/components/TopNav'
-  import CheckIcon from '@/components/CheckIcon'
+  import ListView from '../components/ListView'
+  import CheckIcon from '../components/CheckIcon'
   import { createNamespacedHelpers } from 'vuex'
-  import * as types from '@/store/mutation-types'
 
-  const { mapActions,  mapState } = createNamespacedHelpers('studentCert')
+  const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
   export default {
     components: {
-      Group, XInput, Datetime,
-      TopNav, ListView, CheckIcon
+      Group, XInput, Datetime, ListView, CheckIcon
     },
     data () {
       return {
         dateTime: '',
         address: '',
-        listData: []
+        listData: {currLen: 0, count: 0, list: []}
       }
-    },
-    created () {
-      this.list({state: 1, offset: 0})
     },
     watch: {
       storeList (newArr) {
         const arr = []
         let idx = 0
-        this.listData = newArr.map(item => {
-          let oldItem = this.listData.find(oldItem => oldItem.id === item.id )
+        this.listData = {...newArr}
+        this.listData.list = newArr.list.map(item => {
+          let oldItem = this.listData.list.find(oldItem => oldItem.id === item.id)
           item.dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
           item.checked = oldItem ? oldItem.checked : true
           item.groupChecked = oldItem ? oldItem.checked : true
@@ -78,7 +73,6 @@
     },
     computed: {
       ...mapState({
-        count: state => state.count,
         storeList: state => state.list
       })
     },
@@ -87,28 +81,28 @@
         list: 'list',
         notifyUsers: 'notifyUsers'
       }),
-      pullingUp (data) {
-        this.list({state: 1})
+      pullingUp (pageParams) {
+        this.list({state: 1, ...pageParams})
       },
       setItemChecked (id) {
-        this.listData = this.listData.map(item => {
-          return { ...item, checked: item.id == id? !item.checked: item.checked }
+        this.listData.list = this.listData.list.map(item => {
+          return { ...item, checked: item.id === id ? !item.checked : item.checked }
         })
       },
       getGroupChecked (dateStr) {
-        let ownItems = this.listData.filter(item => item.dateStr == dateStr)
-        return ownItems.length == ownItems.filter(item => item.checked).length
+        let ownItems = this.listData.list.filter(item => item.dateStr === dateStr)
+        return ownItems.length === ownItems.filter(item => item.checked).length
       },
       setGroupChecked (dateStr) {
-        this.listData = this.listData.map(item => {
-          return {...item, checked: item.dateStr == dateStr? !this.getGroupChecked(dateStr): item.checked}
+        this.listData.list = this.listData.list.map(item => {
+          return {...item, checked: item.dateStr === dateStr ? !this.getGroupChecked(dateStr) : item.checked}
         })
       },
       getAllChecked () {
-        return this.listData.length == this.listData.filter(item => item.checked).length
+        return this.listData.list.length === this.listData.list.filter(item => item.checked).length
       },
       setAllChecked () {
-        this.listData = this.listData.map(item => {
+        this.listData.list = this.listData.list.map(item => {
           return {...item, checked: !this.getAllChecked()}
         })
       },
@@ -126,7 +120,7 @@
         })
       },
       confirm () {
-        this.notifyUsers({id: this.listData.filter(item => item.checked).map(item => item.id).join(','), all: this.getAllChecked()? 1: 0, time: this.dateTime, address: this.address})
+        this.notifyUsers({id: this.listData.list.filter(item => item.checked).map(item => item.id).join(','), all: this.getAllChecked() ? 1 : 0, time: this.dateTime, address: this.address})
       }
     }
   }
