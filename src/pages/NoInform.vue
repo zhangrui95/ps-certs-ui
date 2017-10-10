@@ -25,7 +25,7 @@
     </list-view>
     <div class="footer-box">
       <a class="btn check-all">
-        <check-icon :checked='getAllChecked()' @click.native="setAllChecked()"/>全部选择({{checkedCount}})</a>
+        <check-icon :checked='getAllChecked()' @click.native="setAllChecked()"/>全部选择({{count}})</a>
       <a class="btn" @click="submit">通知</a>
     </div>
   </div>
@@ -76,13 +76,7 @@
       ...mapState({
         count: state => state.count,
         storeList: state => state.list
-      }),
-      allChecked () {
-        return true
-      },
-      checkedCount () {
-        return 0
-      }
+      })
     },
     methods: {
       ...mapActions({
@@ -128,7 +122,7 @@
         })
       },
       confirm () {
-        this.notifyUsers({id: this.listData.filter(item => item.checked).map(item => item.id).join(','), all: this.allChecked? 1: 0, time: this.dateTime, address: this.address})
+        this.notifyUsers({id: this.listData.filter(item => item.checked).map(item => item.id).join(','), all: this.getAllChecked()? 1: 0, time: this.dateTime, address: this.address})
       }
     }
   }
