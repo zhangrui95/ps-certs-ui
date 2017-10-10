@@ -17,7 +17,7 @@
           </div>
           <div class="list-item">
             <check-icon :checked='props.item.checked' @click.native="setItemChecked(props.item.id)"/>
-            <span class="item-index">{{props.index > 8? props.index + 1: '0' + (props.index + 1)}}.</span>
+            <span class="item-index">{{props.item.index > 8? props.item.index + 1: '0' + (props.item.index + 1)}}.</span>
             <span class="item-title">{{props.item.name}}</span>
           </div>
         </div>
@@ -58,16 +58,20 @@
     },
     watch: {
       storeList (newArr) {
-        let arr = []
+        const arr = []
+        let idx = 0
         this.listData = newArr.map(item => {
-          let oldItem = this.listData.find(oldItem => oldItem.id == item.id )
+          let oldItem = this.listData.find(oldItem => oldItem.id === item.id )
           item.dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
-          item.checked = oldItem? oldItem.checked : true
-          item.groupChecked = oldItem? oldItem.checked : true
-          if (arr.indexOf(item.dateStr) == -1) {
+          item.checked = oldItem ? oldItem.checked : true
+          item.groupChecked = oldItem ? oldItem.checked : true
+          if (arr.indexOf(item.dateStr) === -1) {
             item.first = true
             arr.push(item.dateStr)
+            idx = 0
           }
+          item.index = idx
+          idx++
           return item
         })
       }

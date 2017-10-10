@@ -136,7 +136,7 @@ const routes = {
   '/api/studentCert/photo': {
     handle: function(req, res) {
       res.setHeader('Content-Type', 'image/png')
-      res.end(fs.readFileSync(path.resolve(__dirname, '../../static/images/header.jpg')))
+      res.end(fs.readFileSync(path.resolve(__dirname, '../resources/header.jpg')))
     }
   },
   /**
