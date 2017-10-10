@@ -1,7 +1,7 @@
 <template>
   <div class="flex-page approve">
     <top-nav :nav="stat">{{title}}</top-nav>
-    <list-view class="approve-list" :list="listData" :total="count" :currLen="currLen" @pullingUp="pullingUp">
+    <list-view class="approve-list" :list="listData.list" :total="listData.count" :currLen="listData.currLen" @pullingUp="pullingUp">
       <template scope="props">
         <div class="list-item"  @click="linkTo('/Undone?id='+props.item.id)">
           <div class="item-left">
@@ -36,9 +36,7 @@ export default {
   computed: {
     ...mapState({
       listData: state => state.list,
-      stat: state => state.stat,
-      currLen: state => state.currLen,
-      count: state => state.count
+      stat: state => state.stat
     })
   },
   created () {

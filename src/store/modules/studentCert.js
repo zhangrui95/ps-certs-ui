@@ -4,11 +4,9 @@ import { dateFormat } from 'vux'
 import Vue from 'vue'
 
 const state = {
-  list: [],
+  list: {currLen: 0, count: 0, list: []},
   stat: [],
   detail: [],
-  count: 0,
-  currLen: 0,
   photo: [],
   data: [],
   notify: 0,
@@ -28,14 +26,14 @@ const actions = {
       if (params.offset === 0) {
         commit(types.SC_LIST, {currLen: 0, count: 0, list: []})
       }
-      const resp = await api.list({...params })
+      const resp = await api.list({ ...params })
       const count = resp.data.count || 0
       const list = resp.data.list || []
       const currLen = list.length
-      commit(types.SC_LIST, { currLen, count, list: [...state.list, ...list] })
+      commit(types.SC_LIST, { currLen, count, list: [...state.list.list, ...list] })
     } catch (e) {
       Vue.$vux.alert.show('load error')
-      commit(types.SC_LIST, state)
+      commit(types.SC_LIST, state.list)
     }
   },
   async groupByState ({ commit }, params) {
@@ -69,10 +67,8 @@ const actions = {
 }
 
 const mutations = {
-  [types.SC_LIST] (state, { list, count, currLen }) {
-    state.list = list
-    state.count = count
-    state.currLen = currLen
+  [types.SC_LIST] (state, list) {
+    state.list = {...list}
   },
   [types.SC_STAT] (state, stat) {
     state.stat = [
