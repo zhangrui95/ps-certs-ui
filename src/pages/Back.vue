@@ -29,19 +29,25 @@
         this.val = val
       },
       clickDics: async function () {
-        if (this.textArea.length !== 0 || this.val.length !== 0) {
-          let id = this.$route.query.id
-          let rest = await api.fail()
-          if (rest.data.state === 0) {
-            this.$vux.toast.show({
-              text:'发送成功',
-              onHide: () => {
-                this.$router.go(-2)
-              }
-            })
+        if (this.tag) {
+          if (this.textArea.length !== 0 || this.val.length !== 0) {
+            let rest = await api.fail()
+            if (rest.data.state === 0) {
+              this.$vux.toast.show({
+                text: '发送成功',
+                onHide: () => {
+                  this.$router.go(-2)
+                }
+              })
+              this.tag = false
+            } else {
+              this.$vux.toast.text('发送失败，请重新操作')
+              this.tag = true
+            }
+          } else {
+            this.$vux.toast.text('请选择存在问题项或填写备注')
+            this.tag = true
           }
-        } else {
-          this.$vux.toast.text('请选择存在问题项或填写备注')
         }
       }
     },
@@ -52,7 +58,8 @@
         error: '',
         commonList: [ '自拍正面照', '在读证明', '学生证照片', '姓名', '身份证号', '手机号码', '血型', '身高', '体重', '婚姻状况', '宗教信仰', '文化程度', '兵役状况', '入学时间', '所在院系', '所在专业' ],
         checklist001: [],
-        val: []
+        val: [],
+        tag: 'true'
       }
     }
   }
