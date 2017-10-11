@@ -212,9 +212,13 @@
             proveIds: this.proveLis.join(',')
           })
           if (rest.data.state === 0) {
+            let that = this
             this.$vux.alert.show({
               title: '提交成功',
-              content: this.$route.query.type == 1 ? '请注意查看系统通知领取个人信息表' : '请注意查看系统通知领取居住证明'
+              content: this.$route.query.type == 1 ? '请注意查看系统通知领取个人信息表' : '请注意查看系统通知领取居住证明',
+              onHide: () => {
+                that.$wechat.closeWindow()
+              }
             })
             this.tag = false
           } else {
