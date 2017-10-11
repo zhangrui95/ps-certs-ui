@@ -33,7 +33,8 @@
       return {
         textList: [],
         showList: 0,
-        options: {}
+        options: {},
+        tag: true
       }
     },
     computed: {
@@ -65,16 +66,28 @@
         })
       },
       async confirm () {
-        let rest = await api.done()
-        if (rest.data.state !== 0) {
-          this.$vux.toast.text('提交失败')
+        if (this.tag) {
+          let rest = await api.done()
+          if (rest.data.state !== 0) {
+            this.$vux.toast.text('提交失败')
+            this.tag = true
+          } else {
+            this.$vux.alert.show({
+              title: '办理完成',
+              content: this.$route.query.type == 1 ? '请及时通知申请人领取个人信息表' : '请及时通知申请人领取证明表',
+              onHide: () => {
+                this.$router.go(-1)
+              }
+            })
+            this.tag = false
+          }
         }
       }
     },
     created: function () {
       this.detail()
       this.options = {
-        getThumbBoundsFn: (index) =>{
+        getThumbBoundsFn: (index) => {
           let thumbnail = document.querySelectorAll('.previewer-box')[this.showList].querySelectorAll('.previewer-img')[index]
           let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
           let rect = thumbnail.getBoundingClientRect()
@@ -96,5 +109,43 @@
     height: 45px;
     float: right;
     margin: 5px;
+  }
+  @media screen and (min-width: 800px) {
+    .flex-page{
+      overflow-y: scroll;
+    }
+    .detail-cell {
+      width: 46%;
+      float: left;
+      margin: 0 1%;
+    }
+    .center-box{
+      flex: inherit;
+      overflow: visible;
+    }
+    .footer-box{
+      border-top: 0;
+      width: 50%;
+      margin: 0 auto;
+    }
+  }
+  @media screen and (min-width: 1360px) {
+    .flex-page{
+      overflow-y: scroll;
+    }
+    .detail-cell {
+      width: 30%;
+      float: left;
+      margin: 0 1%;
+    }
+    .center-box{
+      flex: inherit;
+      overflow: visible;
+    }
+    .footer-box{
+      border-top: 0;
+      width: 40%;
+      margin: 0 auto;
+    }
   }
 </style>
