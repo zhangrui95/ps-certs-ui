@@ -37,7 +37,7 @@
   import CheckIcon from '../components/CheckIcon'
   import * as api from '../api/studentCert'
 
-  const { mapActions,  mapState } = createNamespacedHelpers('studentCert')
+  const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
   export default {
     components: {
@@ -147,10 +147,9 @@
             params.dates = this.lastDate
           }
         }
-//        this.notifyUsers(params)
-        let rest = await api.notifyUsers({id: this.listData.filter(item => item.checked).map(item => item.id).join(','), all: this.getAllChecked()? 1: 0, time: this.dateTime, address: this.address})
+        let rest = await api.notifyUsers(params)
         if (rest.data.state === 0) {
-          this.list({state: 1, offset: 0})
+          this.$refs.listView.reload()
         }
       }
     }

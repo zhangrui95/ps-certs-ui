@@ -73,6 +73,10 @@
           this.next()
         }
       },
+      reload () {
+        this.offset = 0
+        this.next()
+      },
       next () {
         this.$emit('pullingUp', {max: this.page, offset: this.offset})
       },
