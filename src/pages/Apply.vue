@@ -46,12 +46,11 @@
 </template>
 
 <script>
-  import { createNamespacedHelpers } from 'vuex'
   import { Previewer, XInput, PopupPicker, Datetime, Group } from 'vux'
   import UpLoading from '../components/UpLoading'
   import * as valid from '@/utils/valid'
+  import * as api from '@/api/studentCert'
 
-  const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
   export default {
     components: {
@@ -59,11 +58,6 @@
     },
     created () {
       this.title = this.$route.query.type == 1 ? '身份证办理申请登记' : '居住证明办理申请登记'
-    },
-    computed: {
-      ...mapState({
-        saveState: state => state.save
-      })
     },
     data () {
       return {
@@ -111,9 +105,6 @@
       }
     },
     methods: {
-      ...mapActions({
-        save: 'save'
-      }),
       show (index, itemIndex) {
         this.num = index
         this.imgIndex = itemIndex
@@ -197,8 +188,8 @@
           })
         }
       },
-      onConfirm () {
-        this.save({
+      async onConfirm () {
+        let rest = await api.save({
           info: {
             marray: this.marray[0],
             blood: this.blood[0],
@@ -218,6 +209,11 @@
           cardIds: this.cardLis.join(','),
           proveIds: this.proveLis.join(',')
         })
+        if (rest.data.state === 0) {
+          this.$vux.toast.text('请注意查看系统通知领取个人信息表')
+        } else {
+          this.$vux.toast.text('提交失败')
+        }
       }
     }
   }
