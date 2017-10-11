@@ -32,11 +32,12 @@
 
 <script>
   import { Group, XInput, Datetime, dateFormat } from 'vux'
+  import { createNamespacedHelpers } from 'vuex'
   import ListView from '../components/ListView'
   import CheckIcon from '../components/CheckIcon'
-  import { createNamespacedHelpers } from 'vuex'
+  import * as api from '../api/studentCert'
 
-  const { mapActions, mapState } = createNamespacedHelpers('studentCert')
+  const { mapActions,  mapState } = createNamespacedHelpers('studentCert')
 
   export default {
     components: {
@@ -91,8 +92,7 @@
     },
     methods: {
       ...mapActions({
-        list: 'list',
-        notifyUsers: 'notifyUsers'
+        list: 'list'
       }),
       pullingUp (pageParams) {
         this.list({state: 1, ...pageParams})
@@ -139,7 +139,7 @@
           }
         })
       },
-      confirm () {
+      async confirm () {
         const params = {all: this.all ? 1 : 0, time: this.dateTime, address: this.address}
         if (!this.all) {
           params.id = this.listData.list.filter(item => item.checked).map(item => item.id).join(',')
@@ -147,7 +147,11 @@
             params.dates = this.lastDate
           }
         }
-        this.notifyUsers(params)
+//        this.notifyUsers(params)
+        let rest = await api.notifyUsers({id: this.listData.filter(item => item.checked).map(item => item.id).join(','), all: this.getAllChecked()? 1: 0, time: this.dateTime, address: this.address})
+        if (rest.data.state === 0) {
+          this.list({state: 1, offset: 0})
+        }
       }
     }
   }

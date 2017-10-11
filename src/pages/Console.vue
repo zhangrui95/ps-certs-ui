@@ -9,22 +9,18 @@
 </template>
 
 <script>
-  import { createNamespacedHelpers } from 'vuex'
-
-  const { mapActions, mapState } = createNamespacedHelpers('studentCert')
+  import * as api from '@/api/studentCert'
 
   export default {
-    computed: {
-      ...mapState({
-        result: state => state.reload
-      })
+    data () {
+      return {
+        result: ''
+      }
     },
     methods: {
-      ...mapActions({
-        reload: 'reload'
-      }),
-      clickDics: function () {
-        this.reload()
+      async clickDics () {
+        let rest = await api.reload()
+        this.result = rest.data.state
       }
     }
   }

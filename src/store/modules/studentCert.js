@@ -9,11 +9,6 @@ const state = {
   detail: [],
   photo: [],
   data: [],
-  notify: 0,
-  fail: [],
-  save: [],
-  reload: [],
-  done: []
 }
 
 const getters = {
@@ -43,26 +38,6 @@ const actions = {
   async detail ({commit}, params) {
     const resp = await api.detail(params)
     commit(types.SC_DETAIL, resp.data)
-  },
-  async notifyUsers ({commit}, params) {
-    const resp = await api.notifyUsers(params)
-    commit(types.SC_NOTIFYUSERS, resp.data)
-  },
-  async fail ({commit}, params) {
-    const resp = await api.fail(params)
-    commit(types.SC_FAIL, resp.data)
-  },
-  async save ({commit}, params) {
-    const resp = await api.save(params)
-    commit(types.SC_SAVE, resp.data)
-  },
-  async reload ({commit}, params) {
-    const resp = await api.reload(params)
-    commit(types.CL_RELOAD, resp.data)
-  },
-  async done ({commit}, params) {
-    const resp = await api.done(params)
-    commit(types.SC_DONE, resp.data)
   }
 }
 
@@ -90,7 +65,7 @@ const mutations = {
       { name: '文化程度', value: ['本科', '本科以上'][data.info.education - 1] },
       { name: '宗教信仰', value: ['佛教', '道教', '天主教', '基督教', '伊斯兰教', '喇嘛教', '其他', '无宗教信仰'][data.info.religion - 1] },
       { name: '兵役状况', value: ['未服兵役', '退出现役', '国防生', '服现役'][data.info.education - 1] },
-      { name: '入学时间', value: dateFormat(data.info.enterSchoolTime, 'YYYY-MM-DD') },
+      { name: '入学时间', value: dateFormat(data.info.enterSchoolTime, 'YYYY-MM-DD')},
       { name: '所在院系', value: data.info.faculty },
       { name: '所在专业', value: data.info.specialty }
     ]
@@ -107,23 +82,7 @@ const mutations = {
     }, {
       name: '学生证',
       list: photos.filter(item => item.type === 2)
-    }
-    ]
-  },
-  [types.SC_NOTIFYUSERS] (state, notify) {
-    state.notify = notify
-  },
-  [types.SC_FAIL] (state, fail) {
-    state.fail = fail
-  },
-  [types.SC_SAVE] (state, save) {
-    state.save = save
-  },
-  [types.CL_RELOAD] (state, reload) {
-    state.reload = reload
-  },
-  [types.SC_DONE] (state, done) {
-    state.done = done
+    }]
   }
 }
 

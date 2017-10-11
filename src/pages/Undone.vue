@@ -21,6 +21,7 @@
   import { createNamespacedHelpers } from 'vuex'
   import { Previewer, dateFormat, Group } from 'vux'
   import DetailCell from '../components/DetailCell'
+  import * as api from '@/api/studentCert'
 
   const { mapActions, mapState } = createNamespacedHelpers('studentCert')
 
@@ -63,8 +64,11 @@
           }
         })
       },
-      confirm () {
-        this.done()
+      async confirm () {
+        let rest = await api.done()
+        if (rest.data.state !== 0) {
+          this.$vux.toast.text('提交失败')
+        }
       }
     },
     created: function () {
