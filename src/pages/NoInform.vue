@@ -11,21 +11,20 @@
     <list-view :list="listData.list" :total="listData.count" :currLen="listData.currLen" @pullingUp="pullingUp" class="approve-list" ref="listView">
       <template scope="props">
         <div class="list-group">
-          <div class="group-title" v-if="props.item.first">
-            <check-icon :checked='getGroupChecked(props.item.dateStr)' @click.native="setGroupChecked(props.item.dateStr)"/>
+          <check-icon class="group-title" v-if="props.item.first" :data="props.item" :value='props.item.groupChecked' @update:value="setGroupChecked">
             {{props.item.dateStr}}
-          </div>
-          <div class="list-item">
-            <check-icon :checked='props.item.checked' @click="setItemChecked(props.item)"/>
+          </check-icon>
+          <check-icon class="list-item" :value='props.item.checked' :data="props.item" @update:value='setItemChecked'>
             <span class="item-index">{{props.item.index > 8? props.item.index + 1: '0' + (props.item.index + 1)}}.</span>
             <span class="item-title">{{props.item.name}}</span>
-          </div>
+          </check-icon>
         </div>
       </template>
     </list-view>
     <div class="footer-box">
-      <a class="btn check-all">
-        <check-icon :checked='all' @click="setAllChecked"/>全部选择({{listData.count}})</a>
+      <check-icon class="btn check-all" :value.sync='all'>
+        全部选择({{listData.count}})
+      </check-icon>
       <a class="btn" @click="submit">通知</a>
     </div>
   </div>
@@ -49,55 +48,45 @@
         address: '',
         all: true,
         lastDate: '',
-//        listData: {currLen: 0, count: 0, list: []}
+        listData: {currLen: 0, count: 0, list: []}
       }
     },
-//    watch: {
-//      storeList (newArr) {
-//        const arr = []
-//        let idx = 0
-//        this.listData = {...newArr}
-//        this.listData.list = newArr.list.map(item => {
-//          let oldItem = this.listData.list.find(oldItem => oldItem.id === item.id)
-//          item.dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
-//          item.checked = oldItem ? oldItem.checked : true
-//          item.groupChecked = oldItem ? oldItem.groupChecked : true
-//          if (arr.indexOf(item.dateStr) === -1) {
-//            item.first = true
-//            arr.push(item.dateStr)
-//            idx = 0
-//          }
-//          item.index = idx
-//          idx++
-//          return item
-//        })
-//        this.lastDate = arr[arr.length - 1]
-//      }
-//    },
+    watch: {
+      storeList (newArr) {
+        const arr = []
+        let idx = 0
+        this.listData = {...newArr}
+        this.listData.list = newArr.list.map(item => {
+          let oldItem = this.listData.list.find(oldItem => oldItem.id === item.id)
+          item.dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
+          item.checked = this.all || (oldItem && !!oldItem.checked)
+          if (arr.indexOf(item.dateStr) === -1) {
+            item.first = true
+            item.groupChecked = this.all || (oldItem && !!oldItem.groupChecked)
+            arr.push(item.dateStr)
+            idx = 0
+          }
+          item.index = idx
+          idx++
+          return item
+        })
+        this.lastDate = arr[arr.length - 1]
+      },
+      all (all) {
+        if (all) {
+          this.listData.list = this.listData.list.map(item => {
+            let groupChecked
+            if (item.first) {
+              groupChecked = true
+            }
+            return {...item, checked: this.all, groupChecked}
+          })
+        }
+      }
+    },
     computed: {
       ...mapState({
-//        storeList: state => state.list
-        listData: state => {
-          const arr = []
-          let idx = 0
-          const listData = {...state.list}
-          listData.list = state.list.list.map(item => {
-            let oldItem = listData.list.find(oldItem => oldItem.id === item.id)
-            item.dateStr = dateFormat(item.createTime, 'YYYY年MM月DD日')
-            item.checked = oldItem ? oldItem.checked : true
-            item.groupChecked = oldItem ? oldItem.groupChecked : true
-            if (arr.indexOf(item.dateStr) === -1) {
-              item.first = true
-              arr.push(item.dateStr)
-              idx = 0
-            }
-            item.index = idx
-            idx++
-            return item
-          })
-          this.lastDate = arr[arr.length - 1]
-          return listData
-        }
+        storeList: state => state.list
       })
     },
     methods: {
@@ -108,32 +97,33 @@
       pullingUp (pageParams) {
         this.list({state: 1, ...pageParams})
       },
-      setItemChecked (item) {
-        item.checked = !item.checked
-//        this.listData.list = this.listData.list.map(item => {
-//          if (this.all && item.checked) {
-//            this.all = false
-//          }
-//          return { ...item, checked: item.id === id ? !item.checked : item.checked }
-//        })
+      setItemChecked (value, item) {
+        item.checked = value
+        const dateStr = item.dateStr
+        if (value) {
+          this.getGroupChecked(dateStr)
+          this.listData.list = this.listData.list.map(item => {
+            return {...item, groupChecked: item.first ? (item.dateStr === dateStr ? this.getGroupChecked(dateStr) : item.groupChecked) : item.groupChecked}
+          })
+        } else {
+          this.all = false
+          this.listData.list = this.listData.list.map(item => {
+            return {...item, groupChecked: item.first ? (item.dateStr === dateStr ? value : item.groupChecked) : item.groupChecked}
+          })
+        }
       },
       getGroupChecked (dateStr) {
         let ownItems = this.listData.list.filter(item => item.dateStr === dateStr)
         return ownItems.length === ownItems.filter(item => item.checked).length
       },
-      setGroupChecked (dateStr) {
-        const gChk = this.getGroupChecked(dateStr)
-        if (this.all && gChk) {
+      setGroupChecked (value, item) {
+        item.groupChecked = value
+        if (!value) {
           this.all = false
         }
+        const dateStr = item.dateStr
         this.listData.list = this.listData.list.map(item => {
-          return {...item, checked: item.dateStr === dateStr ? !gChk : item.checked}
-        })
-      },
-      setAllChecked () {
-        this.all = !this.all
-        this.listData.list = this.listData.list.map(item => {
-          return {...item, checked: this.all}
+          return {...item, checked: item.dateStr === dateStr ? value : item.checked}
         })
       },
       submit () {
@@ -150,7 +140,14 @@
         })
       },
       confirm () {
-        this.notifyUsers({id: this.listData.list.filter(item => item.checked).map(item => item.id).join(','), all: this.all ? 1 : 0, time: this.dateTime, address: this.address})
+        const params = {all: this.all ? 1 : 0, time: this.dateTime, address: this.address}
+        if (!this.all) {
+          params.id = this.listData.list.filter(item => item.checked).map(item => item.id).join(',')
+          if (this.listData.list.filter(item => item.groupChecked && item.dateStr === this.lastDate).length !== 0) {
+            params.dates = this.lastDate
+          }
+        }
+        this.notifyUsers(params)
       }
     }
   }
