@@ -3,6 +3,7 @@ import { dateFormat, BusPlugin, DatetimePlugin, LocalePlugin, DevicePlugin, Toas
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import MockWechatPlugin from './wechat-mock-plugin'
+import Validate from './validate-plugin'
 import FastClick from 'fastclick'
 
 // plugins
@@ -22,6 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   Vue.use(WechatPlugin)
 }
+Vue.use(Validate)
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
