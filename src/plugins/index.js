@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { dateFormat, BusPlugin, DatetimePlugin, LocalePlugin, DevicePlugin, ToastPlugin, AlertPlugin, ConfirmPlugin, LoadingPlugin, WechatPlugin, AjaxPlugin, AppPlugin } from 'vux'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
-import MockWechatPlugin from '../mock/wx-mock'
+import MockWechatPlugin from './wechat-mock-plugin'
 import FastClick from 'fastclick'
 
 // plugins
