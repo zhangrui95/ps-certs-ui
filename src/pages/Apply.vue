@@ -2,40 +2,42 @@
   <div class="flex-page student-page">
     <div class="header-box">{{title}}</div>
     <div class="center-box padding-min">
-      <div class="none-flex cell-border cell-margin previewer-box" v-for="(imgNews, index) in imgTitle" :key="index">
-        <div class="weui-cell__hd" v-html="imgNews.title"></div>
-        <ul class="weui-uploader__files">
-          <span v-for="(item, itemIndex) in imgNews.imgList" :key="itemIndex">
-            <img class="src-img previewer-demo-img" :src="item.src" @click="show(index, itemIndex)">
-          </span>
-        </ul>
-        <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'>
-          <div class="img-uploader-box">
-            <input class="weui-uploader__input" type="button"/>
-            <img class="change-upload" src="../assets/photo.png"/>
-          </div>
-        </up-loading>
-      </div>
-      <previewer v-for="(group, index) in imgTitle" :list="group.imgList" ref="previewer" :key="index">
-        <template slot="button-after">
-          <div class="del-btn" @click.prevent.stop="deleteImage"><i class="weui-icon-delete weui-icon_gallery-delete"></i></div>
-        </template>
-      </previewer>
-      <x-input title="姓名" v-model="name"></x-input>
-      <x-input title="身份证号" v-model="card"></x-input>
-      <x-input title="手机号码" v-model="mobile"></x-input>
-      <popup-picker title="婚姻状况" ref="picker3" :data="marrayList" v-model="marray" value-text-align="right" placeholder="请选择" @on-change="onChange" show-name></popup-picker>
-      <popup-picker title="血型" :data="bloodList" v-model="blood" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-      <x-input title="身高(cm)" v-model="height"></x-input>
-      <x-input title="体重(kg)" v-model="weight"></x-input>
-      <popup-picker title="文化程度" :data="cultureList" v-model="culture" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-      <popup-picker title="宗教信仰" :data="religionList" v-model="religion" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-      <popup-picker title="兵役状况" :data="militaryList" v-model="military" value-text-align="right" placeholder="请选择" show-name></popup-picker>
-      <div class="vux-cell-box">
-        <datetime v-model="time" @on-change="change" title="入学时间" :show.sync="visibility" placeholder="请选择" show-name></datetime>
-      </div>
-      <x-input title="所在院系" v-model="department"></x-input>
-      <x-input title="所在专业" v-model="major"></x-input>
+      <validate-group ref="ValidateGroup">
+        <div class="none-flex cell-border cell-margin previewer-box" v-for="(imgNews, index) in imgTitle" :key="index">
+          <div class="weui-cell__hd" v-html="imgNews.title"></div>
+          <ul class="weui-uploader__files">
+            <span v-for="(item, itemIndex) in imgNews.imgList" :key="itemIndex">
+              <img class="src-img previewer-demo-img" :src="item.src" @click="show(index, itemIndex)">
+            </span>
+          </ul>
+          <up-loading :count="imgNews.count" v-on:addImages="listenToImgs" :index="index" @num="ImgIndex" @ids='Ids'>
+            <div class="img-uploader-box">
+              <input class="weui-uploader__input" type="button"/>
+              <img class="change-upload" src="../assets/photo.png"/>
+            </div>
+          </up-loading>
+        </div>
+        <previewer v-for="(group, index) in imgTitle" :list="group.imgList" ref="previewer" :key="index">
+          <template slot="button-after">
+            <div class="del-btn" @click.prevent.stop="deleteImage"><i class="weui-icon-delete weui-icon_gallery-delete"></i></div>
+          </template>
+        </previewer>
+        <x-input title="姓名" ref="name" v-model="name" rule="boolean" toast="请输入姓名"></x-input>
+        <x-input title="身份证号" v-model="card"></x-input>
+        <x-input title="手机号码" v-model="mobile"></x-input>
+        <popup-picker title="婚姻状况" ref="picker3" :data="marrayList" v-model="marray" value-text-align="right" placeholder="请选择" @on-change="onChange" show-name></popup-picker>
+        <popup-picker title="血型" :data="bloodList" v-model="blood" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+        <x-input title="身高(cm)" v-model="height"></x-input>
+        <x-input title="体重(kg)" v-model="weight"></x-input>
+        <popup-picker title="文化程度" :data="cultureList" v-model="culture" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+        <popup-picker title="宗教信仰" :data="religionList" v-model="religion" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+        <popup-picker title="兵役状况" :data="militaryList" v-model="military" value-text-align="right" placeholder="请选择" show-name></popup-picker>
+        <div class="vux-cell-box">
+          <datetime v-model="time" @on-change="change" title="入学时间" :show.sync="visibility" placeholder="请选择" show-name></datetime>
+        </div>
+        <x-input title="所在院系" v-model="department"></x-input>
+        <x-input title="所在专业" v-model="major"></x-input>
+      </validate-group>
       <div class="height-fixed-min"></div>
     </div>
     <div class="footer-box">
@@ -48,13 +50,32 @@
 <script>
   import { Previewer, XInput, PopupPicker, Datetime, Group } from 'vux'
   import UpLoading from '../components/UpLoading'
+  import ValidateGroup from '@/components/ValidateGroup'
   import * as valid from '@/utils/valid'
   import * as api from '@/api/studentCert'
 
-
+  let mixin = {
+    props: ['rule', 'value', 'toast', 'min', 'max'],
+    methods: {
+      onValid() {
+        if (this.rule) {
+          let rules = this.rule.split(',')
+          for (let i = 0; i < rules.length; i++) {
+            let validateRest = this.$validate({ rule: rules[i], value: this.value, opt: { min: this.min, max: this.max } })
+            if (!validateRest) {
+              Vue.$vux.toast.text(this.toast)
+              return false
+            }
+          }
+          return true
+        }
+      }
+    }
+  }
   export default {
+    mixins: [mixin],
     components: {
-      Previewer, XInput, PopupPicker, Datetime, Group, UpLoading
+      Previewer, XInput, PopupPicker, Datetime, Group, UpLoading, ValidateGroup
     },
     created () {
       this.title = this.$route.query.type == 1 ? '身份证办理申请登记' : '居住证明办理申请登记'
@@ -124,13 +145,15 @@
         this.imgTitle[this.num].imgList = data
       },
       goOut () {
-        let that = this
-        this.$vux.confirm.show({
-          title: '确定取消当前操作？',
-          onConfirm () {
-            that.$wechat.closeWindow()
-          }
-        })
+        this.$refs.name.mixinValidate()
+        // this.$refs.ValidateGroup.validateGroup()
+        // let that = this
+        // this.$vux.confirm.show({
+        //   title: '确定取消当前操作？',
+        //   onConfirm () {
+        //     that.$wechat.closeWindow()
+        //   }
+        // })
       },
       Ids (ids) {
         if (this.num === 0) {
