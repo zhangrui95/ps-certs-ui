@@ -1,22 +1,18 @@
 import chai from 'chai'
 import factory from '../../../src/plugins/validate-plugin/rule-factory'
+import testList from './test-data'
 
 const expect = chai.expect
 
-describe('test factory', () => {
-  it('should card rule function', () => {
-    const rule = factory.getRule('card')
-    expect(typeof rule)
-      .to.equal('function')
-  })
-  it('should card rule false', () => {
-    const rule = factory.getRule('card')
-    expect(rule('1'))
-      .to.equal(false)
-  })
-  it('should card rule true', () => {
-    const rule = factory.getRule('card')
-    expect(rule('2'))
-      .to.equal(true)
+describe('测试 factory', () => {
+  testList.forEach(function (item) {
+    it('测试' + item.rule + '：' + item.value + ' factory返回：' + item.ret, () => {
+      let fn = function (item) {
+        const rule = factory.getRule(item.rule)
+        expect(rule(item.value))
+          .to.equal(true)
+      }
+      return fn
+    })
   })
 })
