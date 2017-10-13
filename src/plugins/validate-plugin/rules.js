@@ -1,4 +1,16 @@
 const rules = {
+  'number': (val, opt) => {
+    let min = opt.min ? opt.min : val * 1,
+      max = opt.max ? opt.max : val * 1
+    return val * 1 >= min && val * 1 <= max
+  },
+  'string': (val, opt) => {
+    let length = val.length,
+      min = opt.min ? opt.min : length,
+      max = opt.max ? opt.max : length
+    return length * 1 >= min && length <= max
+  },
+  'boolean': val => val ? true : false,
   'mobile': val => /^1[34578]\d{9}$/.test(val),
   'email': val => /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(val),
   'card': val => {
@@ -23,17 +35,6 @@ const rules = {
       check = id.charAt(17);
     }
     return check == checks[sum];
-  },
-  'number': (val, opt) => {
-    let min = opt.min ? opt.min : val * 1,
-      max = opt.max ? opt.max : val * 1
-    return val * 1 >= min && val * 1 <= max
-  },
-  'string': (val, opt) => {
-    let length = val.length,
-      min = opt.min ? opt.min : length,
-      max = opt.max ? opt.max : length
-    return length * 1 >= min && length <= max
   },
 }
 
