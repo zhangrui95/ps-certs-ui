@@ -22,7 +22,7 @@
             <div class="del-btn" @click.prevent.stop="deleteImage"><i class="weui-icon-delete weui-icon_gallery-delete"></i></div>
           </template>
         </previewer>
-        <x-input title="姓名" ref="name" v-model="name" rule="boolean" toast="请输入姓名"></x-input>
+        <x-input v-xxx="123" title="姓名" ref="name" v-model="name" rule="boolean" toast="请输入姓名"></x-input>
         <x-input title="身份证号" v-model="card"></x-input>
         <x-input title="手机号码" v-model="mobile"></x-input>
         <popup-picker title="婚姻状况" ref="picker3" :data="marrayList" v-model="marray" value-text-align="right" placeholder="请选择" @on-change="onChange" show-name></popup-picker>
@@ -106,6 +106,19 @@
           }
         ]
       }
+    },
+    directives: {
+      xxx: {
+        bind: function(e, b, v){
+          console.log('e', e)
+          console.log('v', v)
+          v.context.$vvv.rule = b.value
+        }
+      }
+    },
+    mounted: function(){
+      console.log('this', this)
+      console.log('this.$vvv', this.$vvv)
     },
     methods: {
       show (index, itemIndex) {

@@ -6,6 +6,9 @@ const plugin = {
     Vue.validate = engine.validate
     Vue.mixin({
       props: ['rule', 'value', 'toast', 'min', 'max'],
+      created: function() {
+        this.$vvv = {}
+      },
       methods: {
         mixinValidate() {
           if (this.rule) {
