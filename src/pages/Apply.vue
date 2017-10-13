@@ -54,26 +54,7 @@
   import * as valid from '@/utils/valid'
   import * as api from '@/api/studentCert'
 
-  let mixin = {
-    props: ['rule', 'value', 'toast', 'min', 'max'],
-    methods: {
-      onValid() {
-        if (this.rule) {
-          let rules = this.rule.split(',')
-          for (let i = 0; i < rules.length; i++) {
-            let validateRest = this.$validate({ rule: rules[i], value: this.value, opt: { min: this.min, max: this.max } })
-            if (!validateRest) {
-              Vue.$vux.toast.text(this.toast)
-              return false
-            }
-          }
-          return true
-        }
-      }
-    }
-  }
   export default {
-    mixins: [mixin],
     components: {
       Previewer, XInput, PopupPicker, Datetime, Group, UpLoading, ValidateGroup
     },
